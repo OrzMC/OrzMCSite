@@ -1,56 +1,56 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>❤️‍🔥 我的世界 on 🇨🇳</title><link>https://orzmc.jokerhub.cn/</link><description>Recent content in ❤️‍🔥 我的世界 on 🇨🇳</description><generator>Hugo</generator><language>zh-CN</language><atom:link href="https://orzmc.jokerhub.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>怎样开发一个Minecraft启动器(Java版)</title><link>https://orzmc.jokerhub.cn/posts/1.client/10.launcher/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/1.client/10.launcher/</guid><description>自己动手写一个 Minecraft 启动器，你也可以拥有自己的启动器</description></item><item><title>Minecraft Web 客户端</title><link>https://orzmc.jokerhub.cn/posts/1.client/11.webmc/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/1.client/11.webmc/</guid><description>探索使用Web浏览器玩我的世界游戏。</description></item><item><title>服主应知应会</title><link>https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/</guid><description>如果你要做为一名服务运维自己的Minecraft服务器，这篇文章中的知识需要了解和掌握。</description></item><item><title>服务端运维</title><link>https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/</guid><description>记录一些在实际进行Minecraft服务端运维时遇到的问题和相应的解决办法</description></item><item><title>服务端插件</title><link>https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/</guid><description>收集PaperMC服务端常用的插件信息，以及在实际使用过程中需要注意问题。</description></item><item><title>PaperMC插件开发</title><link>https://orzmc.jokerhub.cn/posts/2.server/23.papermc_plugin_dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/23.papermc_plugin_dev/</guid><description>学习如何开发PaperMC服务端插件是一件很有意义的事情。PaperMC的开发者生态很完善，提供了一个比较好用的插件市场，我们自己开发的插件也可以比较容易的发布到插件市场上，供其它玩家使用。本文教你如何开始开发PaperMC的服务端插件。</description></item><item><title>Minecraft 基岩版服务端</title><link>https://orzmc.jokerhub.cn/posts/2.server/24.bedrock_server/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/24.bedrock_server/</guid><description>探索 Minecraft 基岩版服务端的部署和运维</description></item><item><title>服务器地图大小限制</title><link>https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/</guid><description>运营一个PaperMC服务器，地图占用磁盘空间的大小，会随着玩家跑图越来越大。服务器需要定期备份地图，以防恶意玩家破坏服务器。不断增加的地图磁盘空间占用，对定期备份造成了比较大的影响。本文讨论一种可行的服务器地图备份时的磁盘占用优化方案。</description></item><item><title>相关资源链接</title><link>https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/</guid><description>收集与Minecraft相关的一切有用的资源链接</description></item><item><title>捐赠</title><link>https://orzmc.jokerhub.cn/sponsor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/sponsor/</guid><description>&lt;hr>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>❤️‍🔥 我的世界 on 🇨🇳 OrzMC</title><link>https://orzmc.jokerhub.cn/</link><description>Recent content in ❤️‍🔥 我的世界 on 🇨🇳 OrzMC</description><generator>Hugo</generator><language>zh-cn</language><atom:link href="https://orzmc.jokerhub.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>怎样开发一个Minecraft启动器(Java版)</title><link>https://orzmc.jokerhub.cn/posts/1.client/10.launcher/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/1.client/10.launcher/</guid><description>自己动手写一个 Minecraft 启动器，你也可以拥有自己的启动器</description></item><item><title>Minecraft Web 客户端</title><link>https://orzmc.jokerhub.cn/posts/1.client/11.webmc/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/1.client/11.webmc/</guid><description>探索使用Web浏览器玩我的世界游戏。</description></item><item><title>服主应知应会</title><link>https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/</guid><description>如果你要做为一名服务运维自己的Minecraft服务器，这篇文章中的知识需要了解和掌握。</description></item><item><title>服务端运维</title><link>https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/</guid><description>记录一些在实际进行Minecraft服务端运维时遇到的问题和相应的解决办法</description></item><item><title>服务端插件</title><link>https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/</guid><description>收集PaperMC服务端常用的插件信息，以及在实际使用过程中需要注意问题。</description></item><item><title>PaperMC插件开发</title><link>https://orzmc.jokerhub.cn/posts/2.server/23.papermc_plugin_dev/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/23.papermc_plugin_dev/</guid><description>学习如何开发PaperMC服务端插件是一件很有意义的事情。PaperMC的开发者生态很完善，提供了一个比较好用的插件市场，我们自己开发的插件也可以比较容易的发布到插件市场上，供其它玩家使用。本文教你如何开始开发PaperMC的服务端插件。</description></item><item><title>Minecraft 基岩版服务端</title><link>https://orzmc.jokerhub.cn/posts/2.server/24.bedrock_server/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/24.bedrock_server/</guid><description>探索 Minecraft 基岩版服务端的部署和运维</description></item><item><title>服务器地图大小限制</title><link>https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/</guid><description>运营一个PaperMC服务器，地图占用磁盘空间的大小，会随着玩家跑图越来越大。服务器需要定期备份地图，以防恶意玩家破坏服务器。不断增加的地图磁盘空间占用，对定期备份造成了比较大的影响。本文讨论一种可行的服务器地图备份时的磁盘占用优化方案。</description></item><item><title>相关资源链接</title><link>https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/</guid><description>收集与Minecraft相关的一切有用的资源链接</description></item><item><title>捐赠</title><link>https://orzmc.jokerhub.cn/sponsor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/sponsor/</guid><description>&lt;hr&gt;
 
-&lt;h2 id="支付宝扫二维码并添加备注信息" class="relative">
- 支付宝扫二维码，并&lt;strong>添加备注信息&lt;/strong>&lt;a href="#%e6%94%af%e4%bb%98%e5%ae%9d%e6%89%ab%e4%ba%8c%e7%bb%b4%e7%a0%81%e5%b9%b6%e6%b7%bb%e5%8a%a0%e5%a4%87%e6%b3%a8%e4%bf%a1%e6%81%af" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray">🔗&lt;/a>
-&lt;/h2>
-&lt;p>
-
-
-
-
- &lt;img src="https://orzmc.jokerhub.cn/images/alipay_sponsor.png" alt="alipay" loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" sizes="(max-width: 768px) 100vw, 1200px" />
-
-&lt;/p></description></item><item><title>客户端启动器</title><link>https://orzmc.jokerhub.cn/client/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/client/</guid><description>&lt;hr>
-
-&lt;h2 id="各版本游戏需要的-java-版本" class="relative">
- 各版本游戏需要的 Java 版本&lt;a href="#%e5%90%84%e7%89%88%e6%9c%ac%e6%b8%b8%e6%88%8f%e9%9c%80%e8%a6%81%e7%9a%84-java-%e7%89%88%e6%9c%ac" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray">🔗&lt;/a>
-&lt;/h2>
-&lt;p>具体版本要求以官方发布为准。&lt;/p></description></item><item><title>玩家手册</title><link>https://orzmc.jokerhub.cn/user/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/user/</guid><description>&lt;hr>
-
-&lt;h2 id="玩家须知" class="relative">
- 玩家须知&lt;a href="#%e7%8e%a9%e5%ae%b6%e9%a1%bb%e7%9f%a5" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray">🔗&lt;/a>
-&lt;/h2>
-&lt;p>服务器中一些热爱创造的小伙伴在这里花费了大量心力建造出各种漂亮的建筑，希望刚加入的朋友不要随意破坏，尊重他人的劳动成果。
-如果是完全小白，进服后感觉没有玩伴或者不太熟悉环境，可以加入 &lt;strong>
+&lt;h2 id="支付宝扫二维码并添加备注信息" class="relative"&gt;
+ 支付宝扫二维码，并&lt;strong&gt;添加备注信息&lt;/strong&gt;&lt;a href="#%e6%94%af%e4%bb%98%e5%ae%9d%e6%89%ab%e4%ba%8c%e7%bb%b4%e7%a0%81%e5%b9%b6%e6%b7%bb%e5%8a%a0%e5%a4%87%e6%b3%a8%e4%bf%a1%e6%81%af" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
+&lt;/h2&gt;
+&lt;p&gt;
 
 
 
 
+ &lt;img src="https://orzmc.jokerhub.cn/images/alipay_sponsor.png" alt="alipay" loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" sizes="(max-width: 768px) 100vw, 1200px" /&gt;
 
+&lt;/p&gt;</description></item><item><title>客户端启动器</title><link>https://orzmc.jokerhub.cn/client/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/client/</guid><description>&lt;hr&gt;
 
-&lt;a href="https://pd.qq.com/s/9zuis6m4v" target="_blank" rel="noopener noreferrer">QQ频道&lt;/a>
-&lt;/strong>，群里有很多资深玩家可以带你。&lt;/p></description></item><item><title>自研插件</title><link>https://orzmc.jokerhub.cn/plugin/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/plugin/</guid><description>&lt;hr>
-&lt;p>服务器使用自研插件 &lt;strong>
+&lt;h2 id="各版本游戏需要的-java-版本" class="relative"&gt;
+ 各版本游戏需要的 Java 版本&lt;a href="#%e5%90%84%e7%89%88%e6%9c%ac%e6%b8%b8%e6%88%8f%e9%9c%80%e8%a6%81%e7%9a%84-java-%e7%89%88%e6%9c%ac" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
+&lt;/h2&gt;
+&lt;p&gt;具体版本要求以官方发布为准。&lt;/p&gt;</description></item><item><title>玩家手册</title><link>https://orzmc.jokerhub.cn/user/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/user/</guid><description>&lt;hr&gt;
+
+&lt;h2 id="玩家须知" class="relative"&gt;
+ 玩家须知&lt;a href="#%e7%8e%a9%e5%ae%b6%e9%a1%bb%e7%9f%a5" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
+&lt;/h2&gt;
+&lt;p&gt;服务器中一些热爱创造的小伙伴在这里花费了大量心力建造出各种漂亮的建筑，希望刚加入的朋友不要随意破坏，尊重他人的劳动成果。
+如果是完全小白，进服后感觉没有玩伴或者不太熟悉环境，可以加入 &lt;strong&gt;
 
 
 
 
 
 
-&lt;a href="https://hangar.papermc.io/wangzhizhou666/OrzMC" target="_blank" rel="noopener noreferrer">OrzMC&lt;/a>
-&lt;/strong> 来辅助运营服务器，
-插件已发布到 &lt;strong>
+&lt;a href="https://pd.qq.com/s/9zuis6m4v" target="_blank" rel="noopener noreferrer"&gt;QQ频道&lt;/a&gt;
+&lt;/strong&gt;，群里有很多资深玩家可以带你。&lt;/p&gt;</description></item><item><title>自研插件</title><link>https://orzmc.jokerhub.cn/plugin/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/plugin/</guid><description>&lt;hr&gt;
+&lt;p&gt;服务器使用自研插件 &lt;strong&gt;
 
 
 
 
 
 
-&lt;a href="https://hangar.papermc.io" target="_blank" rel="noopener noreferrer">Hangar&lt;/a>
-&lt;/strong> 平台。&lt;/p>
-&lt;hr>
+&lt;a href="https://hangar.papermc.io/wangzhizhou666/OrzMC" target="_blank" rel="noopener noreferrer"&gt;OrzMC&lt;/a&gt;
+&lt;/strong&gt; 来辅助运营服务器，
+插件已发布到 &lt;strong&gt;
 
-&lt;h1 id="插件功能" class="relative">
- 插件功能&lt;a href="#%e6%8f%92%e4%bb%b6%e5%8a%9f%e8%83%bd" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray">🔗&lt;/a>
-&lt;/h1>
-&lt;p>新手进服会获得新手指南，&lt;strong>/guide&lt;/strong> 命令可以打开新手指南。&lt;/p></description></item></channel></rss>
+
+
+
+
+
+&lt;a href="https://hangar.papermc.io" target="_blank" rel="noopener noreferrer"&gt;Hangar&lt;/a&gt;
+&lt;/strong&gt; 平台。&lt;/p&gt;
+&lt;hr&gt;
+
+&lt;h1 id="插件功能" class="relative"&gt;
+ 插件功能&lt;a href="#%e6%8f%92%e4%bb%b6%e5%8a%9f%e8%83%bd" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
+&lt;/h1&gt;
+&lt;p&gt;新手进服会获得新手指南，&lt;strong&gt;/guide&lt;/strong&gt; 命令可以打开新手指南。&lt;/p&gt;</description></item></channel></rss>
