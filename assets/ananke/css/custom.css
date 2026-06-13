@@ -89,3 +89,8 @@ a:hover { text-decoration: no-underline; }
 table { width: 100%; border-collapse: collapse; }
 th, td { border-bottom: 1px solid #e1e1e1; padding: 0.5rem; }
 th { background: #c9c9cf; }
+
+/* Social icon horizontal spacing */
+.ananke-socials .ananke-social-link {
+  margin-right: 0.5rem;
+}

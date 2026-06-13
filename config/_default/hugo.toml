@@ -1,9 +1,8 @@
 # Site
 baseURL = "https://orzmc.jokerhub.cn"
-title = "🇨🇳"
+title = "🇨🇳 OrzMC"
 theme = "ananke"
 defaultContentLanguage = "zh-cn"
-languageCode = "zh-CN"
 enableRobotsTXT = true
 hasCJKLanguage = true
 
@@ -15,7 +14,7 @@ section = ["HTML", "RSS"]
 
 # Hugo
 [module.hugoVersion]
-min = "0.147.9"
+min = "0.163.1"
 
 [markup.goldmark.renderer]
 unsafe = false
