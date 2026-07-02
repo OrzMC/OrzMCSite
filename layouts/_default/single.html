@@ -12,7 +12,7 @@
           {{ partials.Include "toc.html" . }}
         </details>
       </div>
-      <section class="w-70-l order-2 f5 center measure-wide lh-copy nested-links mid-gray">
+      <section class="w-70-l order-2 f5 center measure-wide lh-copy nested-links mid-gray article-content">
         <header class="mb3">
           <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
           {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
@@ -20,7 +20,7 @@
         {{ .Content }}
       </section>
     {{ else }}
-      <section class="w-100 f5 center measure-wide lh-copy nested-links mid-gray">
+      <section class="w-100 f5 center measure-wide lh-copy nested-links mid-gray article-content">
         <header class="mb3">
           <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
           {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}

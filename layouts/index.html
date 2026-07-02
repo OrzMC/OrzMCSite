@@ -27,15 +27,11 @@
       </section>
 
       {{ if compare.Ge $section_count (math.Add $n_posts 1) }}
-        <section class="w-100">
-          <h1 class="f3">{{ lang.Translate "more" }}</h1>
-          {{ range (collections.First 4 (collections.After $n_posts $section))  }}
-            <h2 class="f5 fw4 mb4 dib {{ compare.Conditional (compare.Eq $.Site.Language.Direction "rtl") "ml3" "mr3" }}">
-              <a href="{{ .RelPermalink }}" class="link black dim">
-                {{ .Title }}
-              </a>
-            </h2>
-          {{ end }}
+        <section class="w-100 tc mt4">
+          <a href="{{ (index (collections.Where $.Site.Sections "Section" "in" $mainSections) 0).RelPermalink }}"
+             class="ba b--black-20 bg-transparent hover-bg-black-10 br2 color-inherit dib f5 link ph4 pv3">
+            {{ lang.Translate "more" | compare.Default "更多文章" }} →
+          </a>
         </section>
       {{ end }}
 
