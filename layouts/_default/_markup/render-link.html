@@ -1,0 +1,8 @@
+{{ $href := .Destination | safeURL }}
+{{ $isHttp := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") }}
+{{ $isProtoRel := strings.HasPrefix $href "//" }}
+{{ $isFtp := strings.HasPrefix $href "ftp://" }}
+{{ $isMailto := strings.HasPrefix $href "mailto:" }}
+{{ $isTel := strings.HasPrefix $href "tel:" }}
+{{ $isExternal := or $isHttp (or $isProtoRel $isFtp) }}
+<a href="{{ $href }}" {{ if $isExternal }}target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text }}</a>

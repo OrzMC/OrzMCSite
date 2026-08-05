@@ -1,0 +1,32 @@
+# !/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
+SITE_ROOT="."
+hugo -s "${SITE_ROOT}" -e production --minify --gc
+
+SITE_PUB_DIR="${SITE_ROOT}/public/"
+
+while getopts ":lr" opt; do
+    case $opt in
+        l)
+            # For MacOS Nginx Default Site Directory
+            NGINX_DEFAULT_SITE_DIR=/var/www/
+            HOMEBREW_PREFIX_DIR=/opt/homebrew
+            SITE_SERVER_DIR="${HOMEBREW_PREFIX_DIR}${NGINX_DEFAULT_SITE_DIR}"
+            rsync -avz --delete $SITE_PUB_DIR $SITE_SERVER_DIR && \
+            echo "发布到本地服务器成功: ${SITE_SERVER_DIR}"
+            ;;
+        r)
+            # For Remote Nginx Default Site Directory
+            NGINX_DEFAULT_SITE_DIR=/var/www/html
+            SITE_SERVER_DIR="ubuntu@jokerhub.cn:${NGINX_DEFAULT_SITE_DIR}"
+            rsync -avz --delete $SITE_PUB_DIR $SITE_SERVER_DIR && \
+            echo "发布到远程服务器成功: ${SITE_SERVER_DIR}"
+            ;;
+        *)
+            echo "Usage: $0 [-l (local)] [-r (remote)]"
+            exit 1
+            ;;
+    esac
+done
+

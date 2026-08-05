@@ -1,0 +1,4 @@
+{{ $id := .Anchor | compare.Default (anchorize .Text) }}
+<h{{ .Level }} id="{{ $id }}" class="relative">
+  {{ .Text }}<a href="#{{ $id }}" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray">🔗</a>
+</h{{ .Level }}>

@@ -1,0 +1,84 @@
+# Ananke 主题Wiki： https://github.com/theNewDynamic/gohugo-theme-ananke/wiki
+# CSS 配置参考：https://tachyons.io/
+
+favicon = "/images/favicon.png"
+site_logo = ""
+description = "Minecraft 服务器与玩法指南、更新记录与社区动态"
+author = "Joker"
+body_classes = "avenir bg-near-white"
+text_color = "black"
+
+featured_image_class = "cover bg-top"
+cover_dimming_class = "bg-black-15"
+background_color_class = "bg-black"
+
+read_more_copy = "阅读全文"
+recent_posts_number = 10
+post_content_classes = "serif"
+
+[ananke]
+show_recent_posts = true
+show_reading_time = false
+show_categories = true
+copy_code = true
+custom_css = ["custom.css"]
+
+[ananke.home]
+content_alignment = "center"
+
+[ananke.social]
+icon_path = "ananke/socials/%s.svg"
+
+# Follow
+[ananke.social.follow]
+networks = [
+    "qq",
+    "discord",
+    "bilibili",
+    "youtube",
+    "x-twitter",
+    "github",
+]
+# Share
+[ananke.social.share]
+disable_share = false
+icons = true
+sharetext = true
+networks = [
+    "x-twitter",
+]
+# GitHub
+[ananke.social.github]
+username = "/OrzMC"
+# X
+[ananke.social.x-twitter]
+username = "OrzGeeker"
+# Youtube
+[ananke.social.youtube]
+username = "OrzGeeker5382"
+
+# 自定义社交媒体：https://github.com/theNewDynamic/gohugo-theme-ananke/wiki/Configure-Social-Media-Networks#setup-individual-new-networks
+# BiliBili
+[ananke.social.bilibili]
+username = "93811391"
+[ananke.social.networks.bilibili]
+slug = "bilibili"
+label = "BiliBili"
+color = "#00A1D6"
+icon = "bilibili"
+profile = "https://space.bilibili.com/%s"
+[ananke.social.networks.qq]
+slug = "qq"
+label = "QQ"
+color = "#12B7F5"
+icon = "qq"
+profile = "https://pd.qq.com/s/9zuis6m4v"
+[ananke.social.networks.discord]
+slug = "discord"
+label = "Discord"
+color = "#5865F2"
+icon = "discord"
+profile = "https://discord.gg/9JAb9vpvUE"
+
+[ananke.hooks]
+verbosity = "error"

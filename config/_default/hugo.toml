@@ -1,0 +1,43 @@
+# Site
+baseURL = "https://orzmc.jokerhub.cn"
+title = "🇨🇳 OrzMC"
+theme = "ananke"
+defaultContentLanguage = "zh-cn"
+enableRobotsTXT = true
+hasCJKLanguage = true
+
+[outputs]
+home = ["HTML", "RSS"]
+section = ["HTML", "RSS"]
+
+
+
+# Hugo
+[module.hugoVersion]
+min = "0.163.1"
+
+[markup.goldmark.renderer]
+unsafe = false
+
+[markup.highlight]
+style = "dracula"
+lineNumbers = true
+lineNumbersInTable = true
+guessSyntax = true
+noClasses = true
+tabWidth = 4
+
+[sitemap]
+changefreq = "weekly"
+priority = 0.5
+
+[minify]
+disableCSS = false
+disableHTML = false
+disableJS = false
+disableJSON = false
+disableSVG = false
+disableXML = false
+
+[privacy.youtube]
+privacyEnhanced = true

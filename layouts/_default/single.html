@@ -1,0 +1,56 @@
+{{ define "main" }}
+<article class="pa3 pa4-ns nested-copy-line-height">
+  {{ partials.Include "breadcrumbs.html" . }}
+  <div class="ph3 ph5-l pv3 pv4-l flex-l mw8 center">
+    {{ if .Params.toc }}
+      <aside class="dn db-l w-30-l pr4-l order-1 toc-sticky">
+        {{ partials.Include "toc.html" . }}
+      </aside>
+      <div class="dn-l mb3">
+        <details class="ba b--black-10 br2 bg-near-white pa3">
+          <summary class="fw5 pointer">目录</summary>
+          {{ partials.Include "toc.html" . }}
+        </details>
+      </div>
+      <section class="w-70-l order-2 f5 center measure-wide lh-copy nested-links mid-gray article-content">
+        <header class="mb3">
+          <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
+          {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
+        </header>
+        {{ .Content }}
+      </section>
+    {{ else }}
+      <section class="w-100 f5 center measure-wide lh-copy nested-links mid-gray article-content">
+        <header class="mb3">
+          <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
+          {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
+        </header>
+        {{ .Content }}
+      </section>
+    {{ end }}
+  </div>
+  {{ if compare.Eq .Section "posts" }}
+  <footer class="ph3 ph5-l pv3 pv4-l">
+    <div class="flex justify-between">
+      {{ $pages := .CurrentSection.Pages.ByDate.Reverse }}
+      {{ $.Scratch.Set "found" false }}
+      {{ $.Scratch.Delete "prev" }}
+      {{ $.Scratch.Delete "next" }}
+      {{ range $pages }}
+        {{ if $.Scratch.Get "found" }}
+          {{ if not ($.Scratch.Get "next") }}
+            {{ $.Scratch.Set "next" . }}
+          {{ end }}
+        {{ else if compare.Eq .RelPermalink $.RelPermalink }}
+          {{ $.Scratch.Set "found" true }}
+        {{ else }}
+          {{ $.Scratch.Set "prev" . }}
+        {{ end }}
+      {{ end }}
+      {{ with ($.Scratch.Get "next") }}<a class="link dim" href="{{ .RelPermalink }}">← {{ .Title }}</a>{{ else }}<span></span>{{ end }}
+      {{ with ($.Scratch.Get "prev") }}<a class="link dim" href="{{ .RelPermalink }}">{{ .Title }} →</a>{{ else }}<span></span>{{ end }}
+    </div>
+  </footer>
+  {{ end }}
+</article>
+{{ end }}

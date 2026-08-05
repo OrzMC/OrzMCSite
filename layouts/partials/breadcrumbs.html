@@ -1,0 +1,34 @@
+{{/* 构建面包屑：优先使用自定义 front matter，其次基于 Section/Ancestors */}}
+{{ $crumbs := collections.Slice (dict "title" "主页" "url" site.Home.RelPermalink) }}
+
+{{ if .Params.breadcrumbs }}
+  {{/* 自定义层级：期望为 [{title: "...", url: "/..."}, ...] */}}
+  {{ $crumbs = collections.Slice }}
+  {{ range .Params.breadcrumbs }}
+    {{ $title := .title | compare.Default "" }}
+    {{ $url := .url | compare.Default "" }}
+    {{ $crumbs = $crumbs | collections.Append (dict "title" $title "url" $url) }}
+  {{ end }}
+{{ else }}
+  {{ with .Ancestors }}
+    {{ range .Reverse }}
+      {{ $title := .LinkTitle | compare.Default .Title }}
+      {{ $url := .RelPermalink }}
+      {{ $crumbs = $crumbs | collections.Append (dict "title" $title "url" $url) }}
+    {{ end }}
+  {{ end }}
+  {{ $crumbs = $crumbs | collections.Append (dict "title" (.LinkTitle | compare.Default .Title) "url" "") }}
+{{ end }}
+
+<nav class="f6 silver pv2 ph3 ph4-ns" role="navigation" aria-label="面包屑导航">
+  {{ $.Scratch.Set "first" true }}
+  {{ range $crumbs }}
+    {{ if not ($.Scratch.Get "first") }}<span class="mh1">›</span>{{ end }}
+    {{ if .url }}
+      <a class="link silver hover-mid-gray" href="{{ .url }}">{{ .title }}</a>
+    {{ else }}
+      <span aria-current="page">{{ .title }}</span>
+    {{ end }}
+    {{ $.Scratch.Set "first" false }}
+  {{ end }}
+</nav>

@@ -1,0 +1,23 @@
+{{ $alt := .Text | compare.Default "" }}
+{{ $title := .Title | compare.Default "" }}
+{{ $src := .Destination }}
+{{ $res := .Page.Resources.GetMatch $src }}
+{{ if $res }}
+  {{ $widths := collections.Slice 480 800 1200 1600 }}
+  {{ $srcsetJ := collections.Slice }}
+  {{ $srcsetW := collections.Slice }}
+  {{ range $w := $widths }}
+    {{ $j := $res | images.Resize (printf "%dx" $w) }}
+    {{ $wimg := $res | images.Resize (printf "%dx webp" $w) }}
+    {{ $srcsetJ = $srcsetJ | collections.Append (printf "%s %dw" $j.RelPermalink $w) }}
+    {{ $srcsetW = $srcsetW | collections.Append (printf "%s %dw" $wimg.RelPermalink $w) }}
+  {{ end }}
+  {{ $fallback := ($res | images.Resize "800x") }}
+  <picture>
+    <source type="image/webp" srcset="{{ collections.Delimit $srcsetW ", " }}" sizes="(max-width: 768px) 100vw, 1200px" />
+    <source srcset="{{ collections.Delimit $srcsetJ ", " }}" sizes="(max-width: 768px) 100vw, 1200px" />
+    <img src="{{ $fallback.RelPermalink }}" alt="{{ $alt }}" {{ if $title }}title="{{ $title }}"{{ end }} loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" />
+  </picture>
+{{ else }}
+  <img src="{{ .Destination | safeURL }}" alt="{{ $alt }}" {{ if $title }}title="{{ $title }}"{{ end }} loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" sizes="(max-width: 768px) 100vw, 1200px" />
+{{ end }}

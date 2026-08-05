@@ -1,0 +1,40 @@
+{{- $pag := $.Paginator }}
+{{- if gt $pag.TotalPages 1 }}
+<nav class="tc mt5" aria-label="Page navigation">
+  <ul class="list flex items-center justify-center">
+    {{- with $pag.First }}
+    <li class="mr2">
+      <a href="{{ .URL }}" class="link dim ba br2 b--black-10 pa2 f6{{ if not $.Paginator.HasPrev }} o-30{{ end }}" aria-label="First">
+        ««
+      </a>
+    </li>
+    {{- end }}
+    <li class="mr2">
+      <a href="{{ if $pag.HasPrev }}{{ $pag.Prev.URL }}{{ else }}#{{ end }}" class="link dim ba br2 b--black-10 pa2 f6{{ if not $pag.HasPrev }} o-30{{ end }}" aria-label="Previous">
+        «
+      </a>
+    </li>
+    {{- range $pag.Pagers }}
+    <li class="mr2">
+      {{- if eq . $pag }}
+      <span class="ba br2 b--black-30 bg-light-gray pa2 f6 fw6" aria-current="page">{{ .PageNumber }}</span>
+      {{- else }}
+      <a href="{{ .URL }}" class="link dim ba br2 b--black-10 pa2 f6 hover-bg-light-gray">{{ .PageNumber }}</a>
+      {{- end }}
+    </li>
+    {{- end }}
+    <li class="mr2">
+      <a href="{{ if $pag.HasNext }}{{ $pag.Next.URL }}{{ else }}#{{ end }}" class="link dim ba br2 b--black-10 pa2 f6{{ if not $pag.HasNext }} o-30{{ end }}" aria-label="Next">
+        »
+      </a>
+    </li>
+    {{- with $pag.Last }}
+    <li>
+      <a href="{{ .URL }}" class="link dim ba br2 b--black-10 pa2 f6{{ if not $.Paginator.HasNext }} o-30{{ end }}" aria-label="Last">
+        »»
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</nav>
+{{- end }}

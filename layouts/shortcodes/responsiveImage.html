@@ -1,0 +1,31 @@
+{{/*
+  Usage:
+  - Static path: {{< responsiveImage src="/images/client/orzmc_macOS.png" alt="OrzMC" >}}
+  - Page bundle resource: {{< responsiveImage src="orzmc_macOS.png" alt="OrzMC" >}}
+*/}}
+{{ $src := .Get "src" }}
+{{ $alt := .Get "alt" | compare.Default "" }}
+{{ $sizes := .Get "sizes" | compare.Default "(max-width: 768px) 100vw, 1200px" }}
+{{ $title := .Get "title" | compare.Default "" }}
+{{ $class := .Get "class" | compare.Default "mw-100" }}
+
+{{ $res := .Page.Resources.GetMatch $src }}
+{{ if $res }}
+  {{ $widths := collections.Slice 480 800 1200 1600 }}
+  {{ $srcsetJ := collections.Slice }}
+  {{ $srcsetW := collections.Slice }}
+  {{ range $w := $widths }}
+    {{ $j := $res | images.Resize (printf "%dx" $w) }}
+    {{ $wimg := $res | images.Resize (printf "%dx webp" $w) }}
+    {{ $srcsetJ = $srcsetJ | collections.Append (printf "%s %dw" $j.RelPermalink $w) }}
+    {{ $srcsetW = $srcsetW | collections.Append (printf "%s %dw" $wimg.RelPermalink $w) }}
+  {{ end }}
+  {{ $fallback := ($res | images.Resize "800x") }}
+  <picture>
+    <source type="image/webp" srcset="{{ collections.Delimit $srcsetW ", " }}" sizes="{{ $sizes }}" />
+    <source srcset="{{ collections.Delimit $srcsetJ ", " }}" sizes="{{ $sizes }}" />
+    <img src="{{ $fallback.RelPermalink }}" alt="{{ $alt }}" {{ if $title }}title="{{ $title }}"{{ end }} loading="lazy" decoding="async" class="{{ $class }}" referrerpolicy="no-referrer" />
+  </picture>
+{{ else }}
+  <img src="{{ $src }}" alt="{{ $alt }}" {{ if $title }}title="{{ $title }}"{{ end }} loading="lazy" decoding="async" class="{{ $class }}" sizes="{{ $sizes }}" />
+{{ end }}
