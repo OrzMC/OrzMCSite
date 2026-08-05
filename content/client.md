@@ -22,8 +22,8 @@ toc: true
 ## 自研 macOS 启动器
 
 使用 Swift & SwiftUI 编写的 macOS 平台启动器:
-[代码仓库](https://github.com//OrzMCApp) -
-[版本下载列表](https://github.com//OrzMCApp/releases)
+[代码仓库](https://github.com/OrzMC/OrzMCApp) -
+[版本下载列表](https://github.com/OrzMC/OrzMCApp/releases)
 
 ![OrzMC_MacOS](/images/client/orzmc_macOS.png)
 
@@ -35,7 +35,7 @@ toc: true
 
 ## Python 命令行启动器
 
-Mac/Linux系统可以使用：[代码仓库](https://github.com//OrzPythonMC) - [PyPI发布](https://pypi.org/project/OrzMC/)
+Mac/Linux系统可以使用：[代码仓库](https://github.com/OrzMC/OrzPythonMC) - [PyPI发布](https://pypi.org/project/OrzMC/)
 
 ![OrzMC_CLI_PY](/images/client/orzmc_cli_py.png)
 
