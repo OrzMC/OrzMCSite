@@ -94,7 +94,7 @@ show_address = false
 # api = "https://api.mcstatus.io/v2/status/java"   # 可选，覆盖默认状态 API
 
 [[server_status.servers]]
-name = "🇨🇳 国内服"
+name = "国内服 🇨🇳"
 host = "mc.fantuantim.xyz"
 port = 25565
 # 基岩版与 Java 版互通、同主机不同端口：配了 bedrock_port 后卡片才显示「基岩版」地址胶囊
@@ -107,7 +107,7 @@ links = [
 ]
 
 [[server_status.servers]]
-name = "🏖️ 海外服"
+name = "海外服 🏖️"
 host = "paper.jokerhub.cn"
 port = 25565
 # 基岩版与 Java 版互通、同主机不同端口
