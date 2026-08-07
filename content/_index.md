@@ -8,26 +8,9 @@ description: "一个人是冒险，一群人是传奇！"
 featured_image: "/images/bg_qq_sponsor_v3.png"
 ---
 
-
 ## [Minecraft](https://www.minecraft.net/download) - [PaperMC](https://papermc.io/downloads/paper) - [Java](https://www.oracle.com/java/technologies/downloads/)
 
-<!-- ```
-当前服务器版本为: 👉 1.21.11
-
-🖥️ Java客户端联机
-国内服地址：mc.jokerhub.cn
-海外服地址：paper.jokerhub.cn
-
-📱 基岩客户端联机
-国内服地址：mc.jokerhub.cn:19132
-海外服地址：paper.jokerhub.cn:39742
-```
--->
---- 
-
 {{< server-status >}}
-
---- 
 
 🔊 **进服需知:** 服务器经历过多次破坏，现采用 **强制白名单**。
 需要先 **加入玩家群**，向管理员发起 **白名单添加请求**，并提供自己的 **玩家用户名**。

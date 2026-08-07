@@ -55,9 +55,8 @@
     document.body.removeChild(ta);
   }
 
-  /* 复制服务器地址（明文 host[:port]）；成功后复制按钮切换为绿色对号 1.6s，纯图标无文字 */
-  function copyAddress(server, copyBtn) {
-    var text = server.host + (server.port !== 25565 ? ':' + server.port : '');
+  /* 复制文本（明文地址）；成功后复制按钮切换为绿色对号 1.6s，纯图标无文字 */
+  function copyText(text, copyBtn) {
     function done() {
       copyBtn.innerHTML = CHECK_ICON;
       copyBtn.classList.add('is-copied');
@@ -178,6 +177,58 @@
     return '更新于 ' + hh + ':' + mm + ':' + ss;
   }
 
+  /* 统一地址胶囊：标签 + 密文/明文切换（睁眼/闭眼）+ 图标复制按钮，合成一个整体。
+     默认掩码显示；睁眼按钮切换明文，复制按钮纯图标，复制完成绿色对号。
+     每枚胶囊自带独立的明/密文状态——Java 版与基岩版分开显示、互不影响。 */
+  function buildAddrPill(label, addressText, initiallyRevealed) {
+    var addr = document.createElement('div');
+    addr.className = 'server-status__addr';
+
+    var lbl = document.createElement('span');
+    lbl.className = 'server-status__addr-label';
+    lbl.textContent = label;
+    addr.appendChild(lbl);
+
+    var text = document.createElement('span');
+    text.className = 'server-status__addr-text';
+    text.textContent = initiallyRevealed ? addressText : MASK;
+    addr.appendChild(text);
+
+    var divider = document.createElement('span');
+    divider.className = 'server-status__addr-divider';
+    divider.setAttribute('aria-hidden', 'true');
+    addr.appendChild(divider);
+
+    var revealed = !!initiallyRevealed;
+    var eye = document.createElement('button');
+    eye.type = 'button';
+    eye.className = 'server-status__addr-eye';
+    eye.title = revealed ? '隐藏服务器地址' : '显示服务器地址';
+    eye.setAttribute('aria-label', eye.title);
+    eye.setAttribute('aria-pressed', revealed ? 'true' : 'false');
+    eye.innerHTML = revealed ? EYE_OFF_ICON : EYE_ICON;
+    eye.addEventListener('click', function () {
+      revealed = !revealed;
+      text.textContent = revealed ? addressText : MASK;
+      eye.innerHTML = revealed ? EYE_OFF_ICON : EYE_ICON;
+      eye.title = revealed ? '隐藏服务器地址' : '显示服务器地址';
+      eye.setAttribute('aria-label', eye.title);
+      eye.setAttribute('aria-pressed', revealed ? 'true' : 'false');
+    });
+    addr.appendChild(eye);
+
+    var copy = document.createElement('button');
+    copy.type = 'button';
+    copy.className = 'server-status__addr-copy';
+    copy.title = '复制服务器地址';
+    copy.setAttribute('aria-label', copy.title);
+    copy.innerHTML = COPY_ICON;
+    copy.addEventListener('click', function () { copyText(addressText, copy); });
+    addr.appendChild(copy);
+
+    return addr;
+  }
+
   function renderCard(server) {
     var res = results.get(server.key) || { status: 'loading', data: null };
     var card = document.createElement('article');
@@ -289,55 +340,15 @@
     var actions = document.createElement('div');
     actions.className = 'server-status__actions';
 
-    /* 统一地址显示控件：标签「服务器地址」+ 密文/明文切换（睁眼/闭眼）+ 图标复制按钮。
-       默认掩码显示；睁眼按钮切换明文，复制按钮纯图标，复制完成绿色对号。 */
-    var addressText = server.host + (server.port !== 25565 ? ':' + server.port : '');
-    var addr = document.createElement('div');
-    addr.className = 'server-status__addr';
+    /* 地址胶囊：Java 版必显，基岩版仅在配置了 bedrock（host 或 port）时显示。
+       两枚胶囊标签明确区分版本，各自独立的明/密文切换与复制按钮。
+       两版地址默认都带端口号（Java 25565 / 基岩 19132）——连接需知端口，且整行展示不截断。 */
+    var javaAddress = server.host + ':' + server.port;
+    actions.appendChild(buildAddrPill(server.bedrockHost ? 'Java 版：' : '服务器地址：', javaAddress, server.show));
 
-    var label = document.createElement('span');
-    label.className = 'server-status__addr-label';
-    label.textContent = '服务器地址：';
-    addr.appendChild(label);
-
-    var text = document.createElement('span');
-    text.className = 'server-status__addr-text';
-    text.textContent = server.show ? addressText : MASK;
-    addr.appendChild(text);
-
-    var divider = document.createElement('span');
-    divider.className = 'server-status__addr-divider';
-    divider.setAttribute('aria-hidden', 'true');
-    addr.appendChild(divider);
-
-    var revealed = !!server.show;
-    var eye = document.createElement('button');
-    eye.type = 'button';
-    eye.className = 'server-status__addr-eye';
-    eye.title = revealed ? '隐藏服务器地址' : '显示服务器地址';
-    eye.setAttribute('aria-label', eye.title);
-    eye.setAttribute('aria-pressed', revealed ? 'true' : 'false');
-    eye.innerHTML = revealed ? EYE_OFF_ICON : EYE_ICON;
-    eye.addEventListener('click', function () {
-      revealed = !revealed;
-      text.textContent = revealed ? addressText : MASK;
-      eye.innerHTML = revealed ? EYE_OFF_ICON : EYE_ICON;
-      eye.title = revealed ? '隐藏服务器地址' : '显示服务器地址';
-      eye.setAttribute('aria-label', eye.title);
-      eye.setAttribute('aria-pressed', revealed ? 'true' : 'false');
-    });
-    addr.appendChild(eye);
-
-    var copy = document.createElement('button');
-    copy.type = 'button';
-    copy.className = 'server-status__addr-copy';
-    copy.title = '复制服务器地址';
-    copy.setAttribute('aria-label', copy.title);
-    copy.innerHTML = COPY_ICON;
-    copy.addEventListener('click', function () { copyAddress(server, copy); });
-    addr.appendChild(copy);
-
-    actions.appendChild(addr);
+    if (server.bedrockHost) {
+      actions.appendChild(buildAddrPill('基岩版：', server.bedrockHost + ':' + server.bedrockPort, server.show));
+    }
 
     /* 社区链接（QQ 群 / QQ 频道 / Discord，公开信息无需加密） */
     if (server.links && server.links.length) {
@@ -417,14 +428,22 @@
     /* refresh_interval=0 表示关闭自动刷新（仅手动） */
     refreshInterval = (cfg.refresh_interval > 0) ? cfg.refresh_interval : 0;
     api = String(cfg.api || 'https://api.mcstatus.io/v2/status/java').replace(/\/+$/, '');
-    servers = (cfg.servers || []).map(function (s) {
+    servers = (cfg.servers || []).map(function (s, i) {
       var host = decodeHost(s.host || '');
       var port = s.port || 25565;
+      /* 基岩版地址：可选。与 Java 版互通、同主机不同端口。
+         仅配置了 bedrock_host 或 bedrock_port 才渲染「基岩版」胶囊；
+         host 缺省时沿用 Java 地址（同主机），端口缺省 19132（Geyser）。 */
+      var hasBedrock = s.bedrock_host || s.bedrock_port;
+      var bedrockHost = hasBedrock ? decodeHost(s.bedrock_host || host) : '';
       return {
-        key: host + ':' + port,
+        /* 内部索引用作 key：不把明文地址写进 DOM（data-server-key） */
+        key: String(i),
         name: s.name || host,
         host: host,
         port: port,
+        bedrockHost: bedrockHost,
+        bedrockPort: hasBedrock ? (s.bedrock_port || 19132) : 0,
         note: s.note || '',
         links: s.links || [],
         show: (typeof s.show_address === 'boolean') ? s.show_address : !!cfg.show_address

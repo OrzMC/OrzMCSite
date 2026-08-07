@@ -190,11 +190,12 @@ html[data-theme="dark"] .server-status {
 
 /* 用户操作区：地址复制胶囊 + 社区链接。
    融入卡片主体——无独立底带/分隔线，随卡片背景与内边距排版，
-   控件自身（胶囊边框 + 图标按钮）即足以标示可操作。亮/暗主题随卡片 token。 */
+   控件自身（胶囊边框 + 图标按钮）即足以标示可操作。亮/暗主题随卡片 token。
+   Java 版与基岩版地址各独占一行、社区链接另起一行——长地址整行展示不截断。 */
 .server-status__actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 0.5rem;
   margin-top: 0.15rem;
 }
@@ -203,6 +204,7 @@ html[data-theme="dark"] .server-status {
 .server-status__addr {
   display: inline-flex;
   align-items: center;
+  width: 100%; /* 独占一行：整行展示，长地址不截断 */
   border: 1px solid var(--ss-border);
   border-radius: 999px;
   padding: 0.12rem 0.3rem 0.12rem 0.7rem;
@@ -221,6 +223,8 @@ html[data-theme="dark"] .server-status {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   letter-spacing: 0.08em;
   user-select: none;
+  min-width: 0;            /* 允许收缩，配合 overflow-wrap 换行而非溢出 */
+  overflow-wrap: anywhere; /* 超长地址在胶囊内换行，不截断 */
   margin: 0 0.15rem;
 }
 .server-status__addr-divider {
@@ -228,7 +232,7 @@ html[data-theme="dark"] .server-status {
   height: 1rem;
   align-self: center;
   background: var(--ss-border);
-  margin: 0 0.2rem;
+  margin: 0 0.2rem 0 auto; /* 右侧操作簇（分隔线+睁眼+复制）钉到行尾 */
 }
 .server-status__addr-eye,
 .server-status__addr-copy {
