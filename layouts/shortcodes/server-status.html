@@ -1,0 +1,29 @@
+{{- /* 服务器实时状态卡片组件短代码。
+  用法：{{< server-status >}} 或带参数（均可选，未指定时取 params.toml 全局配置）：
+    refresh="30"         自动刷新间隔（秒）；0 = 关闭自动刷新，仅手动
+    columns="2"          卡片列数：1 或 2（默认 1）
+    show_address="true"  是否显示服务器地址（默认取全局 show_address）
+    servers="国内服,海外服" 仅显示这些服务器（按名称或主机匹配，默认全部）
+  示例：
+    {{< server-status refresh="0" >}}              只手动刷新
+    {{< server-status columns="2" refresh="30" >}}  双列 + 30 秒自动刷新
+ */ -}}
+{{- $ov := dict -}}
+{{- if .IsNamedParams -}}
+  {{- with .Get "refresh" }}{{ $ov = merge $ov (dict "refresh_interval" (int .)) }}{{ end -}}
+  {{- with .Get "columns" }}{{ $ov = merge $ov (dict "columns" (int .)) }}{{ end -}}
+  {{- with .Get "show_address" }}{{ $ov = merge $ov (dict "show_address" (eq . "true")) }}{{ end -}}
+  {{- with .Get "servers" }}
+    {{- $want := collections.Slice -}}
+    {{- range (split . ",") }}{{ $want = $want | append (trim . " ") }}{{ end -}}
+    {{- $filtered := collections.Slice -}}
+    {{- range site.Params.server_status.servers -}}
+      {{- $s := . -}}
+      {{- if or (in $want (string $s.name)) (in $want (string $s.host)) -}}
+        {{- $filtered = $filtered | append $s -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $ov = merge $ov (dict "servers" $filtered) -}}
+  {{- end -}}
+{{- end -}}
+{{- partials.Include "server-status.html" (dict "overrides" $ov) -}}

@@ -1,0 +1,62 @@
+{{- /* 服务器实时状态卡片组件（渲染）。
+       由 {{< server-status >}} 短代码调用；overrides 为 shortcode 参数覆盖项（可选）。
+       无统一标题头——每张卡片自带刷新按钮、更新时间、加密地址+复制按钮、社区链接。
+       可嵌入任意 markdown。 */ -}}
+{{- $raw := site.Params.server_status -}}
+{{- if not $raw -}}{{ return }}{{- end -}}
+{{- $ov := dict -}}
+{{- /* 兼容 shortcode 传入的 (dict "overrides" …)；误以 page 上下文调用时取空覆盖 */ -}}
+{{- if reflect.IsMap . -}}{{- $ov = index . "overrides" | default dict -}}{{- end -}}
+{{- $cfg := dict
+    "refresh_interval" ($raw.refresh_interval | compare.Default 60)
+    "api"              ($raw.api | compare.Default "https://api.mcstatus.io/v2/status/java")
+    "show_address"     ($raw.show_address | compare.Default false)
+    "servers"          ($raw.servers | default collections.Slice)
+-}}
+{{- $cfg = merge $cfg $ov -}}
+
+{{- /* 地址防爬虫：明文主机只存在于本模板与 params.toml，永不进入 HTML。
+       构建产物里的 host 一律是替换表生成的密文（明文字母/数字/.- 全部映射为
+       大写字母+符号，与明文集不相交，单遍替换无级联）。浏览器端按同一表解码。 */ -}}
+{{- $plain  := slice "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z" "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "." "-" -}}
+{{- $cipher := slice "Q" "W" "E" "R" "T" "Y" "U" "I" "O" "P" "A" "S" "D" "F" "G" "H" "J" "K" "L" "Z" "X" "C" "V" "B" "N" "M" "@" "#" "$" "%" "^" "&" "*" "_" "+" "=" "{" "}" -}}
+{{- $servers := collections.Slice -}}
+{{- range $cfg.servers -}}
+  {{- $s := . -}}
+  {{- /* 先统一小写再编码：替换表明文只含小写+数字+.-，大写/`_` 等字符
+         不被替换会原样残留，解码时又会被密文表误映射导致地址损坏
+         （DNS 主机名大小写不敏感，小写化不影响实际查询） */ -}}
+  {{- $enc := $s.host | strings.ToLower -}}
+  {{- range $i, $p := $plain -}}
+    {{- $enc = strings.Replace $enc $p (index $cipher $i) -1 -}}
+  {{- end -}}
+  {{- $sd := dict
+      "name"  ($s.name | default $s.host)
+      "host"  $enc
+      "port"  ($s.port | default 25565)
+      "note"  ($s.note | default "")
+      "links" ($s.links | default collections.Slice)
+  -}}
+  {{- /* 仅在 params 显式设置了 show_address 时透传（否则 JS 回退全局默认值） */ -}}
+  {{- if isset $s "show_address" -}}{{- $sd = merge $sd (dict "show_address" $s.show_address) -}}{{- end -}}
+  {{- $servers = $servers | append $sd -}}
+{{- end -}}
+{{- $cfg = merge $cfg (dict "servers" $servers) -}}
+
+{{- $cols := $cfg.columns | compare.Default 1 | int -}}
+<section id="server-status" class="server-status{{ if eq $cols 2 }} server-status--cols-2{{ end }} w-100 measure-wide center pa3" aria-label="服务器实时状态">
+  <div class="server-status__grid" data-server-status-grid>
+    {{/* 卡片由 JS 渲染；JS 关闭时显示占位提示 */}}
+    <p class="server-status__loading f6">正在查询服务器状态…</p>
+  </div>
+
+  <noscript><p class="server-status__noscript f6">请启用 JavaScript 以查看服务器实时状态。</p></noscript>
+
+  {{- /* 配置 JSON：safeJS 防止 <script> 上下文的 JS 转义破坏 JSON；
+       < 转义为 < 防止配置中出现 </script> 提前闭合标签。
+       注意 strings.Replace 显式传参——管道会把值作为最后一个参数导致参数顺序错乱。 */ -}}
+  <script type="application/json" id="server-status-config">{{ strings.Replace (jsonify $cfg) "<" "\\u003c" | safeJS }}</script>
+
+  {{- /* 组件自包含：JS 随组件一并加载（defer），无需额外 hook */ -}}
+  <script src="{{ "js/server-status.js" | relURL }}" defer></script>
+</section>
