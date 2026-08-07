@@ -52,10 +52,10 @@ networks = [
 username = "/OrzMC"
 # X
 [ananke.social.x-twitter]
-username = "OrzGeeker"
+username = "OrzMC666"
 # Youtube
 [ananke.social.youtube]
-username = "OrzGeeker5382"
+username = "wangzhizhou"
 
 # 自定义社交媒体：https://github.com/theNewDynamic/gohugo-theme-ananke/wiki/Configure-Social-Media-Networks#setup-individual-new-networks
 # BiliBili
