@@ -1,47 +1,140 @@
-
-# !/usr/bin/env bash
+#!/usr/bin/env bash
 # -*- coding: utf-8 -*-
+#
+# deploy — 构建站点并发布到 GitHub Pages (gh-pages 分支)
+#
+# 运行 ./deploy -h 查看完整的「参数/环境变量对照表」。
+set -euo pipefail
+IFS=$'\n\t'
 
-if [ "`git status -s`" ]
-then
-    echo "The working directory is dirty. Please commit any pending changes."
-    exit 1;
+# 允许脚本从任意目录运行（-P 解析符号链接，与 git 输出的物理路径一致）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+cd "${SCRIPT_DIR}"
+
+if [ -t 1 ]; then
+  C_RED=$'\033[31m'
+  C_GREEN=$'\033[32m'
+  C_RESET=$'\033[0m'
+else
+  C_RED=''
+  C_GREEN=''
+  C_RESET=''
 fi
 
-SITE_ROOT="."
-SITE_PUB_DIR="${SITE_ROOT}/public"
-SITE_CONTENT_DIR="${SITE_ROOT}/content"
-SITE_THEME_DIR="${SITE_ROOT}/themes"
-SITE_DOMAIN="orzmc.jokerhub.cn"
+log() { printf '%s[deploy]%s %s\n' "${C_GREEN}" "${C_RESET}" "$*"; }
+die() { printf '%s[deploy]%s %s\n' "${C_RED}" "${C_RESET}" "$*" >&2; exit 1; }
 
-echo "Deleting old publication"
-rm -rf ${SITE_PUB_DIR}
-mkdir ${SITE_PUB_DIR}
+usage() {
+  local code="${1:-0}"
+  cat <<'EOF'
+用法: ./deploy [-n] [-h]
+
+构建站点并发布到 GitHub Pages (gh-pages 分支)。
+
+选项:
+  参数       说明
+  -n         仅完成构建与对比，不上传 (dry-run)
+  -h         显示本帮助
+
+环境变量:
+  变量            默认值              说明
+  SITE_DOMAIN     orzmc.jokerhub.cn   写入 public/CNAME 的站点域名
+
+说明:
+  - 要求工作区干净（含未跟踪文件），否则中止
+  - 构建产物写入临时 worktree public/，发布后自动清理
+  - 首次部署（远端无 gh-pages）时自动从当前提交创建
+EOF
+  exit "${code}"
+}
+
+DRY_RUN=false
+while getopts "nh" opt; do
+  case "$opt" in
+    n) DRY_RUN=true ;;
+    h) usage 0 ;;
+    *) usage 1 ;;
+  esac
+done
+shift $((OPTIND - 1))
+[ $# -eq 0 ] || usage 1
+
+SITE_DOMAIN="${SITE_DOMAIN:-orzmc.jokerhub.cn}"
+SITE_PUB_DIR="${SCRIPT_DIR}/public"
+
+# 依赖检查
+command -v hugo >/dev/null 2>&1 || die "未找到 hugo，请先安装: brew install hugo"
+command -v git >/dev/null 2>&1 || die "未找到 git"
+git rev-parse --git-dir >/dev/null 2>&1 || die "当前目录不是 git 仓库"
+
+# 主题子模块未初始化时自动同步，避免误判工作区不干净
+if [ ! -e "${SCRIPT_DIR}/themes/ananke" ] || [ -z "$(ls -A "${SCRIPT_DIR}/themes/ananke" 2>/dev/null || true)" ]; then
+  log "主题子模块未初始化，正在同步..."
+  git submodule sync --recursive >/dev/null 2>&1 || true
+  git submodule update --init --recursive || die "初始化主题子模块失败"
+fi
+
+# 发布前工作区必须干净（包含未跟踪文件与子模块改动）
+if [ -n "$(git status --porcelain)" ]; then
+  die "工作区有未提交的改动，请先提交。若主题子模块未同步，请运行: git submodule update --init --recursive"
+fi
+
+# 远端 gh-pages 分支：以远端为准，没有则从当前提交新建
+git fetch origin gh-pages 2>/dev/null || log "远端尚无 gh-pages 分支，将从当前提交创建"
+if git rev-parse --verify origin/gh-pages >/dev/null 2>&1; then
+  BASE_REF="origin/gh-pages"
+elif git rev-parse --verify gh-pages >/dev/null 2>&1; then
+  BASE_REF="gh-pages"
+else
+  BASE_REF="HEAD"
+fi
+
+CURRENT_BRANCH="$(git symbolic-ref --short HEAD 2>/dev/null || true)"
+if [ "${CURRENT_BRANCH}" = "gh-pages" ]; then
+  die "当前分支是 gh-pages，请先切回 main 再执行发布"
+fi
+
+# 清理旧的 public worktree / 目录
+cleanup_worktree() {
+  if git worktree list --porcelain 2>/dev/null | grep -F -q "worktree ${SITE_PUB_DIR}"; then
+    git worktree remove --force "${SITE_PUB_DIR}" 2>/dev/null || true
+  fi
+}
+cleanup_worktree
 git worktree prune
-rm -rf .git/worktrees/${SITE_PUB_DIR}
-
-echo "Checking out gh-pages branch into public"
-git fetch
-git worktree add -B gh-pages ${SITE_PUB_DIR} origin/gh-pages
-
-echo "Removing existing files"
-rm -rf ${SITE_PUB_DIR}/*
-
-echo "${SITE_DOMAIN}" > ${SITE_PUB_DIR}/CNAME
-
-echo "Generating site"
-hugo -s "${SITE_ROOT}" -e production --minify --gc
-
-echo "Updating gh-pages branch"
-cd ${SITE_PUB_DIR}
-git add --all
-if git diff --cached --quiet; then
-    echo "No changes to publish"
-    cd -
-    exit 0
+if [ -e "${SITE_PUB_DIR}" ]; then
+  rm -rf "${SITE_PUB_DIR}"
 fi
-git commit -m "Publishing to gh-pages (publish.sh)"
 
-echo "Pushing to github"
-cd -
-git push origin gh-pages
+# 无论成功失败，退出时都清理临时 worktree，保持仓库干净
+trap cleanup_worktree EXIT
+
+# 检出 gh-pages 到 public
+log "检出 gh-pages 分支到 public/ (base: ${BASE_REF})"
+git worktree add --force -B gh-pages "${SITE_PUB_DIR}" "${BASE_REF}"
+
+# 清空工作区内容（保留 .git 指针），由 hugo 重新生成
+find "${SITE_PUB_DIR}" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+
+# 构建
+log "开始构建站点 (production) ..."
+hugo -s "${SCRIPT_DIR}" -e production --minify --gc
+
+if [ ! -f "${SITE_PUB_DIR}/index.html" ]; then
+  die "构建产物缺少 index.html，中止发布，请检查站点配置"
+fi
+echo "${SITE_DOMAIN}" > "${SITE_PUB_DIR}/CNAME"
+
+# 提交并推送
+git -C "${SITE_PUB_DIR}" add --all
+if git -C "${SITE_PUB_DIR}" diff --cached --quiet; then
+  log "没有需要发布的内容，跳过。"
+elif [ "${DRY_RUN}" = true ]; then
+  log "[dry-run] 以下变更将被提交并推送到 gh-pages:"
+  git -C "${SITE_PUB_DIR}" diff --cached --stat
+else
+  git -C "${SITE_PUB_DIR}" commit -m "Publishing to gh-pages $(date +'%Y-%m-%d %H:%M:%S %Z')"
+  log "推送到远端 gh-pages ..."
+  git -C "${SITE_PUB_DIR}" push origin gh-pages
+  log "发布完成 ✅"
+fi
