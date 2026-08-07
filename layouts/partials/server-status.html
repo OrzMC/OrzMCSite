@@ -37,6 +37,17 @@
       "note"  ($s.note | default "")
       "links" ($s.links | default collections.Slice)
   -}}
+  {{- /* 基岩版地址（可选）：与 Java 版互通、同主机不同端口（Geyser）。
+         与 Java 地址同机制加密；仅当配置了 bedrock_host 或 bedrock_port 时输出，
+         JS 据此渲染「基岩版」地址胶囊；只配 bedrock_port 时主机沿用 Java 地址。 */ -}}
+  {{- if or $s.bedrock_host $s.bedrock_port -}}
+    {{- $bhost := $s.bedrock_host | default $s.host -}}
+    {{- $ben := $bhost | strings.ToLower -}}
+    {{- range $i, $p := $plain -}}
+      {{- $ben = strings.Replace $ben $p (index $cipher $i) -1 -}}
+    {{- end -}}
+    {{- $sd = merge $sd (dict "bedrock_host" $ben "bedrock_port" ($s.bedrock_port | compare.Default 19132)) -}}
+  {{- end -}}
   {{- /* 仅在 params 显式设置了 show_address 时透传（否则 JS 回退全局默认值） */ -}}
   {{- if isset $s "show_address" -}}{{- $sd = merge $sd (dict "show_address" $s.show_address) -}}{{- end -}}
   {{- $servers = $servers | append $sd -}}
