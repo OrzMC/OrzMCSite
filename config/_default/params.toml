@@ -87,7 +87,7 @@ verbosity = "error"
 # 说明：地址会写入页面配置 JSON 供浏览器查询状态 API；
 # show_address 控制是否在卡片上显示地址（默认隐藏防爬虫，可被单台服务器覆盖）。
 [server_status]
-refresh_interval = 60        # 自动刷新间隔（秒）
+refresh_interval = 10        # 自动刷新间隔（秒）
 # show_address=false（默认）：卡片显示加密地址 + 复制按钮（防爬虫，构建产物 0 明文地址）；
 # show_address=true：显示明文地址（信任页面用，可被单台服务器覆盖）
 show_address = false
