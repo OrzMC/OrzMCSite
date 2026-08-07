@@ -1,32 +1,147 @@
-# !/usr/bin/env bash
+#!/usr/bin/env bash
 # -*- coding: utf-8 -*-
+#
+# rsync_publish — 构建站点并通过 rsync 发布到本地/远程 Nginx
+#
+# 运行 ./rsync_publish -h 查看完整的「参数/环境变量对照表」。
+set -euo pipefail
+IFS=$'\n\t'
 
-SITE_ROOT="."
-hugo -s "${SITE_ROOT}" -e production --minify --gc
+# 允许脚本从任意目录运行（-P 解析符号链接）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+cd "${SCRIPT_DIR}"
 
-SITE_PUB_DIR="${SITE_ROOT}/public/"
+if [ -t 1 ]; then
+  C_RED=$'\033[31m'
+  C_GREEN=$'\033[32m'
+  C_RESET=$'\033[0m'
+else
+  C_RED=''
+  C_GREEN=''
+  C_RESET=''
+fi
 
-while getopts ":lr" opt; do
-    case $opt in
-        l)
-            # For MacOS Nginx Default Site Directory
-            NGINX_DEFAULT_SITE_DIR=/var/www/
-            HOMEBREW_PREFIX_DIR=/opt/homebrew
-            SITE_SERVER_DIR="${HOMEBREW_PREFIX_DIR}${NGINX_DEFAULT_SITE_DIR}"
-            rsync -avz --delete $SITE_PUB_DIR $SITE_SERVER_DIR && \
-            echo "发布到本地服务器成功: ${SITE_SERVER_DIR}"
-            ;;
-        r)
-            # For Remote Nginx Default Site Directory
-            NGINX_DEFAULT_SITE_DIR=/var/www/html
-            SITE_SERVER_DIR="ubuntu@jokerhub.cn:${NGINX_DEFAULT_SITE_DIR}"
-            rsync -avz --delete $SITE_PUB_DIR $SITE_SERVER_DIR && \
-            echo "发布到远程服务器成功: ${SITE_SERVER_DIR}"
-            ;;
-        *)
-            echo "Usage: $0 [-l (local)] [-r (remote)]"
-            exit 1
-            ;;
-    esac
+log() { printf '%s[rsync_publish]%s %s\n' "${C_GREEN}" "${C_RESET}" "$*"; }
+die() { printf '%s[rsync_publish]%s %s\n' "${C_RED}" "${C_RESET}" "$*" >&2; exit 1; }
+
+usage() {
+  local code="${1:-0}"
+  cat <<'EOF'
+用法: ./rsync_publish [-l] [-r] [-t <目标>] [-n] [-h]
+
+构建站点并用 rsync 发布到任意目标。
+
+选项:
+  参数            说明
+  -l              发布到本地服务器 (Homebrew 前缀 + LOCAL_WEB_ROOT)
+  -r              发布到远程服务器 (REMOTE_HOST:REMOTE_WEB_ROOT)
+  -t <目标>       指定任意 rsync 目标，可多次使用
+  -n              仅预览，不实际同步 (dry-run)
+  -h              显示本帮助
+
+环境变量:
+  变量            默认值                说明
+  LOCAL_WEB_ROOT  /var/www              本地站点目录（相对 Homebrew 前缀；绝对路径则直接用）
+  REMOTE_HOST     ubuntu@jokerhub.cn    远程主机
+  REMOTE_WEB_ROOT /var/www/html         远程站点目录
+  RSYNC_OPTS      -rlptzv               rsync 选项（--delete 恒开启）
+
+说明:
+  - 可同时指定 -l、-r 和多个 -t，全部依次同步
+  - 至少需要一个目标，否则报错退出
+
+-t 目标示例:
+  ./rsync_publish -t user@host:/var/www/html    # 任意远程主机
+  ./rsync_publish -t /srv/site                  # 本地绝对路径
+EOF
+  exit "${code}"
+}
+
+DO_LOCAL=false
+DO_REMOTE=false
+DO_DRYRUN=false
+CUSTOM_TARGETS=()   # -t 目标列表（数组，避免空格/IFS 歧义）
+
+while getopts "lrnt:h" opt; do
+  case "$opt" in
+    l) DO_LOCAL=true ;;
+    r) DO_REMOTE=true ;;
+    n) DO_DRYRUN=true ;;
+    t) CUSTOM_TARGETS+=("$OPTARG") ;;
+    h) usage 0 ;;
+    *) usage 1 ;;
+  esac
 done
+shift $((OPTIND - 1))
+[ $# -eq 0 ] || usage 1
 
+# 至少需要一个目标（-l / -r / -t 任一），否则直接报错退出
+if [ "${DO_LOCAL}" = false ] && [ "${DO_REMOTE}" = false ] && [ "${#CUSTOM_TARGETS[@]}" -eq 0 ]; then
+  usage 1
+fi
+
+command -v hugo >/dev/null 2>&1 || die "未找到 hugo，请先安装: brew install hugo"
+command -v rsync >/dev/null 2>&1 || die "未找到 rsync"
+
+SITE_PUB_DIR="${SCRIPT_DIR}/public"
+LOCAL_WEB_ROOT="${LOCAL_WEB_ROOT:-/var/www}"
+REMOTE_HOST="${REMOTE_HOST:-ubuntu@jokerhub.cn}"
+REMOTE_WEB_ROOT="${REMOTE_WEB_ROOT:-/var/www/html}"
+RSYNC_OPTS="${RSYNC_OPTS:--rlptzv}"
+
+# 构建（多个目标只需构建一次）
+log "开始构建站点 (production) ..."
+hugo -s "${SCRIPT_DIR}" -e production --minify --gc
+[ -f "${SITE_PUB_DIR}/index.html" ] || die "构建产物缺少 index.html，中止发布"
+
+run_rsync() {
+  local dest="$1"
+  local dry_flag=""
+  if [ "${DO_DRYRUN}" = true ]; then
+    dry_flag="--dry-run"
+  fi
+  log "同步到: ${dest}"
+  # 源目录带尾斜杠 = 同步目录内容；--delete 保证与构建产物完全一致
+  # shellcheck disable=SC2086
+  if rsync ${RSYNC_OPTS} --delete ${dry_flag} "${SITE_PUB_DIR}/" "${dest}/"; then
+    log "成功: ${dest}"
+  else
+    die "rsync 失败: ${dest}"
+  fi
+}
+
+if [ "${DO_LOCAL}" = true ]; then
+  # 检测 Homebrew 前缀 (Apple Silicon: /opt/homebrew, Intel: /usr/local)
+  local_prefix=""
+  if command -v brew >/dev/null 2>&1; then
+    local_prefix="$(brew --prefix 2>/dev/null || true)"
+  fi
+  if [ -z "${local_prefix}" ]; then
+    if [ -d "/opt/homebrew/var/www" ]; then
+      local_prefix="/opt/homebrew"
+    elif [ -d "/usr/local/var/www" ]; then
+      local_prefix="/usr/local"
+    fi
+  fi
+  [ -n "${local_prefix}" ] || die "无法确定 Homebrew 前缀，请将 LOCAL_WEB_ROOT 设为完整绝对路径"
+
+  if [ "${LOCAL_WEB_ROOT#/}" != "${LOCAL_WEB_ROOT}" ]; then
+    dest_local="${LOCAL_WEB_ROOT}"          # 绝对路径，直接用
+  else
+    dest_local="${local_prefix}${LOCAL_WEB_ROOT}"
+  fi
+  [ -d "${dest_local}" ] || die "本地站点目录不存在: ${dest_local}"
+  run_rsync "${dest_local}"
+fi
+
+if [ "${DO_REMOTE}" = true ]; then
+  dest_remote="${REMOTE_HOST}:${REMOTE_WEB_ROOT}"
+  run_rsync "${dest_remote}"
+fi
+
+# 自定义目标（-t 可多次指定）
+if [ "${#CUSTOM_TARGETS[@]}" -gt 0 ]; then
+  for tgt in "${CUSTOM_TARGETS[@]}"; do
+    run_rsync "${tgt}"
+  done
+fi

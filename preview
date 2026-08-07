@@ -1,7 +1,188 @@
 #!/usr/bin/env bash
-#-*- utf-8 -*-
+# -*- coding: utf-8 -*-
+#
+# preview — 本地预览 OrzMC 网站（Hugo server）
+#
+# 运行 ./preview -h 查看完整的「参数/环境变量对照表」。
+set -euo pipefail
+IFS=$'\n\t'
 
-pkill -9 hugo
-hugo -s . -D server --disableFastRender --noHTTPCache --gc --cleanDestinationDir --bind "0.0.0.0"   &
-sleep 2s
-open http://localhost:1313
+# 允许脚本从任意目录运行（-P 解析符号链接，与 git 输出的物理路径一致）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+cd "${SCRIPT_DIR}"
+
+if [ -t 1 ]; then
+  C_RED=$'\033[31m'
+  C_GREEN=$'\033[32m'
+  C_RESET=$'\033[0m'
+else
+  C_RED=''
+  C_GREEN=''
+  C_RESET=''
+fi
+
+log() { printf '%s[preview]%s %s\n' "${C_GREEN}" "${C_RESET}" "$*"; }
+die() { printf '%s[preview]%s %s\n' "${C_RED}" "${C_RESET}" "$*" >&2; exit 1; }
+
+usage() {
+  local code="${1:-0}"
+  cat <<'EOF'
+用法: ./preview [-p <端口>] [-h]
+
+本地预览网站（Hugo server）。
+
+选项:
+  参数            说明
+  -p <端口>       监听端口 (默认: 1313)
+  -h              显示本帮助
+
+环境变量:
+  变量            默认值     说明
+  HUGO_HOST       0.0.0.0    监听地址；为 0.0.0.0 时浏览器自动打开 localhost
+  HUGO_PORT       1313       监听端口（-p 优先级更高）
+  NO_OPEN         (空)        设为 1 时跳过自动打开浏览器
+
+优先级: -p 参数 > HUGO_PORT 环境变量 > 默认值
+EOF
+  exit "${code}"
+}
+
+HOST="${HUGO_HOST:-0.0.0.0}"
+PORT="${HUGO_PORT:-1313}"
+
+while getopts "p:h" opt; do
+  case "$opt" in
+    p) PORT="$OPTARG" ;;
+    h) usage 0 ;;
+    *) usage 1 ;;
+  esac
+done
+shift $((OPTIND - 1))
+[ $# -eq 0 ] || usage 1
+
+case "$PORT" in
+  *[!0-9]*) die "无效端口号: ${PORT}" ;;
+esac
+
+command -v hugo >/dev/null 2>&1 || die "未找到 hugo，请先安装: brew install hugo"
+
+# 只释放我们要用的端口，而不是 pkill 所有 hugo 进程
+kill_port_listener() {
+  local pids remaining tool=""
+  if command -v lsof >/dev/null 2>&1; then
+    pids="$(lsof -ti tcp:"${PORT}" -s tcp:listen 2>/dev/null || true)"
+    tool="lsof"
+  elif command -v fuser >/dev/null 2>&1; then
+    pids="$(fuser "${PORT}/tcp" 2>/dev/null || true)"
+    tool="fuser"
+  else
+    log "警告: 未找到 lsof/fuser，无法检测端口占用"
+    return 0
+  fi
+  [ -n "$pids" ] || return 0
+
+  log "端口 ${PORT} 被占用 (${tool})，正在结束进程: ${pids}"
+  # shellcheck disable=SC2086
+  kill ${pids} 2>/dev/null || true
+
+  remaining="${pids}"
+  for _ in {1..25}; do
+    # shellcheck disable=SC2086
+    kill -0 ${remaining} 2>/dev/null || { remaining=""; break; }
+    sleep 0.2
+  done
+  if [ -n "$remaining" ]; then
+    log "进程未在 5 秒内退出，强制结束: ${remaining}"
+    # shellcheck disable=SC2086
+    kill -9 ${remaining} 2>/dev/null || true
+  fi
+}
+
+# 构建访问地址（监听 0.0.0.0 时用 localhost 打开浏览器）
+if [ "${HOST}" = "0.0.0.0" ]; then
+  URL="http://localhost:${PORT}"
+else
+  URL="http://${HOST}:${PORT}"
+fi
+
+open_url() {
+  local url="$1"
+  case "$(uname -s)" in
+    Darwin)
+      if command -v open >/dev/null 2>&1; then
+        open "$url"
+      else
+        printf '请手动打开浏览器访问: %s\n' "$url"
+      fi
+      ;;
+    Linux)
+      if command -v xdg-open >/dev/null 2>&1; then
+        xdg-open "$url" >/dev/null 2>&1 &
+      else
+        printf '请手动打开浏览器访问: %s\n' "$url"
+      fi
+      ;;
+    *)
+      printf '请手动打开浏览器访问: %s\n' "$url"
+      ;;
+  esac
+}
+
+lan_ip() {
+  case "$(uname -s)" in
+    Darwin) ipconfig getifaddr en0 2>/dev/null || true ;;
+    Linux)  hostname -I 2>/dev/null | awk '{print $1}' ;;
+    *)      printf '' ;;
+  esac
+}
+
+kill_port_listener
+
+log "启动 Hugo (${HOST}:${PORT}) ..."
+hugo server \
+  -s "${SCRIPT_DIR}" \
+  --bind "${HOST}" \
+  --port "${PORT}" \
+  --buildDrafts \
+  --disableFastRender \
+  --noHTTPCache \
+  --gc \
+  --cleanDestinationDir &
+HUGO_PID=$!
+
+wait_for_server() {
+  for _ in {1..120}; do
+    if command -v curl >/dev/null 2>&1; then
+      if curl -fsS --max-time 1 "${URL}" >/dev/null 2>&1; then
+        return 0
+      fi
+    elif (exec 3<>"/dev/tcp/127.0.0.1/${PORT}") 2>/dev/null; then
+      return 0
+    fi
+    # hugo 进程提前退出说明启动失败
+    if ! kill -0 "${HUGO_PID}" 2>/dev/null; then
+      return 1
+    fi
+    sleep 0.5
+  done
+  return 1
+}
+
+if wait_for_server; then
+  log "站点已就绪: ${URL}"
+  if [ "${HOST}" = "0.0.0.0" ]; then
+    local_ip="$(lan_ip)"
+    [ -n "$local_ip" ] && log "局域网访问: http://${local_ip}:${PORT}"
+  fi
+  if [ "${NO_OPEN:-0}" != "1" ]; then
+    open_url "${URL}"
+  else
+    log "NO_OPEN=1，跳过自动打开浏览器"
+  fi
+else
+  if kill -0 "${HUGO_PID}" 2>/dev/null; then
+    die "等待 Hugo 就绪超时: ${URL}"
+  else
+    die "Hugo 启动失败，请查看上方日志"
+  fi
+fi
