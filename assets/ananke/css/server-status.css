@@ -1,0 +1,316 @@
+/* 服务器实时状态卡片组件 — 对齐站点暗/亮色 token（见 custom.css）。
+   设计：左侧状态色条 + 状态胶囊徽章 + 信息标签 chip + 柔和阴影 + hover 抬升。 */
+.server-status {
+  --ss-bg: #ffffff;
+  --ss-border: #e5e7eb;
+  --ss-border-strong: #d1d5df;
+  --ss-text: #1a1e2a;
+  --ss-muted: #6b7280;
+  --ss-faint: #9aa3b2;
+  --ss-online: #16a34a;
+  --ss-online-bg: rgba(22, 163, 74, 0.12);
+  --ss-offline: #dc2626;
+  --ss-offline-bg: rgba(220, 38, 38, 0.10);
+  --ss-sleeping: #b45309;
+  --ss-sleeping-bg: rgba(180, 83, 9, 0.12);
+  --ss-wait: #6b7280;
+  --ss-wait-bg: rgba(107, 114, 128, 0.14);
+  --ss-tag-bg: rgba(127, 127, 127, 0.08);
+  --ss-tag-bg-strong: rgba(127, 127, 127, 0.16);
+  --ss-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 2px 8px rgba(16, 24, 40, 0.05);
+  --ss-shadow-hover: 0 2px 4px rgba(16, 24, 40, 0.06), 0 6px 18px rgba(16, 24, 40, 0.10);
+  /* 组件自包含：无论嵌入正文 article（f4/tc-l 居中排版）还是普通页面，
+     都固定为基础字号并左对齐，避免继承外部排版类导致错位 */
+  font-size: 1rem;
+  text-align: left;
+}
+html[data-theme="dark"] .server-status {
+  --ss-bg: #151a24;
+  --ss-border: #2a3140;
+  --ss-border-strong: #3a4255;
+  --ss-text: #e8e8e8;
+  --ss-muted: #a0a7b3;
+  --ss-faint: #6b7280;
+  --ss-online: #22c55e;
+  --ss-online-bg: rgba(34, 197, 94, 0.16);
+  --ss-offline: #ef4444;
+  --ss-offline-bg: rgba(239, 68, 68, 0.15);
+  --ss-sleeping: #f59e0b;
+  --ss-sleeping-bg: rgba(245, 158, 11, 0.16);
+  --ss-wait: #8b93a1;
+  --ss-wait-bg: rgba(139, 147, 161, 0.16);
+  --ss-tag-bg: rgba(255, 255, 255, 0.06);
+  --ss-tag-bg-strong: rgba(255, 255, 255, 0.13);
+  --ss-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --ss-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.40), 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* 网格：默认单列；shortcode 参数 columns="2" 时双列（窄屏回退单列） */
+.server-status__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 30em) {
+  .server-status--cols-2 .server-status__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 卡片 */
+.server-status__card {
+  position: relative;
+  background: var(--ss-bg);
+  border: 1px solid var(--ss-border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem 0.85rem;
+  color: var(--ss-text);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%; /* 无宽度上限：随容器（measure-wide / 网格列）自动撑满 */
+  box-shadow: var(--ss-shadow);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.server-status__card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ss-shadow-hover);
+  border-color: var(--ss-border-strong);
+}
+/* 左侧状态色条（dashboard 风格，按状态着色） */
+.server-status__card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.8rem;
+  bottom: 0.8rem;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ss-wait);
+}
+.server-status__card.is-online::before { background: var(--ss-online); }
+.server-status__card.is-offline::before { background: var(--ss-offline); }
+.server-status__card.is-sleeping::before { background: var(--ss-sleeping); }
+.server-status__card.is-error::before { background: var(--ss-offline); }
+
+/* 头部：图标 + 名称 + 状态胶囊徽章 */
+.server-status__card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.server-status__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  flex: none;
+  background: var(--ss-tag-bg);
+  box-shadow: inset 0 0 0 1px rgba(127, 127, 127, 0.14);
+  image-rendering: pixelated;
+}
+.server-status__icon.is-hidden { display: none; }
+.server-status__name {
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* 头部右侧：更新时间 + 状态徽标（整体靠右） */
+.server-status__head-right {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+/* 状态徽标 = 状态标签 + 内嵌 ICON 刷新按钮（一个整体，点击整卡刷新） */
+.server-status__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.28rem 0.55rem 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: var(--ss-wait-bg);
+  color: var(--ss-wait);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.server-status__badge:hover { filter: brightness(1.08); }
+.server-status__badge:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 2px; }
+.server-status__card.is-online .server-status__badge { background: var(--ss-online-bg); color: var(--ss-online); }
+.server-status__card.is-offline .server-status__badge { background: var(--ss-offline-bg); color: var(--ss-offline); }
+.server-status__card.is-sleeping .server-status__badge { background: var(--ss-sleeping-bg); color: var(--ss-sleeping); }
+.server-status__card.is-error .server-status__badge { background: var(--ss-offline-bg); color: var(--ss-offline); }
+.server-status__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.server-status__card.is-online .server-status__dot { animation: ss-pulse 2s ease-out infinite; }
+.server-status__refresh-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.1rem;
+  opacity: 0.75;
+}
+.server-status__refresh-ico svg { display: block; }
+.server-status__card.is-loading .server-status__refresh-ico { animation: ss-spin 1s linear infinite; }
+
+/* 信息标签 chip：玩家数 / 版本 */
+.server-status__meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.server-status__tag {
+  background: var(--ss-tag-bg);
+  border-radius: 7px;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.78rem;
+  color: var(--ss-muted);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.server-status__motd {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ss-text);
+  opacity: 0.95;
+  white-space: pre-wrap;
+}
+
+/* 用户操作区：地址复制胶囊 + 社区链接。
+   融入卡片主体——无独立底带/分隔线，随卡片背景与内边距排版，
+   控件自身（胶囊边框 + 图标按钮）即足以标示可操作。亮/暗主题随卡片 token。 */
+.server-status__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.15rem;
+}
+
+/* 统一地址显示控件：标签「服务器地址」+ 密文/明文切换（睁眼/闭眼）+ 图标复制按钮，合成一个整体 */
+.server-status__addr {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ss-border);
+  border-radius: 999px;
+  padding: 0.12rem 0.3rem 0.12rem 0.7rem;
+  background: var(--ss-tag-bg);
+  color: var(--ss-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.server-status__addr-label {
+  white-space: nowrap;
+  opacity: 0.9;
+}
+.server-status__addr-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.08em;
+  user-select: none;
+  margin: 0 0.15rem;
+}
+.server-status__addr-divider {
+  width: 1px;
+  height: 1rem;
+  align-self: center;
+  background: var(--ss-border);
+  margin: 0 0.2rem;
+}
+.server-status__addr-eye,
+.server-status__addr-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--ss-muted);
+  padding: 0.26rem 0.4rem;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.server-status__addr-copy { margin-left: 0.05rem; }
+.server-status__addr-eye:hover,
+.server-status__addr-copy:hover { background: var(--ss-tag-bg-strong); color: var(--ss-text); }
+.server-status__addr-eye:focus-visible,
+.server-status__addr-copy:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 1px; }
+.server-status__addr-eye svg,
+.server-status__addr-copy svg { display: block; }
+.server-status__addr-copy.is-copied { color: var(--ss-online); background: var(--ss-online-bg); }
+
+/* 社区链接（QQ 群 / QQ 频道 / Discord） */
+.server-status__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.server-status__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid var(--ss-border);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  background: var(--ss-tag-bg);
+  color: var(--ss-muted);
+  font-size: 0.78rem;
+  text-decoration: none;
+  line-height: 1.5;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.server-status__link:hover { background: var(--ss-tag-bg-strong); border-color: var(--ss-muted); color: var(--ss-text); }
+.server-status__link:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 2px; }
+
+/* 说明 / 错误 */
+.server-status__note {
+  font-size: 0.8rem;
+  color: var(--ss-muted);
+  line-height: 1.55;
+  margin-top: auto;
+}
+.server-status__error {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ss-offline);
+}
+
+/* 更新时间（状态徽标左侧小字，不换行） */
+.server-status__updated {
+  font-size: 0.72rem;
+  color: var(--ss-faint);
+  white-space: nowrap;
+}
+
+.server-status__loading { color: var(--ss-muted); }
+.server-status__noscript { color: var(--ss-muted); margin-top: 0.75rem; }
+
+/* 查询/刷新中：只旋转刷新图标做反馈，不做整卡透明度动画——
+   否则结果返回 replaceWith 换新卡时透明度会从中间值瞬间跳回 1.0，产生抖动 */
+@keyframes ss-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45); }
+  70% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+@keyframes ss-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .server-status__card, .server-status__card:hover { transform: none; transition: none; }
+  .server-status__card.is-online .server-status__dot,
+  .server-status__card.is-loading .server-status__refresh-ico { animation: none; }
+}

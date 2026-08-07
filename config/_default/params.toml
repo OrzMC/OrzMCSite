@@ -21,7 +21,7 @@ show_recent_posts = true
 show_reading_time = false
 show_categories = true
 copy_code = true
-custom_css = ["custom.css"]
+custom_css = ["custom.css", "server-status.css"]
 
 [ananke.home]
 content_alignment = "center"
@@ -82,3 +82,25 @@ profile = "https://discord.gg/9JAb9vpvUE"
 
 [ananke.hooks]
 verbosity = "error"
+
+# 服务器实时状态组件（通用可嵌入：任意 markdown 里用 {{< server-status >}}）
+# 说明：地址会写入页面配置 JSON 供浏览器查询状态 API；
+# show_address 控制是否在卡片上显示地址（默认隐藏防爬虫，可被单台服务器覆盖）。
+[server_status]
+refresh_interval = 60        # 自动刷新间隔（秒）
+# show_address=false（默认）：卡片显示加密地址 + 复制按钮（防爬虫，构建产物 0 明文地址）；
+# show_address=true：显示明文地址（信任页面用，可被单台服务器覆盖）
+show_address = false
+# api = "https://api.mcstatus.io/v2/status/java"   # 可选，覆盖默认状态 API
+servers = [
+  { name = "国内服", host = "mc.fantuantim.xyz", port = 25565, note = "由群内小伙伴提供机器",
+    links = [
+      { label = "QQ频道", url = "https://pd.qq.com/s/9zuis6m4v" },
+      { label = "QQ群",   url = "https://qm.qq.com/q/jK94lqgub0" },
+    ] },
+  { name = "海外服", host = "paper.jokerhub.cn", port = 25565, note = "离开 3 分钟后自动停止，白名单玩家加入时自动启动",
+    links = [
+      { label = "QQ群",     url = "https://qm.qq.com/q/jIZ4hf4mYM" },
+      { label = "Discord",  url = "https://discord.gg/9JAb9vpvUE" },
+    ] },
+]
