@@ -27,46 +27,60 @@ die() { printf '%s[preview]%s %s\n' "${C_RED}" "${C_RESET}" "$*" >&2; exit 1; }
 usage() {
   local code="${1:-0}"
   cat <<'EOF'
-用法: ./preview [-p <端口>] [-h]
+用法: ./preview [-b <地址>] [-p <端口>] [stop]
 
 本地预览网站（Hugo server）。
 
 选项:
   参数            说明
+  -b <地址>       监听地址 (默认: 127.0.0.1，仅本地)
   -p <端口>       监听端口 (默认: 1313)
+  -k              停止正在运行的预览服务
   -h              显示本帮助
+
+子命令:
+  stop            停止正在运行的预览服务
 
 环境变量:
   变量            默认值     说明
-  HUGO_HOST       0.0.0.0    监听地址；为 0.0.0.0 时浏览器自动打开 localhost
+  HUGO_HOST       127.0.0.1  监听地址；设为 0.0.0.0 可局域网访问
   HUGO_PORT       1313       监听端口（-p 优先级更高）
   NO_OPEN         (空)        设为 1 时跳过自动打开浏览器
 
-优先级: -p 参数 > HUGO_PORT 环境变量 > 默认值
+优先级: -b 参数 > HUGO_HOST 环境变量 > 默认值
 EOF
   exit "${code}"
 }
 
-HOST="${HUGO_HOST:-0.0.0.0}"
+HOST="${HUGO_HOST:-127.0.0.1}"
 PORT="${HUGO_PORT:-1313}"
+STOP=0
 
-while getopts "p:h" opt; do
+while getopts "b:p:hk" opt; do
   case "$opt" in
+    b) HOST="$OPTARG" ;;
     p) PORT="$OPTARG" ;;
+    k) STOP=1 ;;
     h) usage 0 ;;
     *) usage 1 ;;
   esac
 done
 shift $((OPTIND - 1))
+
+# 子命令: stop（与 -k 等价）
+if [ "${1:-}" = "stop" ]; then
+  STOP=1
+  shift
+fi
 [ $# -eq 0 ] || usage 1
 
 case "$PORT" in
   *[!0-9]*) die "无效端口号: ${PORT}" ;;
 esac
-
-command -v hugo >/dev/null 2>&1 || die "未找到 hugo，请先安装: brew install hugo"
+[ -n "${HOST}" ] || die "无效监听地址: 空"
 
 # 只释放我们要用的端口，而不是 pkill 所有 hugo 进程
+# 返回 0 = 有进程被结束（或无法检测）；返回 1 = 端口空闲无进程
 kill_port_listener() {
   local pids remaining tool=""
   if command -v lsof >/dev/null 2>&1; then
@@ -77,9 +91,9 @@ kill_port_listener() {
     tool="fuser"
   else
     log "警告: 未找到 lsof/fuser，无法检测端口占用"
-    return 0
+    return 1
   fi
-  [ -n "$pids" ] || return 0
+  [ -n "$pids" ] || return 1
 
   log "端口 ${PORT} 被占用 (${tool})，正在结束进程: ${pids}"
   # shellcheck disable=SC2086
@@ -96,7 +110,25 @@ kill_port_listener() {
     # shellcheck disable=SC2086
     kill -9 ${remaining} 2>/dev/null || true
   fi
+  return 0
 }
+
+# 停止正在运行的预览服务（./preview stop 或 ./preview -k）
+stop_service() {
+  log "正在停止预览服务（端口 ${PORT}）..."
+  if kill_port_listener; then
+    log "预览服务已停止"
+  else
+    log "没有正在运行的服务（端口 ${PORT} 空闲）"
+  fi
+}
+
+if [ "$STOP" -eq 1 ]; then
+  stop_service
+  exit 0
+fi
+
+command -v hugo >/dev/null 2>&1 || die "未找到 hugo，请先安装: brew install hugo"
 
 # 构建访问地址（监听 0.0.0.0 时用 localhost 打开浏览器）
 if [ "${HOST}" = "0.0.0.0" ]; then
@@ -136,7 +168,7 @@ lan_ip() {
   esac
 }
 
-kill_port_listener
+kill_port_listener || true
 
 log "启动 Hugo (${HOST}:${PORT}) ..."
 hugo server \
