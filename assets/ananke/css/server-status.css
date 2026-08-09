@@ -180,6 +180,54 @@ html[data-theme="dark"] .server-status {
   line-height: 1.4;
   white-space: nowrap;
 }
+/* 玩家数标签：复用 .server-status__tag 外观——保持与普通标签完全一致
+   （无 hover/按下高亮、无按钮原生边框/底色）；仅当 API 有玩家列表时渲染为
+   button，外观不变，点击展开玩家列表。 */
+.server-status__players-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  border: none;
+  font-family: inherit;
+  font-weight: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.server-status__players-toggle:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 1px; }
+
+/* 玩家列表面板（点击展开）：网格，每格 = 头像 + 名称 */
+.server-status__players {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.35rem 0.7rem;
+  padding: 0.55rem 0.65rem;
+  background: var(--ss-tag-bg);
+  border: 1px solid var(--ss-border);
+  border-radius: 10px;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+.server-status__player {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+.server-status__player-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  flex: none;
+  background: var(--ss-border);
+  image-rendering: pixelated;
+}
+.server-status__player-avatar.is-empty { display: none; }
+.server-status__player-name {
+  font-size: 0.8rem;
+  color: var(--ss-text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 .server-status__motd {
   font-size: 0.85rem;
   line-height: 1.6;
@@ -216,7 +264,8 @@ html[data-theme="dark"] .server-status {
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 .server-status__addr-label {
-  white-space: nowrap;
+  overflow-wrap: anywhere; /* 长标签（Java版客户端连接地址：）在窄列内换行而非溢出 */
+  min-width: 0;
   opacity: 0.9;
 }
 .server-status__addr-text {
