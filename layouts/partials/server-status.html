@@ -50,6 +50,8 @@
   {{- end -}}
   {{- /* 仅在 params 显式设置了 show_address 时透传（否则 JS 回退全局默认值） */ -}}
   {{- if isset $s "show_address" -}}{{- $sd = merge $sd (dict "show_address" $s.show_address) -}}{{- end -}}
+  {{- /* 仅显式设置 refresh_interval 时透传（否则 JS 回退全局默认值） */ -}}
+  {{- if isset $s "refresh_interval" -}}{{- $sd = merge $sd (dict "refresh_interval" $s.refresh_interval) -}}{{- end -}}
   {{- $servers = $servers | append $sd -}}
 {{- end -}}
 {{- $cfg = merge $cfg (dict "servers" $servers) -}}

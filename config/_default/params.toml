@@ -49,7 +49,7 @@ networks = [
 ]
 # GitHub
 [ananke.social.github]
-username = "/OrzMC"
+username = "OrzMC"
 # X
 [ananke.social.x-twitter]
 username = "OrzMC666"
@@ -85,12 +85,12 @@ verbosity = "error"
 
 # 服务器实时状态组件（通用可嵌入：任意 markdown 里用 {{< server-status >}}）
 # 说明：地址会写入页面配置 JSON 供浏览器查询状态 API；
-# show_address 控制是否在卡片上显示地址（默认隐藏防爬虫，可被单台服务器覆盖）。
+# show_address 控制地址是否在卡片上显示（缺省 false；可被单台服务器覆盖）：
+#   false：地址彻底隐藏——不渲染任何地址胶囊（无掩码/复制/眼睛），适合私密服；
+#   true：显示地址胶囊（掩码 + 眼睛切换 + 复制按钮）。明文只在 JS 运行时解码，构建产物仍无明文。
 [server_status]
-refresh_interval = 10        # 自动刷新间隔（秒）
-# show_address=false（默认）：卡片显示加密地址 + 复制按钮（防爬虫，构建产物 0 明文地址）；
-# show_address=true：显示明文地址（信任页面用，可被单台服务器覆盖）
-show_address = false
+refresh_interval = 10        # 自动刷新间隔（秒）；可被单台服务器覆盖
+show_address = true
 # api = "https://api.mcstatus.io/v2/status/java"   # 可选，覆盖默认状态 API
 
 [[server_status.servers]]
@@ -117,4 +117,24 @@ note = "离开 3 分钟后自动停止，白名单玩家加入时自动启动。
 links = [
   { label = "QQ玩家管理群",    url = "https://qm.qq.com/q/jIZ4hf4mYM" },
   { label = "Discord交流频道", url = "https://discord.gg/9JAb9vpvUE" },
+]
+
+[[server_status.servers]]
+name = "开发测试服 📌"
+host = "dev.jokerhub.cn"
+port = 25565
+# 基岩版与 Java 版互通、同主机不同端口
+bedrock_port = 19132
+note = "用来开发和调试用的专用服务器，与线上服务器隔离，随时可能关闭。"
+# 私密服：per-server 覆盖全局 show_address=true，地址彻底隐藏
+show_address = false
+# 可选 per-server 覆盖：refresh_interval = 30   # 该服单独刷新间隔（秒）
+links = [
+  { label = "QQ测试群",    url = "https://qm.qq.com/q/mQEjtMZANq" },
+  { label = "PaperMC",    url = "https://papermc.io/downloads/paper" },
+  { label = "Hangar",    url = "https://hangar.papermc.io/" },
+  { label = "Modrinth",    url = "https://modrinth.com/discover/plugins" },
+  { label = "EssentialsX",    url = "https://essentialsx.net/downloads" },
+  { label = "LuckPerms",    url = "https://luckperms.net/download" },
+  { label = "GeyserMC",    url = "https://geysermc.org/download/" },
 ]
