@@ -34,7 +34,7 @@ title: 玩家手册
 
 服务器实时状态与地址（点击卡片可查看地址）：
 
-{{< server-status servers="mc.fantuantim.xyz,paper.jokerhub.cn" columns="2" >}}
+{{< server-status tags="players" columns="2" >}}
 
 1. 启动游戏 → 多人游戏 → 添加服务器，填入上方地址
 2. 首次进入会要求**注册密码**（防止账号被盗用）：

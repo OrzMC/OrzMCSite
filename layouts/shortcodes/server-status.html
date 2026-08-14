@@ -25,5 +25,20 @@
     {{- end -}}
     {{- $ov = merge $ov (dict "servers" $filtered) -}}
   {{- end -}}
+  {{- /* tags 过滤（推荐，单点维护）：按 params.toml 中服务器 tags 字段精确匹配，
+        任意一个 tag 命中即显示。名称/地址变化无需改文档，只改 params.toml。 */ -}}
+  {{- with .Get "tags" }}
+    {{- $want := collections.Slice -}}
+    {{- range (split . ",") }}{{ $want = $want | append (trim . " ") }}{{ end -}}
+    {{- $filtered := collections.Slice -}}
+    {{- range site.Params.server_status.servers -}}
+      {{- $s := . -}}
+      {{- $sTags := $s.tags | default collections.Slice -}}
+      {{- if intersect $sTags $want -}}
+        {{- $filtered = $filtered | append $s -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $ov = merge $ov (dict "servers" $filtered) -}}
+  {{- end -}}
 {{- end -}}
 {{- partials.Include "server-status.html" (dict "overrides" $ov) -}}
