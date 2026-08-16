@@ -66,15 +66,17 @@
     document.body.removeChild(ta);
   }
 
-  /* 复制文本（明文地址）；成功后复制按钮切换为绿色对号 1.6s，纯图标无文字 */
+  /* 复制文本（明文地址）；成功后复制按钮切换为「对号 + 已复制」绿色 1.6s。
+     复制按钮为图标 + 文字结构（.copy-text），窄卡时文字由 CSS 隐藏只留图标。 */
   function copyText(text, copyBtn) {
+    function setLabel(state) {
+      copyBtn.innerHTML = (state === 'copied' ? CHECK_ICON : COPY_ICON)
+        + '<span class="server-status__copy-text">' + (state === 'copied' ? '已复制' : '复制') + '</span>';
+      copyBtn.classList.toggle('is-copied', state === 'copied');
+    }
     function done() {
-      copyBtn.innerHTML = CHECK_ICON;
-      copyBtn.classList.add('is-copied');
-      setTimeout(function () {
-        copyBtn.innerHTML = COPY_ICON;
-        copyBtn.classList.remove('is-copied');
-      }, 1600);
+      setLabel('copied');
+      setTimeout(function () { setLabel('idle'); }, 1600);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
@@ -222,28 +224,50 @@
     return '更新于 ' + hh + ':' + mm + ':' + ss;
   }
 
-  /* 统一地址胶囊：标签 + 密文/明文切换（睁眼/闭眼）+ 图标复制按钮，合成一个整体。
-     默认掩码显示；睁眼按钮切换明文，复制按钮纯图标，复制完成绿色对号。
-     每枚胶囊自带独立的明/密文状态——Java 版与基岩版分开显示、互不影响。
+  /* 统一地址显示区（连接信息面板，2026-08 重设计）：
+     顶部版本标签行（色点 + 标签）+ 地址值行（等宽地址 + 分隔线 + 睁眼 + 复制）。
+     地址值用主文字色加粗、是面板的视觉重心；复制按钮带「复制」文字比纯图标更易发现；
+     点击地址值本身也可复制（与复制按钮一致）。tone 决定标签行色点：
+     'java' 绿 / 'bedrock' 蓝 / 'generic' 灰。
+     默认掩码显示；睁眼按钮切换明文；每枚面板独立明/密文状态（Java/基岩互不影响）。
      onToggle(revealed) 回调：切换明文时把状态写回 addrReveals，供刷新后恢复。 */
-  function buildAddrPill(label, addressText, initiallyRevealed, onToggle) {
+  function buildAddrPill(label, addressText, initiallyRevealed, onToggle, tone) {
     var addr = document.createElement('div');
     addr.className = 'server-status__addr';
+    addr.dataset.tone = tone || 'generic';
+
+    /* 顶部标签行：版本色点 + 标签文字 */
+    var head = document.createElement('div');
+    head.className = 'server-status__addr-head';
+
+    var dot = document.createElement('span');
+    dot.className = 'server-status__addr-dot';
+    dot.setAttribute('aria-hidden', 'true');
+    head.appendChild(dot);
 
     var lbl = document.createElement('span');
     lbl.className = 'server-status__addr-label';
     lbl.textContent = label;
-    addr.appendChild(lbl);
+    head.appendChild(lbl);
+
+    addr.appendChild(head);
+
+    /* 地址值行 */
+    var body = document.createElement('div');
+    body.className = 'server-status__addr-body';
 
     var text = document.createElement('span');
     text.className = 'server-status__addr-text';
     text.textContent = initiallyRevealed ? addressText : MASK;
-    addr.appendChild(text);
+    text.title = '点击复制服务器地址';
+    text.tabIndex = 0;
+    text.setAttribute('role', 'button');
+    body.appendChild(text);
 
     var divider = document.createElement('span');
     divider.className = 'server-status__addr-divider';
     divider.setAttribute('aria-hidden', 'true');
-    addr.appendChild(divider);
+    body.appendChild(divider);
 
     var revealed = !!initiallyRevealed;
     var eye = document.createElement('button');
@@ -262,17 +286,27 @@
       eye.setAttribute('aria-pressed', revealed ? 'true' : 'false');
       if (onToggle) onToggle(revealed);   // 写回 addrReveals，刷新后恢复明/密文
     });
-    addr.appendChild(eye);
+    body.appendChild(eye);
 
     var copy = document.createElement('button');
     copy.type = 'button';
     copy.className = 'server-status__addr-copy';
     copy.title = '复制服务器地址';
     copy.setAttribute('aria-label', copy.title);
-    copy.innerHTML = COPY_ICON;
+    copy.innerHTML = COPY_ICON + '<span class="server-status__copy-text">复制</span>';
     copy.addEventListener('click', function () { copyText(addressText, copy); });
-    addr.appendChild(copy);
+    body.appendChild(copy);
 
+    /* 点击 / 回车 地址值本身也复制（密文状态复制的也是明文，与复制按钮一致） */
+    function copyOnAction(e) {
+      if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+      if (e.type === 'keydown') e.preventDefault();   // 阻止空格滚动页面
+      copyText(addressText, copy);
+    }
+    text.addEventListener('click', copyOnAction);
+    text.addEventListener('keydown', copyOnAction);
+
+    addr.appendChild(body);
     return addr;
   }
 
@@ -503,22 +537,24 @@
       var addrState = addrReveals.get(server.key) || {};
       var javaAddress = server.host + ':' + server.port;
       actions.appendChild(buildAddrPill(
-        server.bedrockHost ? 'Java版客户端连接地址：' : '服务器地址：', javaAddress, !!addrState.java,
+        server.bedrockHost ? 'Java版客户端连接地址' : '服务器地址', javaAddress, !!addrState.java,
         function (r) {
           var st = addrReveals.get(server.key) || {};
           st.java = r;
           addrReveals.set(server.key, st);
-        }
+        },
+        server.bedrockHost ? 'java' : 'generic'
       ));
 
       if (server.bedrockHost) {
         actions.appendChild(buildAddrPill(
-          '基岩版客户端连接地址：', server.bedrockHost + ':' + server.bedrockPort, !!addrState.bedrock,
+          '基岩版客户端连接地址', server.bedrockHost + ':' + server.bedrockPort, !!addrState.bedrock,
           function (r) {
             var st = addrReveals.get(server.key) || {};
             st.bedrock = r;
             addrReveals.set(server.key, st);
-          }
+          },
+          'bedrock'
         ));
       }
     }

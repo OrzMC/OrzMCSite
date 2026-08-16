@@ -248,62 +248,123 @@ html[data-theme="dark"] .server-status {
   margin-top: 0.15rem;
 }
 
-/* 统一地址显示控件：标签「服务器地址」+ 密文/明文切换（睁眼/闭眼）+ 图标复制按钮，合成一个整体 */
+/* 服务器地址显示区（连接信息面板，2026-08 重设计）：
+   顶部版本标签行（色点 + 标签）+ 地址值行（等宽地址 + 分隔线 + 睁眼 + 复制）。
+   地址值是面板视觉重心（主文字色加粗、点击即复制）；复制按钮带文字比纯图标更易发现。
+   色点按 data-tone 区分版本：java 绿 / bedrock 蓝 / generic 灰。 */
 .server-status__addr {
-  display: inline-flex;
-  align-items: center;
-  width: 100%; /* 独占一行：整行展示，长地址不截断 */
+  margin: 0;
+  padding: 0.55rem 0.7rem 0.6rem;
   border: 1px solid var(--ss-border);
-  border-radius: 999px;
-  padding: 0.12rem 0.3rem 0.12rem 0.7rem;
+  border-radius: 12px;
   background: var(--ss-tag-bg);
   color: var(--ss-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
   font: inherit;
   font-size: 0.78rem;
   line-height: 1.5;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
-.server-status__addr-label {
-  overflow-wrap: anywhere; /* 长标签（Java版客户端连接地址：）在窄列内换行而非溢出 */
+.server-status__addr:hover {
+  border-color: var(--ss-border-strong);
+  background: var(--ss-tag-bg-strong);
+}
+
+/* 顶部标签行：版本色点 + 标签文字 */
+.server-status__addr-head {
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
   min-width: 0;
-  opacity: 0.9;
+}
+.server-status__addr-dot {
+  width: 0.44rem;
+  height: 0.44rem;
+  border-radius: 50%;
+  background: var(--ss-faint);
+  flex: none;
+}
+.server-status__addr[data-tone="java"] .server-status__addr-dot { background: var(--ss-online); }
+.server-status__addr[data-tone="bedrock"] .server-status__addr-dot { background: #38bdf8; }
+.server-status__addr-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ss-muted);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 地址值行：等宽地址（点击复制）+ 分隔线 + 睁眼 + 复制 */
+.server-status__addr-body {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
 }
 .server-status__addr-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.3rem 0.45rem;
+  border-radius: 8px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  letter-spacing: 0.08em;
-  user-select: none;
-  min-width: 0;            /* 允许收缩，配合 overflow-wrap 换行而非溢出 */
-  overflow-wrap: anywhere; /* 超长地址在胶囊内换行，不截断 */
-  margin: 0 0.15rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ss-text);
+  overflow-wrap: anywhere;
+  user-select: none;   /* 防止误选；点击/回车即复制 */
+  cursor: copy;
+  transition: background-color 0.15s ease;
 }
+.server-status__addr-text:hover { background: var(--ss-tag-bg-strong); }
 .server-status__addr-divider {
   width: 1px;
-  height: 1rem;
-  align-self: center;
+  height: 1.2rem;
   background: var(--ss-border);
-  margin: 0 0.2rem 0 auto; /* 右侧操作簇（分隔线+睁眼+复制）钉到行尾 */
+  flex: none;
 }
 .server-status__addr-eye,
 .server-status__addr-copy {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  background: transparent;
+  gap: 0.32rem;
+  flex: none;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--ss-border);
+  border-radius: 8px;
+  background: var(--ss-tag-bg);
   color: var(--ss-muted);
-  padding: 0.26rem 0.4rem;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1;
   cursor: pointer;
-  border-radius: 999px;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.server-status__addr-copy { margin-left: 0.05rem; }
+.server-status__addr-eye { width: 2rem; }
+.server-status__addr-copy { padding: 0 0.6rem; }
 .server-status__addr-eye:hover,
-.server-status__addr-copy:hover { background: var(--ss-tag-bg-strong); color: var(--ss-text); }
+.server-status__addr-copy:hover {
+  background: var(--ss-tag-bg-strong);
+  color: var(--ss-text);
+  border-color: var(--ss-border-strong);
+}
 .server-status__addr-eye:focus-visible,
-.server-status__addr-copy:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 1px; }
+.server-status__addr-copy:focus-visible,
+.server-status__addr-text:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 1px; }
 .server-status__addr-eye svg,
 .server-status__addr-copy svg { display: block; }
-.server-status__addr-copy.is-copied { color: var(--ss-online); background: var(--ss-online-bg); }
+.server-status__addr-copy.is-copied {
+  color: var(--ss-online);
+  border-color: var(--ss-online);
+  background: var(--ss-online-bg);
+}
 
 /* 社区链接（QQ 群 / QQ 频道 / Discord） */
 .server-status__links {
@@ -369,19 +430,14 @@ html[data-theme="dark"] .server-status {
 }
 
 /* 移动端响应式：容器查询按「卡片自身宽度」而非视口响应（对多列 grid 也正确）。
-   卡片 ≤576px：地址胶囊分行——「服务器地址」标签独占第一行，地址文本 + 睁眼/复制按钮第二行
-               （原整行胶囊在窄卡内会被折成 2-3 行、标签与地址文本混排，视觉混乱）。
-   卡片 ≤448px：头部右侧竖排——更新时间移到状态徽章上方，给服务器名称让出横向空间。 */
+   卡片 ≤448px：头部右侧竖排——更新时间移到状态徽章上方，给服务器名称让出横向空间。
+   卡片 ≤544px：地址面板复制按钮收回纯图标（文字靠 CSS 隐藏，复制成功仍显示对号），
+   给等宽地址让横向空间、密文掩码保持单行不折。 */
 .server-status__card { container-type: inline-size; }
 
-@container (max-width: 36em) {
-  .server-status__addr {
-    flex-wrap: wrap;
-    row-gap: 0.2rem;
-  }
-  .server-status__addr-label { flex-basis: 100%; }
-  .server-status__addr-text { flex: 1 1 auto; }
-  .server-status__addr-divider { margin-left: 0.2rem; }
+@container (max-width: 34em) {
+  .server-status__copy-text { display: none; }
+  .server-status__addr-copy { padding: 0; width: 2rem; }
 }
 
 @container (max-width: 28em) {
