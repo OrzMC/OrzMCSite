@@ -18,11 +18,12 @@
   var addrReveals = new Map(); // key -> { java, bedrock } 地址明/密文状态（跨刷新保留）
   var busy = false;
 
-  /* 地址防爬虫：配置 JSON 里的 host 是替换表密文（见 partial server-status.html），
-     PLAIN/CIPHER 逐字符一一对应，这里在浏览器端解码出明文用于 API 查询与复制。
-     明文地址不会出现在 HTML 中；卡片默认以固定掩码显示，点击复制。 */
-  var PLAIN = 'abcdefghijklmnopqrstuvwxyz0123456789.-';
-  var CIPHER = 'QWERTYUIOPASDFGHJKLZXCVBNM@#$%^&*_+={}';
+  /* 地址防爬虫：配置 JSON 里的 host 是替换表密文，明文地址不会出现在 HTML 中；
+     卡片默认以固定掩码显示，点击复制。替换表由模板单点维护（partial
+     server-status.html），经配置 JSON 的 cipher_plain / cipher_mapping 下发，
+     这里在浏览器端按同一表解码出明文用于 API 查询与复制。 */
+  var PLAIN_TABLE = '';  // 由配置 JSON 的 cipher_plain 提供
+  var CIPHER_TABLE = ''; // 由配置 JSON 的 cipher_mapping 提供
   var MASK = '••••••••••••••••'; // 16 个 •（密文占位）
   /* 静态 SVG 图标（固定字符串，无用户输入，innerHTML 安全） */
   var REFRESH_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>';
@@ -39,8 +40,10 @@
 
   function decodeHost(enc) {
     if (!enc || typeof enc !== 'string') return enc;
+    /* 表未就绪时原样返回（短代码正常渲染时配置必带替换表，不会走到这里） */
+    if (!PLAIN_TABLE || !CIPHER_TABLE) return enc;
     var map = {};
-    for (var i = 0; i < CIPHER.length; i++) map[CIPHER[i]] = PLAIN[i];
+    for (var i = 0; i < CIPHER_TABLE.length; i++) map[CIPHER_TABLE[i]] = PLAIN_TABLE[i];
     var out = '';
     for (var j = 0; j < enc.length; j++) out += map[enc[j]] || enc[j];
     return out;
@@ -613,6 +616,11 @@
     } catch (e) {
       return;
     }
+
+    /* 地址解码表由模板随配置下发（cipher_plain / cipher_mapping），置于
+       servers 映射（decodeHost 调用点）之前 */
+    PLAIN_TABLE = cfg.cipher_plain || '';
+    CIPHER_TABLE = cfg.cipher_mapping || '';
 
     /* refresh_interval=0 表示关闭自动刷新（仅手动） */
     refreshInterval = (cfg.refresh_interval > 0) ? cfg.refresh_interval : 0;
