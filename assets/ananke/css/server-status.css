@@ -367,3 +367,27 @@ html[data-theme="dark"] .server-status {
   .server-status__card.is-online .server-status__dot,
   .server-status__card.is-loading .server-status__refresh-ico { animation: none; }
 }
+
+/* 移动端响应式：容器查询按「卡片自身宽度」而非视口响应（对多列 grid 也正确）。
+   卡片 ≤576px：地址胶囊分行——「服务器地址」标签独占第一行，地址文本 + 睁眼/复制按钮第二行
+               （原整行胶囊在窄卡内会被折成 2-3 行、标签与地址文本混排，视觉混乱）。
+   卡片 ≤448px：头部右侧竖排——更新时间移到状态徽章上方，给服务器名称让出横向空间。 */
+.server-status__card { container-type: inline-size; }
+
+@container (max-width: 36em) {
+  .server-status__addr {
+    flex-wrap: wrap;
+    row-gap: 0.2rem;
+  }
+  .server-status__addr-label { flex-basis: 100%; }
+  .server-status__addr-text { flex: 1 1 auto; }
+  .server-status__addr-divider { margin-left: 0.2rem; }
+}
+
+@container (max-width: 28em) {
+  .server-status__head-right {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+  }
+}
