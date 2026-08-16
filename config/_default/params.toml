@@ -120,6 +120,8 @@ show_address = false
 # 可选 per-server 覆盖：refresh_interval = 30   # 该服单独刷新间隔（秒）
 links = [
   { label = "QQ测试群",    url = "https://qm.qq.com/q/mQEjtMZANq" },
+  { label = "Minecraft",    url = "https://www.minecraft.net/download" },
+  { label = "Java",    url = "https://www.oracle.com/java/technologies/downloads/" },
   { label = "PaperMC",    url = "https://papermc.io/downloads/paper" },
   { label = "Hangar",    url = "https://hangar.papermc.io/" },
   { label = "Modrinth",    url = "https://modrinth.com/discover/plugins" },
@@ -127,3 +129,36 @@ links = [
   { label = "LuckPerms",    url = "https://luckperms.net/download" },
   { label = "GeyserMC",    url = "https://geysermc.org/download/" },
 ]
+
+# 信息面板（进服需知/声明/玩家支持）：仅在首页 server-status 下方展示，
+# 样式与状态卡统一（复用 --ss-* token）。body 支持 markdown，用三个引号包裹多行文本。
+[[server_status.info_panels]]
+icon = "🔊"
+title = "进服需知"
+body = """
+服务器经历过多次破坏，现采用 **强制白名单**（未在白名单内的玩家无法进入）。
+需要先点击上方 **服务器卡片上的「玩家群」** 加入，向管理员提交自己的 **玩家用户名**。
+管理员 **审核添加后** 即可 **进服玩耍**。详见 [玩家手册](/user/)。
+"""
+
+[[server_status.info_panels]]
+icon = "💓"
+title = "声明"
+body = """
+本服为 **非商业离线私服**，用户不需要正版验证，
+并遵守 **[Mojang EULA 协议](https://account.mojang.com/documents/minecraft_eula)**，
+旨在提供 **小范围Minecraft社区玩家相互交流**， **激发协作和创造力**。
+
+**[Mojang EULA 协议解读](https://chat.deepseek.com/share/ld76gr54mfq59ov7gw)**
+"""
+
+[[server_status.info_panels]]
+icon = "🩷"
+title = "玩家支持"
+body = """
+如果你喜欢本服务器，并希望它可以运行下去，请 [**支持一下**](/sponsor)
+
+😘😘😘😘😘😘
+
+收到的捐赠将全部用于运营服务器，并公开所有接收到的捐赠及用途。
+"""

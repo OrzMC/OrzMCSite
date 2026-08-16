@@ -12,6 +12,8 @@
     "api"              ($raw.api | compare.Default "https://api.mcstatus.io/v2/status/java")
     "show_address"     ($raw.show_address | compare.Default false)
     "servers"          ($raw.servers | default collections.Slice)
+    "info_panels"      ($raw.info_panels | default collections.Slice)
+    "show_info"        false
 -}}
 {{- $cfg = merge $cfg $ov -}}
 
@@ -70,10 +72,37 @@
 
   <noscript><p class="server-status__noscript f6">请启用 JavaScript 以查看服务器实时状态。</p></noscript>
 
+  {{- /* 信息面板（进服需知/声明/玩家支持）：纯静态、服务端渲染，不经过 JS/配置 JSON。
+         变量 token 定义在 .server-status 上，面板留在 section 内才能继承。 */ -}}
+  {{- if and $cfg.show_info (compare.Gt (len $cfg.info_panels) 0) -}}
+    <div class="server-status__info">
+      {{- range $cfg.info_panels -}}
+        <article class="server-status__info-panel">
+          <header class="server-status__info-head">
+            {{- with .icon }}<span class="server-status__info-icon" aria-hidden="true">{{ . }}</span>{{ end -}}
+            {{- with .title }}<h3 class="server-status__info-title">{{ . }}</h3>{{ end -}}
+          </header>
+          {{- with .body -}}
+            {{- /* RenderString display:block 而非 markdownify：markdownify 在 Hugo 0.164 是
+                  内联渲染（无 <p> 包裹，段落连成一句）；block 渲染保留原文分段 */ -}}
+            <div class="server-status__info-body nested-links">{{ site.Home.RenderString (dict "display" "block") . }}</div>
+          {{- end -}}
+        </article>
+      {{- end -}}
+    </div>
+  {{- end -}}
+
   {{- /* 配置 JSON：safeJS 防止 <script> 上下文的 JS 转义破坏 JSON；
        < 转义为 < 防止配置中出现 </script> 提前闭合标签。
-       注意 strings.Replace 显式传参——管道会把值作为最后一个参数导致参数顺序错乱。 */ -}}
-  <script type="application/json" id="server-status-config">{{ strings.Replace (jsonify $cfg) "<" "\\u003c" | safeJS }}</script>
+       注意 strings.Replace 显式传参——管道会把值作为最后一个参数导致参数顺序错乱。
+       信息面板是服务端静态渲染，info_panels/show_info 不进入 JS 配置（过滤后再 jsonify）。 */ -}}
+  {{- $json_cfg := dict -}}
+  {{- range $k, $v := $cfg -}}
+    {{- if and (ne $k "info_panels") (ne $k "show_info") -}}
+      {{- $json_cfg = merge $json_cfg (dict $k $v) -}}
+    {{- end -}}
+  {{- end -}}
+  <script type="application/json" id="server-status-config">{{ strings.Replace (jsonify $json_cfg) "<" "\\u003c" | safeJS }}</script>
 
   {{- /* 组件自包含：JS 随组件一并加载（defer），无需额外 hook */ -}}
   <script src="{{ "js/server-status.js" | relURL }}" defer></script>

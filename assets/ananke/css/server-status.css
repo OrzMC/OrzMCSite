@@ -391,3 +391,47 @@ html[data-theme="dark"] .server-status {
     gap: 0.15rem;
   }
 }
+
+/* 信息面板（进服需知/声明/玩家支持）：状态卡下方纵向排列，与卡片同视觉语言。
+   全部用 --ss-* token，亮/暗自动适配。纯静态内容，无 transform 抬升，仅 hover 边框/阴影加深。 */
+.server-status__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.server-status__info-panel {
+  background: var(--ss-bg);
+  border: 1px solid var(--ss-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: var(--ss-shadow);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.server-status__info-panel:hover {
+  border-color: var(--ss-border-strong);
+  box-shadow: var(--ss-shadow-hover);
+}
+.server-status__info-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.server-status__info-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.server-status__info-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ss-text);
+}
+.server-status__info-body {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ss-muted);
+}
+.server-status__info-body p { margin: 0 0 0.5rem; }
+.server-status__info-body p:last-child { margin-bottom: 0; }
