@@ -16,9 +16,6 @@ section = ["HTML", "RSS"]
 [module.hugoVersion]
 min = "0.164.0"
 
-[markup.goldmark.renderer]
-unsafe = false
-
 [markup.highlight]
 style = "dracula"
 lineNumbers = true
@@ -30,14 +27,3 @@ tabWidth = 4
 [sitemap]
 changefreq = "weekly"
 priority = 0.5
-
-[minify]
-disableCSS = false
-disableHTML = false
-disableJS = false
-disableJSON = false
-disableSVG = false
-disableXML = false
-
-[privacy.youtube]
-privacyEnhanced = true
