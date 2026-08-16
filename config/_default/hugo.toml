@@ -8,7 +8,8 @@ hasCJKLanguage = true
 
 [outputs]
 home = ["HTML", "RSS"]
-section = ["HTML", "RSS"]
+# section 只出 RSS 不出 HTML：主页已列出全部文章，归档页 /posts/ 不再需要页面
+section = ["RSS"]
 
 
 

@@ -1,7 +1,6 @@
 {{ $show_date := partials.Include "func/ShowDate.html" . }}
-<div class="w-100 mb4 nested-copy-line-height relative bg-white flex flex-column">
-  <div class="mb3 pa4 gray overflow-hidden bg-white flex flex-column">
-    {{with .CurrentSection.Title }}<span class="f6 db">{{ . }}</span>{{end}}
+<div class="summary-card h-100 relative bg-white overflow-hidden flex flex-column">
+  <div class="pa3 mid-gray bg-white flex flex-column">
     {{ if $show_date }}
       <time class="f6 db" {{ fmt.Printf `datetime="%s"` (.Date.Format "2006-01-02T15:04:05Z07:00") | safe.HTMLAttr }}>
         {{- .Date | time.Format (compare.Default "January 2, 2006" .Site.Params.date_format) -}}
@@ -12,7 +11,7 @@
         {{ .Title }}
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height flex-grow-1">
+    <div class="nested-links f5 lh-copy summary-text flex-grow-1">
       {{ .Summary }}
     </div>
   </div>
