@@ -4,7 +4,7 @@
   </article>
 
   {{/* 最近文章列表 */}}
-  {{ $mainSections := site.Params.mainSections | compare.Default (collections.Slice "post") }}
+  {{ $mainSections := site.Params.mainSections | compare.Default (collections.Slice "posts") }}
   {{ $show_recent_posts := site.Params.ananke.show_recent_posts }}
   {{ $section := collections.Where $.Site.RegularPages "Section" "in" $mainSections }}
   {{ $section_count := len $section }}

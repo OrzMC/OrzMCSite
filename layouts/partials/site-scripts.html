@@ -3,7 +3,9 @@
   var d=document.documentElement;
   var key='theme';
   var preferred=function(){
-    return 'dark';
+    /* 与 DOMContentLoaded 里的初始主题逻辑保持一致，避免首屏 dark→light 闪烁：
+       无存档时按系统偏好决定初始主题（站点默认深色仅体现在无偏好时随系统） */
+    return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
   };
   var saved;
   try{ saved=localStorage.getItem(key); }catch(_){}
