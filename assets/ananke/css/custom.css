@@ -7,7 +7,6 @@ html[data-theme="dark"] .bg-light-gray { background: #171c26; }
 html[data-theme="dark"] .near-black,
 html[data-theme="dark"] .black { color: #e6e6e6; }
 html[data-theme="dark"] .mid-gray { color: #b5b5b5; }
-html[data-theme="dark"] .dark-gray { color: #c7cbd1; }
 html[data-theme="dark"] .silver { color: #9aa3b2; }
 html[data-theme="dark"] a { color: #9bd1ff; }
 html[data-theme="dark"] a:hover { color: #c2e1ff; }
@@ -88,12 +87,6 @@ html[data-theme="dark"] :not(pre) > code {
 /* Images */
 img { border-radius: 1px; }
 .mw-100 { max-width: 100%; height: auto; }
-
-/* Aspect ratio & cover */
-.aspect-ratio { position: relative; }
-.aspect-ratio--16x9 { padding-top: 56.25%; }
-.aspect-ratio > img, .aspect-ratio > div { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-.object-cover { object-fit: cover; }
 
 /* TOC sticky layout */
 .toc-sticky { position: sticky; top: 5rem; align-self: flex-start; max-height: calc(100vh - 6rem); overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; }
