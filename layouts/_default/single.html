@@ -34,8 +34,6 @@
     <div class="flex justify-between">
       {{ $pages := .CurrentSection.Pages.ByDate.Reverse }}
       {{ $.Scratch.Set "found" false }}
-      {{ $.Scratch.Delete "prev" }}
-      {{ $.Scratch.Delete "next" }}
       {{ range $pages }}
         {{ if $.Scratch.Get "found" }}
           {{ if not ($.Scratch.Get "next") }}

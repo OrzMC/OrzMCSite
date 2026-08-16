@@ -19,5 +19,5 @@
     <img src="{{ $fallback.RelPermalink }}" alt="{{ $alt }}" {{ if $title }}title="{{ $title }}"{{ end }} loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" />
   </picture>
 {{ else }}
-  <img src="{{ .Destination | safeURL }}" alt="{{ $alt }}" {{ if $title }}title="{{ $title }}"{{ end }} loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" sizes="(max-width: 768px) 100vw, 1200px" />
+  <img src="{{ .Destination | safeURL }}" alt="{{ $alt }}" {{ if $title }}title="{{ $title }}"{{ end }} loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" />
 {{ end }}
