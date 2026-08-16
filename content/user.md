@@ -179,10 +179,6 @@ title: 玩家手册
 /skinsrestorer:skin set <your_skin_image_download_link>
 ```
 
-[joker skin download link]: <https://imgur.com/h1uiSRA>
-
-[fancy skin download link]: <https://imgur.com/UXp36tp>
-
 ---
 
 ## 新人避坑指南

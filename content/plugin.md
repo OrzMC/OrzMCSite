@@ -18,8 +18,6 @@ title: 自研插件
 
 **/tpbow** 命令可获得传送弓。
 
-**/menu** 命令打开功能菜单（开发中）。
-
 **/bot** 命令查看各机器人连接状态，执行时自动尝试重连 WebSocket。
 
 **/config** 命令在游戏内管理 24 项配置，修改后热重载生效。
@@ -35,9 +33,3 @@ QQ 群管理员可对玩家白名单进行添加/移除操作。
 ---
 
 QQ 群玩家通知和命令控制能力支持 **[NapCatQQ](https://napcat.napneko.icu)**（旧方案）和 **EasyBot IM 网关**（新方案）两种方式。EasyBot 同时支持 QQ / Telegram / Discord / 飞书 / 微信多平台统一接入。
-
----
-
-[管理面板]: <http://mcs.jokerhub.cn:23333/>
-
-[海外服积分]: <https://exaroton.com/pools/qWE6dfsMX4TxT6g4>
