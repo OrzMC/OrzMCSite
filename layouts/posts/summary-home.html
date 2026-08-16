@@ -1,0 +1,18 @@
+{{ $show_date := partials.Include "func/ShowDate.html" . }}
+<div class="summary-card h-100 relative bg-white overflow-hidden flex flex-column">
+  <div class="pa3 mid-gray bg-white flex flex-column">
+    {{ if $show_date }}
+      <time class="f6 db" {{ fmt.Printf `datetime="%s"` (.Date.Format "2006-01-02T15:04:05Z07:00") | safe.HTMLAttr }}>
+        {{- .Date | time.Format (compare.Default "January 2, 2006" .Site.Params.date_format) -}}
+      </time>
+    {{ end }}
+    <h1 class="f3 near-black">
+      <a href="{{ .RelPermalink }}" class="link black dim">
+        {{ .Title }}
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy summary-text flex-grow-1">
+      {{ .Summary }}
+    </div>
+  </div>
+</div>

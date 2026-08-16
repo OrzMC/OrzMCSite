@@ -11,29 +11,19 @@
 
   {{ if and ($show_recent_posts) (compare.Ge $section_count 1) }}
     <div class="pa3 pa4-ns w-100 w-70-ns center">
-      {{ $n_posts := $.Param "recent_posts_number" | compare.Default 3 }}
-      {{ $recent_title := site.Params.recent_posts_title | compare.Default "最近文章" }}
+      {{ $recent_title := site.Params.recent_posts_title | compare.Default "全部文章" }}
 
       <header class="w-100 mw8 mb3">
         <h2 class="f3 fw4">{{ $recent_title }}</h2>
       </header>
 
-      <section class="w-100 mw8">
-        {{ range (collections.First $n_posts $section) }}
-          <div class="w-100 mb4 relative">
-            {{ .Render "summary-with-image" }}
+      <section class="w-100 mw8 posts-grid posts-grid-home">
+        {{ range $section }}
+          <div class="relative">
+            {{ .Render "summary-home" }}
           </div>
         {{ end }}
       </section>
-
-      {{ if compare.Ge $section_count (math.Add $n_posts 1) }}
-        <section class="w-100 tc mt4">
-          <a href="{{ (index (collections.Where $.Site.Sections "Section" "in" $mainSections) 0).RelPermalink }}"
-             class="ba b--black-20 bg-transparent hover-bg-black-10 br2 color-inherit dib f5 link ph4 pv3">
-            {{ lang.Translate "more" | compare.Default "更多文章" }} →
-          </a>
-        </section>
-      {{ end }}
 
     </div>
   {{ end }}

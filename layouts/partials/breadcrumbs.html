@@ -12,9 +12,11 @@
 {{ else }}
   {{ with .Ancestors }}
     {{ range .Reverse }}
-      {{ $title := .LinkTitle | compare.Default .Title }}
-      {{ $url := .RelPermalink }}
-      {{ $crumbs = $crumbs | collections.Append (dict "title" $title "url" $url) }}
+      {{ if and (ne .Kind "section") (not .IsHome) }}
+        {{ $title := .LinkTitle | compare.Default .Title }}
+        {{ $url := .RelPermalink }}
+        {{ $crumbs = $crumbs | collections.Append (dict "title" $title "url" $url) }}
+      {{ end }}
     {{ end }}
   {{ end }}
   {{ $crumbs = $crumbs | collections.Append (dict "title" (.LinkTitle | compare.Default .Title) "url" "") }}
