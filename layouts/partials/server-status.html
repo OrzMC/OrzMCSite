@@ -17,9 +17,14 @@
 
 {{- /* 地址防爬虫：明文主机只存在于本模板与 params.toml，永不进入 HTML。
        构建产物里的 host 一律是替换表生成的密文（明文字母/数字/.- 全部映射为
-       大写字母+符号，与明文集不相交，单遍替换无级联）。浏览器端按同一表解码。 */ -}}
-{{- $plain  := slice "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z" "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "." "-" -}}
-{{- $cipher := slice "Q" "W" "E" "R" "T" "Y" "U" "I" "O" "P" "A" "S" "D" "F" "G" "H" "J" "K" "L" "Z" "X" "C" "V" "B" "N" "M" "@" "#" "$" "%" "^" "&" "*" "_" "+" "=" "{" "}" -}}
+       大写字母+符号，与明文集不相交，单遍替换无级联）。浏览器端按同一表解码。
+       替换表在本模板单点维护（字符串常量），随配置 JSON 输出为 cipher_plain /
+       cipher_mapping，JS 端从配置读取，不再各自硬编码一份。 */ -}}
+{{- $plainStr := "abcdefghijklmnopqrstuvwxyz0123456789.-" -}}
+{{- $cipherStr := "QWERTYUIOPASDFGHJKLZXCVBNM@#$%^&*_+={}" -}}
+{{- $plain  := split $plainStr "" -}}
+{{- $cipher := split $cipherStr "" -}}
+{{- $cfg = merge $cfg (dict "cipher_plain" $plainStr "cipher_mapping" $cipherStr) -}}
 {{- $servers := collections.Slice -}}
 {{- range $cfg.servers -}}
   {{- $s := . -}}
