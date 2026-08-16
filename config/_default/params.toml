@@ -14,20 +14,14 @@ background_color_class = "bg-black"
 
 read_more_copy = "阅读全文"
 recent_posts_number = 10
-post_content_classes = "serif"
+mainSections = ["posts"]
 
 [ananke]
 show_recent_posts = true
-show_reading_time = false
-show_categories = true
-copy_code = true
+copy_code = false
 custom_css = ["custom.css", "server-status.css"]
 
-[ananke.home]
-content_alignment = "center"
-
 [ananke.social]
-icon_path = "ananke/socials/%s.svg"
 
 # Follow
 [ananke.social.follow]
@@ -38,14 +32,6 @@ networks = [
     "youtube",
     "x-twitter",
     "github",
-]
-# Share
-[ananke.social.share]
-disable_share = false
-icons = true
-sharetext = true
-networks = [
-    "x-twitter",
 ]
 # GitHub
 [ananke.social.github]
