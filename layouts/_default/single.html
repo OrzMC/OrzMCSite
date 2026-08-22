@@ -14,23 +14,41 @@
       </div>
       <section class="w-70-l order-2 f5 center measure-wide lh-copy nested-links mid-gray article-content">
         <header class="mb3">
-          <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
+          <h2 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h2>
           {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
+          {{ if compare.Eq .Section "posts" }}{{ with .Date }}<time class="f6 mid-gray db mt2" datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "2006-01-02" }}</time>{{ end }}{{ end }}
         </header>
         {{ .Content }}
       </section>
     {{ else }}
       <section class="w-100 f5 center measure-wide lh-copy nested-links mid-gray article-content">
         <header class="mb3">
-          <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
+          <h2 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h2>
           {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
+          {{ if compare.Eq .Section "posts" }}{{ with .Date }}<time class="f6 mid-gray db mt2" datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "2006-01-02" }}</time>{{ end }}{{ end }}
         </header>
         {{ .Content }}
       </section>
     {{ end }}
   </div>
   {{ if compare.Eq .Section "posts" }}
+  {{/* 标签 / 分类胶囊 */}}
+  <div class="ph3 ph5-l center measure-wide mb3">
+    {{ range .GetTerms "categories" }}<a class="link f6 grow br-pill ba ph3 pv2 dib black sans-serif no-underline mr2" href="{{ .RelPermalink }}">分类 · {{ .LinkTitle }}</a>{{ end }}
+    {{ range .GetTerms "tags" }}<a class="link f6 grow br-pill ba ph3 pv2 dib black sans-serif no-underline mr2" href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>{{ end }}
+  </div>
   <footer class="ph3 ph5-l pv3 pv4-l">
+    {{ $related := .Site.RegularPages.Related . | first 3 }}
+    {{ with $related }}
+    <section class="mb4" aria-label="相关文章">
+      <h2 class="f3 fw4 mb3">相关文章</h2>
+      <div class="flex flex-wrap">
+        {{ range . }}
+          <a class="link dim ba b--black-10 br2 pa3 ma2" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
     <div class="flex justify-between">
       {{ $pages := .CurrentSection.Pages.ByDate.Reverse }}
       {{ $.Scratch.Set "found" false }}

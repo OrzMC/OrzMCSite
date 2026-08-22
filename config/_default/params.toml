@@ -2,6 +2,8 @@
 # CSS 配置参考：https://tachyons.io/
 
 favicon = "/images/favicon.png"
+# 默认社交分享图（og:image / twitter:image / Article 结构化数据）
+default_og_image = "/images/og-default.png"
 site_logo = ""
 description = "Minecraft 服务器与玩法指南、更新记录与社区动态"
 author = "Joker"
