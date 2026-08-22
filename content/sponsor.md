@@ -61,3 +61,7 @@ description: "无论金额大小，您的名字都将铭刻在服务器的成长
 汇率波动，可能导致实际支付金额与展示金额有轻微差异。
 
 ![积分购买](/images/server/score_pay.png)
+
+---
+
+{{< sponsor-cta >}}

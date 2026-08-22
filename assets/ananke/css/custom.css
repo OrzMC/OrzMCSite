@@ -232,3 +232,75 @@ html[data-theme="dark"] .summary-card:hover {
 @media (prefers-reduced-motion: reduce) {
   .summary-card, .summary-card:hover { transform: none; transition: none; }
 }
+
+/* 捐赠页 CTA 区块（爱发电 + 返佣卡片）：配置驱动于 params.toml [sponsor]，链接全空时整个区块不渲染 */
+.sponsor-cta { margin-top: 2.5rem; }
+.sponsor-cta__intro { color: #6b7280; }
+html[data-theme="dark"] .sponsor-cta__intro { color: #9aa3b2; }
+
+/* 爱发电主按钮 */
+.sponsor-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #0b00e4;
+  color: #fff;
+  border: 1px solid #0b00e4;
+  border-radius: 999px;
+  padding: 0.6rem 1.3rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.sponsor-cta__btn:hover {
+  background: #2a1ae8;
+  border-color: #2a1ae8;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(11, 0, 228, 0.25);
+}
+html[data-theme="dark"] .sponsor-cta__btn {
+  background: #9bd1ff;
+  border-color: #9bd1ff;
+  color: #0f1115;
+}
+html[data-theme="dark"] .sponsor-cta__btn:hover {
+  background: #c2e1ff;
+  border-color: #c2e1ff;
+  color: #0f1115;
+}
+
+/* 返佣卡片网格：measure-wide(48rem) 列宽内自适应排布 */
+.sponsor-cta__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin: 1.2rem 0;
+}
+
+/* 返佣卡片：复用 .summary-card 边框/圆角/hover 抬升，这里只做内部排版与链接态 */
+.sponsor-cta__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  color: inherit;
+}
+.sponsor-cta__card:hover { text-decoration: none; }
+.sponsor-cta__card-name { font-weight: 600; color: #1a1e2a; }
+.sponsor-cta__card-desc { font-size: 0.85rem; color: #6b7280; }
+.sponsor-cta__card-link {
+  margin-top: auto;
+  font-size: 0.85rem;
+  color: #0b00e4;
+}
+html[data-theme="dark"] .sponsor-cta__card-name { color: #e6e6e6; }
+html[data-theme="dark"] .sponsor-cta__card-desc { color: #9aa3b2; }
+html[data-theme="dark"] .sponsor-cta__card-link { color: #9bd1ff; }
+
+.sponsor-cta__disclaimer { font-size: 0.8rem; color: #6b7280; }
+html[data-theme="dark"] .sponsor-cta__disclaimer { color: #9aa3b2; }
+@media (prefers-reduced-motion: reduce) {
+  .sponsor-cta__btn { transition: none; }
+}

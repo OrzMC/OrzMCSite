@@ -1,0 +1,4 @@
+{{- /* 捐赠/返佣 CTA 区块短代码。用法：{{< sponsor-cta >}}
+  配置驱动于 params.toml [sponsor]（afdian_url + [[sponsor.affiliate]]）；
+  对应链接为空时该条目自动隐藏，所有链接为空时整个区块不输出。 */ -}}
+{{- partials.Include "sponsor-cta.html" . -}}
