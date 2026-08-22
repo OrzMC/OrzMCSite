@@ -1,0 +1,65 @@
+{{/* 覆盖主题 site-header.html：hero 改为 <picture> 响应式加载（多档 WebP/PNG，见 AGENTS.md 图片约定）。
+    featured_image 仍从页面 frontmatter 读取；变体路径按约定从 featured_image 派生（_640/_1280/_1920/_2560 的 .webp/.png + _3840.webp 全分辨率）。
+    sizes 分段抬档的原因：手机 hero 是竖容器，object-fit:cover 按高填满导致图横向放大 ~2.7x，sizes=100vw 的朴素选档会欠采样发糊——
+    故手机(<48em)用 180vw 按 DPR 抬档（DPR2→1920w、DPR3→2560w）；平板(48-60em)用 120vw 防过载；桌面(≥60em)是 1:1 保持 100vw。
+    2560 档兼顾 DPR1.25-1.5 笔记本与 2K 屏（缺它会让这些屏直跳 3840w 白掏流量）；3840 档 = Retina 桌面 2x 兜底。
+    换 hero 图时需用 ffmpeg 重跑变体生成命令并保持此派生约定，无需改动本文件逻辑。 */}}
+{{ $featured_image := partials.Include "func/GetFeaturedImage.html" . }}
+{{ if $featured_image }}
+  {{/* 从 .Params.featured_image（原始值，如 /images/minecraft_night.png）派生变体路径 */}}
+  {{ $dir := "" }}
+  {{ $stem := "" }}
+  {{ with .Params.featured_image }}
+    {{ $rel := strings.Trim . "/" }}
+    {{ $dir = path.Dir $rel }}
+    {{ $stem = strings.TrimSuffix (path.Ext $rel) (path.Base $rel) }}
+  {{ end }}
+  {{ $w640 := printf "%s/%s_640.webp" $dir $stem | urls.RelURL }}
+  {{ $w1280 := printf "%s/%s_1280.webp" $dir $stem | urls.RelURL }}
+  {{ $w1920 := printf "%s/%s_1920.webp" $dir $stem | urls.RelURL }}
+  {{ $w2560 := printf "%s/%s_2560.webp" $dir $stem | urls.RelURL }}
+  {{ $w3840 := printf "%s/%s_3840.webp" $dir $stem | urls.RelURL }}
+  {{ $p640 := printf "%s/%s_640.png" $dir $stem | urls.RelURL }}
+  {{ $p1280 := printf "%s/%s_1280.png" $dir $stem | urls.RelURL }}
+  {{ $p1920 := printf "%s/%s_1920.png" $dir $stem | urls.RelURL }}
+  {{ $cover_dimming_class := .Param "cover_dimming_class" | compare.Default "bg-black-15" }}
+  {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv4 pv6-l ph3 ph4-ns" }}
+  {{ $sizes := "(min-width:60em) 100vw, (min-width:48em) 120vw, 180vw" }}
+  <header class="relative site-hero-header">
+    <picture class="site-hero-media">
+      <source type="image/webp" srcset="{{ $w640 }} 640w, {{ $w1280 }} 1280w, {{ $w1920 }} 1920w, {{ $w2560 }} 2560w, {{ $w3840 }} 3840w" sizes="{{ $sizes }}">
+      <source type="image/png" srcset="{{ $p640 }} 640w, {{ $p1280 }} 1280w, {{ $p1920 }} 1920w" sizes="{{ $sizes }}">
+      <img class="site-hero-img" src="{{ $p1280 }}" alt=""{{ if .IsHome }} fetchpriority="high"{{ end }}>
+    </picture>
+    <div class="relative {{ $cover_dimming_class }}">
+      {{ partials.Include "site-navigation.html" .}}
+      <div class="{{ $header_section_class }}">
+        <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
+          {{ .Title | compare.Default .Site.Title }}
+        </h1>
+        {{ with .Params.description }}
+          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3">
+            {{ . }}
+          </h2>
+        {{ end }}
+      </div>
+    </div>
+  </header>
+{{ else }}
+  <header>
+    <div class="pb3-m pb6-l {{ .Site.Params.background_color_class | compare.Default "bg-black" }}">
+      {{ partials.Include "site-navigation.html" . }}
+      {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv3 ph3 ph4-ns" }}
+      <div class="{{ $header_section_class }}">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          {{ .Title | compare.Default .Site.Title }}
+        </h1>
+        {{ with .Params.description }}
+          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+            {{ . }}
+          </h2>
+        {{ end }}
+      </div>
+    </div>
+  </header>
+{{ end }}
