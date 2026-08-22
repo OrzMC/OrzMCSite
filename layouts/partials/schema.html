@@ -52,8 +52,8 @@
     "headline" .Title
     "description" (.Description | compare.Default .Summary)
     "image" $og
-    "author" (dict "@type" "Organization" "name" $name)
-    "publisher" (dict "@type" "Organization" "name" $name "logo" (dict "@type" "ImageObject" "url" $logo))
+    "author" (dict "@type" "Organization" "name" $name "url" $siteURL)
+    "publisher" (dict "@type" "Organization" "name" $name "url" $siteURL "logo" (dict "@type" "ImageObject" "url" $logo))
     "datePublished" $published
     "dateModified" $modified
     "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
