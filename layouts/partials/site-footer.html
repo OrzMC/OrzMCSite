@@ -1,21 +1,22 @@
-{{/* 覆盖主题 site-footer.html：保留版权 + 社交行，新增不蒜子访问统计行（PV + UV） */}}
+{{/* 覆盖主题 site-footer.html：版权(左) + 不蒜子访问统计(中) + 社交(右)，同一水平行 */}}
 <footer class="{{ .Site.Params.background_color_class | compare.Default "bg-black" }} bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between">
-  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="{{ .Site.Home.Permalink }}" >
-    &copy; {{ with .Site.Copyright | compare.Default .Site.Title }} {{ . | safe.HTML }} {{ now.Format "2006"}} {{ end }}
-  </a>
-    <div>{{ partials.IncludeCached "social/follow.html" . }}</div>
-  </div>
+  <div class="flex justify-between items-center">
+    <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="{{ .Site.Home.Permalink }}">
+      &copy; {{ with .Site.Copyright | compare.Default .Site.Title }} {{ . | safe.HTML }} {{ now.Format "2006"}} {{ end }}
+    </a>
 
-  {{/* 不蒜子访问统计：总访问量(PV) + 访客数(UV)。容器默认 .dn 隐藏，busuanzi 成功时以 style.display=inline 覆盖显示；
-      脚本未加载 / 计数 API 失败 / 回调异常 → 保持隐藏，不出现残缺文案 */}}
-  <div class="tc f6 white-40 mt3" id="site-stats">
-    <span id="busuanzi_container_site_pv" class="dn">
-      总访问量 <span id="busuanzi_value_site_pv"></span> 次
-      <span class="white-30 mh2">·</span>
-    </span>
-    <span id="busuanzi_container_site_uv" class="dn">
-      访客数 <span id="busuanzi_value_site_uv"></span> 人
-    </span>
+    {{/* 不蒜子访问统计：总访问量(PV) + 访客数(UV)。容器默认 .dn 隐藏，busuanzi 成功时以 style.display=inline 覆盖显示；
+        脚本未加载 / 计数 API 失败 / 回调异常 → 保持隐藏，不出现残缺文案 */}}
+    <div class="f6 white-40 tc" id="site-stats">
+      <span id="busuanzi_container_site_pv" class="dn">
+        总访问量 <span id="busuanzi_value_site_pv"></span> 次
+        <span class="white-30 mh2">·</span>
+      </span>
+      <span id="busuanzi_container_site_uv" class="dn">
+        访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+
+    <div>{{ partials.IncludeCached "social/follow.html" . }}</div>
   </div>
 </footer>
