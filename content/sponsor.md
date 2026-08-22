@@ -6,6 +6,7 @@ featured_image: "/images/minecraft_night.png"
 featured_image_class: "cover bg-top"
 cover_dimming_class: "bg-black-0"
 title: "捐赠"
+images: ["/images/og-default.png"]
 description: "无论金额大小，您的名字都将铭刻在服务器的成长史诗中！"
 ---
 

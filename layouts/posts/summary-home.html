@@ -6,11 +6,11 @@
         {{- .Date | time.Format (compare.Default "January 2, 2006" .Site.Params.date_format) -}}
       </time>
     {{ end }}
-    <h1 class="f3 near-black">
+    <h2 class="f3 near-black">
       <a href="{{ .RelPermalink }}" class="link black dim">
         {{ .Title }}
       </a>
-    </h1>
+    </h2>
     <div class="nested-links f5 lh-copy summary-text flex-grow-1">
       {{ .Summary }}
     </div>

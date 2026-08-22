@@ -1,0 +1,9 @@
+{{/* 覆盖 Hugo 内置 twitter_cards：大图卡片 + 分享图 */}}
+{{- $og := partial "func/get-og-image.html" . }}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ .Title | compare.Default site.Title }}">
+<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
+<meta name="twitter:image" content="{{ $og }}">
+{{- with (index site.Params.ananke.social "x-twitter") }}
+  {{- with .username }}<meta name="twitter:site" content="@{{ . }}">{{ end }}
+{{- end }}

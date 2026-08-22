@@ -1,0 +1,16 @@
+{
+  "name": "OrzMC",
+  "short_name": "OrzMC",
+  "description": "Minecraft 服务器与玩法指南、更新记录与社区动态",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/images/favicon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

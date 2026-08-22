@@ -1,0 +1,10 @@
+{{- /* 解析页面社交分享图：images[0] → featured_image → 站点默认图，输出绝对 URL */ -}}
+{{- $img := site.Params.default_og_image | compare.Default "/images/og-default.png" -}}
+{{- with .Params.images -}}
+  {{- $img = index . 0 -}}
+{{- else -}}
+  {{- with .Params.featured_image -}}
+    {{- $img = . -}}
+  {{- end -}}
+{{- end -}}
+{{- return ($img | absURL) -}}

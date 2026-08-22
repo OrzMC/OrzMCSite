@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="0.55" stop-color="#1e293b"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="blockGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#0891b2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- 淡 Minecraft 网格 -->
+  <g stroke="#334155" stroke-width="1" opacity="0.5">
+    <path d="M0 70h1200M0 140h1200M0 210h1200M0 280h1200M0 350h1200M0 420h1200M0 490h1200M0 560h1200"/>
+    <path d="M100 0v630M200 0v630M300 0v630M400 0v630M500 0v630M600 0v630M700 0v630M800 0v630M900 0v630M1000 0v630M1100 0v630"/>
+  </g>
+
+  <!-- 顶部细光晕 -->
+  <rect width="1200" height="4" fill="url(#accent)" opacity="0.9"/>
+
+  <!-- 左侧 Paper 风格方块：青色 3D 纸片 -->
+  <g transform="translate(110, 150)">
+    <polygon points="0,60 60,90 60,180 0,150" fill="#155e75" opacity="0.7"/>
+    <polygon points="0,60 60,90 120,60 60,30" fill="#0ea5e9" opacity="0.85"/>
+    <polygon points="60,30 120,60 120,150 60,180" fill="#22d3ee" opacity="0.95"/>
+    <polygon points="60,30 60,0 120,30 120,60" fill="#0891b2" opacity="0.6"/>
+    <rect x="20" y="60" width="80" height="5" fill="#0f172a" opacity="0.55"/>
+    <rect x="20" y="78" width="64" height="5" fill="#0f172a" opacity="0.45"/>
+    <rect x="20" y="96" width="48" height="5" fill="#0f172a" opacity="0.35"/>
+  </g>
+
+  <!-- 品牌标题 -->
+  <text x="340" y="216" font-family="Helvetica,Arial,sans-serif" font-size="88" font-weight="bold" fill="#ffffff">OrzMC</text>
+
+  <!-- 中文副标语 -->
+  <text x="344" y="272" font-family="PingFang SC,Hiragino Sans GB,STHeiti,sans-serif" font-size="32" fill="#94a3b8">Minecraft 服务器与玩法指南</text>
+
+  <!-- 强调线 -->
+  <rect x="344" y="300" width="440" height="6" rx="3" fill="url(#accent)"/>
+
+  <!-- 底部标语 -->
+  <text x="344" y="520" font-family="PingFang SC,Hiragino Sans GB,STHeiti,sans-serif" font-size="26" fill="#64748b">一个人是冒险，一群人是传奇</text>
+</svg>

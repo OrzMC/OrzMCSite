@@ -1,0 +1,7 @@
+{{/* 覆盖主题 head 注入点：性能提示 + PWA manifest + theme-color，保留 head-end hook */}}
+<link rel="preconnect" href="https://api.mcstatus.io" crossorigin>
+<link rel="dns-prefetch" href="https://api.mcstatus.io">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
+{{ if .IsHome }}<link rel="preload" as="image" href="{{ "images/minecraft_night.png" | relURL }}">{{ end }}
+{{ partials.Include "hook.html" (dict "hook" "head-end" "context" .) }}

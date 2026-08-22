@@ -1,0 +1,91 @@
+{{/* 覆盖 Hugo 内置 schema（原 Microdata）：输出 JSON-LD 结构化数据
+    WebSite + Organization（全页）；Article（文章）；BreadcrumbList（全页） */}}
+{{- $siteURL := site.Home.Permalink -}}
+{{- $lang := "zh-CN" -}}
+{{- $name := "OrzMC" -}}
+{{- $logo := "/images/favicon.png" | absURL -}}
+{{- $og := partial "func/get-og-image.html" . -}}
+
+{{- /* Organization.sameAs：从 params.ananke.social 汇总 */ -}}
+{{- $sameAs := collections.Slice -}}
+{{- with site.Params.ananke.social.github }}{{ with .username }}{{ $sameAs = $sameAs | collections.Append (printf "https://github.com/%s" .) }}{{ end }}{{ end -}}
+{{- with (index site.Params.ananke.social "x-twitter") }}{{ with .username }}{{ $sameAs = $sameAs | collections.Append (printf "https://x.com/%s" .) }}{{ end }}{{ end -}}
+{{- with site.Params.ananke.social.youtube }}{{ with .username }}{{ $sameAs = $sameAs | collections.Append (printf "https://www.youtube.com/@%s" .) }}{{ end }}{{ end -}}
+{{- with site.Params.ananke.social.bilibili }}{{ with .username }}{{ $sameAs = $sameAs | collections.Append (printf "https://space.bilibili.com/%s" .) }}{{ end }}{{ end -}}
+{{- with site.Params.ananke.social.networks.discord }}{{ with .profile }}{{ $sameAs = $sameAs | collections.Append . }}{{ end }}{{ end -}}
+
+{{- $website := dict
+  "@context" "https://schema.org"
+  "@type" "WebSite"
+  "name" site.Title
+  "url" $siteURL
+  "description" site.Params.description
+  "inLanguage" $lang
+  "potentialAction" (dict
+    "@type" "SearchAction"
+    "target" (dict "@type" "EntryPoint" "urlTemplate" (printf "%s?s={search_term_string}" $siteURL))
+    "query-input" "required name=search_term_string")
+-}}
+
+{{- $org := dict
+  "@context" "https://schema.org"
+  "@type" "Organization"
+  "name" $name
+  "url" $siteURL
+  "logo" (dict "@type" "ImageObject" "url" $logo)
+  "sameAs" $sameAs
+-}}
+
+{{- /* Article：仅文章页，且必须有发布日期 */ -}}
+{{- $article := dict -}}
+{{- if and .IsPage (eq .Section "posts") (not .PublishDate.IsZero) -}}
+  {{- $published := .PublishDate.Format "2006-01-02T15:04:05Z07:00" -}}
+  {{- $modified := $published -}}
+  {{- if not .Lastmod.IsZero }}{{ $modified = .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}{{ end -}}
+  {{- $section := .Section -}}
+  {{- with (.GetTerms "categories") }}{{ range first 1 . }}{{ $section = .Title }}{{ end }}{{ end -}}
+  {{- $keywords := collections.Slice -}}
+  {{- range .GetTerms "tags" }}{{ $keywords = $keywords | collections.Append .Title }}{{ end -}}
+  {{- $article = dict
+    "@context" "https://schema.org"
+    "@type" "Article"
+    "headline" .Title
+    "description" (.Description | compare.Default .Summary)
+    "image" $og
+    "author" (dict "@type" "Organization" "name" $name)
+    "publisher" (dict "@type" "Organization" "name" $name "logo" (dict "@type" "ImageObject" "url" $logo))
+    "datePublished" $published
+    "dateModified" $modified
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+    "inLanguage" $lang
+    "articleSection" $section
+    "keywords" $keywords
+  -}}
+{{- end -}}
+
+{{- /* BreadcrumbList：与可见面包屑同源 */ -}}
+{{- $items := collections.Slice -}}
+{{- $crumbs := partial "func/breadcrumbs.html" . -}}
+{{- range $i, $crumb := $crumbs -}}
+  {{- $items = $items | collections.Append (dict
+    "@type" "ListItem"
+    "position" (add $i 1)
+    "name" $crumb.title
+    "item" (($crumb.url | compare.Default $.Permalink) | absURL)) -}}
+{{- end -}}
+{{- $breadcrumb := dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $items -}}
+
+<script type="application/ld+json">
+{{ $website | jsonify (dict "indent" "  ") | safeJS }}
+</script>
+<script type="application/ld+json">
+{{ $org | jsonify (dict "indent" "  ") | safeJS }}
+</script>
+{{ with $article }}
+<script type="application/ld+json">
+{{ . | jsonify (dict "indent" "  ") | safeJS }}
+</script>
+{{ end }}
+<script type="application/ld+json">
+{{ $breadcrumb | jsonify (dict "indent" "  ") | safeJS }}
+</script>

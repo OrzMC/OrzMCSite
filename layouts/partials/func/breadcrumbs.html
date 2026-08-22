@@ -1,0 +1,21 @@
+{{- /* 返回面包屑数据 [{title, url}]：主页 › …section… › 当前页。可见导航与 BreadcrumbList 共用 */ -}}
+{{- $crumbs := collections.Slice (dict "title" "主页" "url" site.Home.RelPermalink) -}}
+{{- if not .IsHome -}}
+  {{- if .Params.breadcrumbs -}}
+    {{- /* 自定义层级：期望为 [{title: "...", url: "/..."}, ...] */ -}}
+    {{- $crumbs = collections.Slice -}}
+    {{- range .Params.breadcrumbs -}}
+      {{- $crumbs = $crumbs | collections.Append (dict "title" (.title | compare.Default "") "url" (.url | compare.Default "")) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- with .Ancestors -}}
+      {{- range .Reverse -}}
+        {{- if not .IsHome -}}
+          {{- $crumbs = $crumbs | collections.Append (dict "title" (.LinkTitle | compare.Default .Title) "url" .RelPermalink) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $crumbs = $crumbs | collections.Append (dict "title" (.LinkTitle | compare.Default .Title) "url" "") -}}
+  {{- end -}}
+{{- end -}}
+{{- return $crumbs -}}
