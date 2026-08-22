@@ -1,7 +1,7 @@
 {{/* 覆盖主题 site-footer.html：版权(左) + 不蒜子访问统计(中) + 社交(右)，同一水平行 */}}
 <footer class="{{ .Site.Params.background_color_class | compare.Default "bg-black" }} bottom-0 w-100 pa3" role="contentinfo">
-  <div class="flex justify-between items-center">
-    <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="{{ .Site.Home.Permalink }}">
+  <div class="site-footer__row">
+    <a class="site-footer__copyright f5 fw4 hover-white white-70 pv2 ph3 no-underline" href="{{ .Site.Home.Permalink }}">
       &copy; {{ with .Site.Copyright | compare.Default .Site.Title }} {{ . | safe.HTML }} {{ now.Format "2006"}} {{ end }}
     </a>
 

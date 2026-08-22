@@ -10,7 +10,7 @@
   {{ $section_count := len $section }}
 
   {{ if and ($show_recent_posts) (compare.Ge $section_count 1) }}
-    <div class="pa3 pa4-ns w-100 w-70-ns center">
+    <div class="posts-home">
       {{ $recent_title := site.Params.recent_posts_title | compare.Default "全部文章" }}
 
       <header class="w-100 mw8 center mb3">

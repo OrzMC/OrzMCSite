@@ -10,10 +10,15 @@
   var saved;
   try{ saved=localStorage.getItem(key); }catch(_){}
   d.setAttribute('data-theme',saved||preferred());
+  /* theme-color 随主题：暗 #0f172a / 亮 #f4f4f4（head 里静态 meta 作首屏默认） */
+  var meta=document.querySelector('meta[name="theme-color"]');
+  if(meta){ meta.setAttribute('content', d.getAttribute('data-theme')==='dark' ? '#0f172a' : '#f4f4f4'); }
 })();
 document.addEventListener('DOMContentLoaded',function(){
   var applyTheme=function(theme){
     document.documentElement.setAttribute('data-theme',theme);
+    var meta=document.querySelector('meta[name="theme-color"]');
+    if(meta){ meta.setAttribute('content', theme==='dark' ? '#0f172a' : '#f4f4f4'); }
     var btn=document.getElementById('theme-toggle');
     if(btn){
       var label=btn.querySelector('.theme-toggle__label');
