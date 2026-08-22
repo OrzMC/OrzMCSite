@@ -195,18 +195,35 @@ html[data-theme="dark"] .server-status {
 }
 .server-status__players-toggle:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 1px; }
 
-/* 玩家列表面板（点击展开）：网格，每格 = 头像 + 名称 */
+/* 玩家列表面板（点击展开）：网格，每格 = 头像 + 名称。
+   滚动健壮性说明：面板是卡片 flex 列布局里的一个 flex 项，旧引擎（旧 WebKit/部分
+   WebView）对带 overflow 的 flex 项不会自动把最小尺寸归零，导致 max-height 被内容撑破、
+   无法成为滚动容器——故显式 min-height:0。max-height 12rem→20rem：一次可见更多玩家；
+   网格列 140px→120px：手机面板（~290px 宽）也能排 2 列，滚动距离减半、可见玩家翻倍。
+   overscroll-behavior:contain 让面板滚动到顶/底时不再把滚动交给页面（避免"一滑整页也
+   跟着动"的假性失灵感）；iOS 惯性滚动 + 显式细滚动条，滚动能力一眼可见。 */
 .server-status__players {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 0.35rem 0.7rem;
   padding: 0.55rem 0.65rem;
   background: var(--ss-tag-bg);
   border: 1px solid var(--ss-border);
   border-radius: 10px;
-  max-height: 12rem;
+  max-height: 20rem;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ss-border-strong) transparent;
 }
+.server-status__players::-webkit-scrollbar { width: 8px; }
+.server-status__players::-webkit-scrollbar-thumb {
+  background: var(--ss-border-strong);
+  border-radius: 4px;
+}
+.server-status__players::-webkit-scrollbar-thumb:hover { background: var(--ss-muted); }
 .server-status__player {
   display: inline-flex;
   align-items: center;
