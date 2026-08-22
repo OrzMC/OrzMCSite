@@ -4,8 +4,8 @@
   var key='theme';
   var preferred=function(){
     /* 与 DOMContentLoaded 里的初始主题逻辑保持一致，避免首屏 dark→light 闪烁：
-       无存档时按系统偏好决定初始主题（站点默认深色仅体现在无偏好时随系统） */
-    return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+       无存档时站点默认暗黑模式（不再随系统偏好；用户手动切换后以 localStorage 为准） */
+    return 'dark';
   };
   var saved;
   try{ saved=localStorage.getItem(key); }catch(_){}
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded',function(){
   try{ stored=localStorage.getItem('theme'); }catch(_){}
   if(stored){ applyTheme(stored); }
   else{
-    applyTheme(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    applyTheme('dark'); /* 无存档 → 默认暗黑 */
   }
   var toggle=document.getElementById('theme-toggle');
   if(toggle){
