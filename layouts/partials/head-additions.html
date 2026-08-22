@@ -1,7 +1,11 @@
 {{/* 覆盖主题 head 注入点：性能提示 + PWA manifest + theme-color，保留 head-end hook */}}
 <link rel="preconnect" href="https://api.mcstatus.io" crossorigin>
 <link rel="dns-prefetch" href="https://api.mcstatus.io">
+<link rel="preconnect" href="https://busuanzi.ibruce.info">
+<link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
 <meta name="theme-color" content="#0f172a">
 <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
 {{ if .IsHome }}<link rel="preload" as="image" href="{{ "images/minecraft_night.png" | relURL }}">{{ end }}
+{{/* 不蒜子访问统计：async 不阻塞渲染；busuanzi 内部用 defer JSONP 请求计数 API 并等待 DOM 就绪 */}}
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 {{ partials.Include "hook.html" (dict "hook" "head-end" "context" .) }}
