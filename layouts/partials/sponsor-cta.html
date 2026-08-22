@@ -1,4 +1,4 @@
-{{- /* 捐赠/返佣 CTA 区块 partial（配置驱动，见 params.toml [sponsor]）。
+{{- /* 赞助/返佣 CTA 区块 partial（配置驱动，见 params.toml [sponsor]）。
   使用场景：/sponsor 页通过 {{< sponsor-cta >}} shortcode 嵌入。
   优雅降级：afdian_url 与所有 affiliate url 均为空时，整个区块不输出任何内容。
   注意：不用 {{ return }} 短路（在 partials.Include 下不可靠），改为 if 整体包裹。 */ -}}
@@ -9,7 +9,7 @@
 <section class="sponsor-cta">
   <h2>💖 支持我们</h2>
   {{- with $s.afdian_url -}}
-  <p class="sponsor-cta__intro">{{ $s.afdian_note | default "在爱发电支持我们，所有捐赠公开透明，全部用于服务器运营。" }}</p>
+  <p class="sponsor-cta__intro">{{ $s.afdian_note | default "在爱发电支持我们，所有赞助公开透明，全部用于服务器运营。" }}</p>
   <p><a class="sponsor-cta__btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">⚡ 前往爱发电支持我们</a></p>
   {{- end -}}
   {{- if $hasCards -}}
