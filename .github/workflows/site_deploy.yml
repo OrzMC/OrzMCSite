@@ -3,11 +3,27 @@ on:
   push:
     branches:
       - main
+    # 只对影响站点构建的路径触发重建；README/AGENTS/CLAUDE/.github 非 workflow 等无关改动跳过
+    paths:
+      - 'config/**'
+      - 'content/**'
+      - 'layouts/**'
+      - 'static/**'
+      - 'assets/**'
+      - 'i18n/**'
+      - 'archetypes/**'
+      - 'themes/**'              # submodule 指针变化也触发
+      - 'deploy'
+      - '.github/workflows/**'   # workflow 自身变更触发（便于验证）
+  workflow_dispatch:             # 手动触发入口
+
+concurrency:
+  group: deploy-gh-pages
+  cancel-in-progress: true       # 最新 push 覆盖旧 run，避免并发竞争 gh-pages 分支
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     permissions:
       contents: write
     steps:
@@ -15,8 +31,8 @@ jobs:
       uses: actions/checkout@v6
       with:
         submodules: true
-        fetch-depth: 0
-        persist-credentials: true
+        fetch-depth: 0            # deploy 发布 + enableGitInfo 需要完整历史
+        persist-credentials: true # deploy 脚本需要推送 gh-pages 的凭据
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v3
       with:
