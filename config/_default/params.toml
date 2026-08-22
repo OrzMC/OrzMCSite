@@ -164,3 +164,19 @@ body = """
 
 收到的捐赠将全部用于运营服务器，并公开所有接收到的捐赠及用途。
 """
+
+# 捐赠/返佣 CTA 区块（仅 /sponsor 页展示，见 layouts/shortcodes/sponsor-cta.html）
+# 配置驱动：对应链接为空时该条目自动隐藏，无需改模板。填入真实推广链接即可生效。
+[sponsor]
+afdian_url = "https://ifdian.net/a/orzmc"
+afdian_note = "在爱发电支持我们，所有捐赠公开透明，全部用于服务器运营。"
+
+[[sponsor.affiliate]]
+name = "腾讯云"
+description = "腾讯轻量，一键开服"
+url = "https://curl.qcloud.com/yc9gf7MY"
+
+[[sponsor.affiliate]]
+name = "阿里云"
+description = "轻量应用服务器 / ECS · 稳定可靠"
+url = "https://www.aliyun.com/product/ecs?userCode=uqebe1h3"
