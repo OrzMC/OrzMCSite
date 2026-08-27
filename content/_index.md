@@ -9,4 +9,4 @@ featured_image: "/images/minecraft_night.png"
 images: ["/images/og-default.png"]
 ---
 
-{{< server-status >}}
+{{< server-status tags="cn">}}
