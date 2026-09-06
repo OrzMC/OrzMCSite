@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>❤️‍🔥 我的世界 on 🇨🇳 OrzMC</title><link>https://orzmc.jokerhub.cn/</link><description>Recent content in ❤️‍🔥 我的世界 on 🇨🇳 OrzMC</description><generator>Hugo</generator><language>zh-cn</language><atom:link href="https://orzmc.jokerhub.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>怎样开发一个Minecraft启动器(Java版)</title><link>https://orzmc.jokerhub.cn/posts/1.client/10.launcher/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/1.client/10.launcher/</guid><description>自己动手写一个 Minecraft 启动器：从版本清单到启动命令，客户端和服务端启动器都能照做</description></item><item><title>Minecraft Web 客户端</title><link>https://orzmc.jokerhub.cn/posts/1.client/11.webmc/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/1.client/11.webmc/</guid><description>对比 Minecraft 网页客户端方案的版本覆盖、体验完整度与合规风险，给出选型建议。</description></item><item><title>服主应知应会</title><link>https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/</guid><description>面向 Minecraft 服务端管理员的迁移、升级、常用配置、指令和安全速查。</description></item><item><title>服务端运维</title><link>https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/</guid><description>记录 PaperMC 服务端在 Ubuntu 上的部署依赖、网络、资源包、systemd、定时任务与常见问题。</description></item><item><title>服务端插件</title><link>https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/</guid><description>收集 PaperMC 服务端常用插件，按权限安全、建筑地图、玩法经济和运维兼容分类，并记录安装与常见问题。</description></item><item><title>PaperMC插件开发</title><link>https://orzmc.jokerhub.cn/posts/2.server/23.papermc_plugin_dev/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/23.papermc_plugin_dev/</guid><description>从一个最小 PaperMC 插件开始，走完 plugin.yml、主类、事件、构建、调试和发布的完整流程。</description></item><item><title>Minecraft 基岩版服务端</title><link>https://orzmc.jokerhub.cn/posts/2.server/24.bedrock_server/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/24.bedrock_server/</guid><description>从下载、首次启动、常用配置到 systemd 托管，完整记录 Minecraft 基岩版服务端的部署与运维。</description></item><item><title>PaperMC 危险指令与防护</title><link>https://orzmc.jokerhub.cn/posts/2.server/25.papermc-dangerous-commands/</link><pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/25.papermc-dangerous-commands/</guid><description>服务端指令中容易造成灾难性后果的操作与场景，以及如何从权限和习惯上规避</description></item><item><title>对外开服安全清单</title><link>https://orzmc.jokerhub.cn/posts/2.server/26.papermc-open-server-checklist/</link><pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/26.papermc-open-server-checklist/</guid><description>从搭建到上线，检查对外开服前需要落实的安全加固与运维项</description></item><item><title>Paper 与 Folia 双核心插件全景对比</title><link>https://orzmc.jokerhub.cn/posts/2.server/27.paper-vs-folia/</link><pubDate>Wed, 19 Aug 2026 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/2.server/27.paper-vs-folia/</guid><description>Paper 与 Folia 两种核心的差异、插件生态对应关系、下载渠道与启用状态，一张表看懂两个核心开服的状况。</description></item><item><title>服务器地图大小限制</title><link>https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/</guid><description>从区块存储模型理解地图占用，用理论极值和实际测量估算容量，并给出世界边界与 mcaselector 备份优化方案。</description></item><item><title>相关资源链接</title><link>https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/</link><pubDate>Sat, 02 Aug 2025 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/</guid><description>按官方下载、Wiki、协议、工具和社区分类整理的 Minecraft 资源链接，并标注使用注意点。</description></item><item><title>Paper 26.1 世界目录结构迁移报告</title><link>https://orzmc.jokerhub.cn/posts/3.other/33.world-directory-migration-report/</link><pubDate>Thu, 02 Jul 2026 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/posts/3.other/33.world-directory-migration-report/</guid><description>Paper 26.1 废弃了旧版 Bukkit/CraftBukkit 继承的三目录平铺结构（world/ + world_nether/ + world_the_end/），改为与 Vanilla 原版一致的单目录嵌套维度结构。本文详细记录了从旧版到新版的世界目录结构迁移过程、变化明细、清理建议及 Paper 与 Vanilla 的三方对比。</description></item><item><title>客户端启动器</title><link>https://orzmc.jokerhub.cn/client/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/client/</guid><description>&lt;hr&gt;
+&lt;p&gt;Minecraft Java 版需要启动器才能运行。本页从玩家视角介绍三种选择：自研的 &lt;strong&gt;OrzMC 命令行启动器&lt;/strong&gt;（跨平台，首选）、自研的 &lt;strong&gt;OrzMC macOS 启动器&lt;/strong&gt;，以及第三方备选 &lt;strong&gt;HMCL&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;不知道怎么选，先看下表；想直接进服（白名单申请、服务器地址），见
 
-&lt;h2 id="各版本游戏需要的-java-版本" class="relative"&gt;
- 各版本游戏需要的 Java 版本&lt;a href="#%e5%90%84%e7%89%88%e6%9c%ac%e6%b8%b8%e6%88%8f%e9%9c%80%e8%a6%81%e7%9a%84-java-%e7%89%88%e6%9c%ac" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
-&lt;/h2&gt;
-&lt;p&gt;具体版本要求以官方发布为准。&lt;/p&gt;</description></item><item><title>玩家手册</title><link>https://orzmc.jokerhub.cn/user/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/user/</guid><description>&lt;h2 id="欢迎加入-orzmc" class="relative"&gt;
+
+
+
+&lt;a href="https://orzmc.jokerhub.cn/user/" &gt;玩家手册&lt;/a&gt;
+。&lt;/p&gt;</description></item><item><title>玩家手册</title><link>https://orzmc.jokerhub.cn/user/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/user/</guid><description>&lt;h2 id="欢迎加入-orzmc" class="relative"&gt;
  欢迎加入 OrzMC&lt;a href="#%e6%ac%a2%e8%bf%8e%e5%8a%a0%e5%85%a5-orzmc" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
 &lt;/h2&gt;
 &lt;p&gt;这里是一个由玩家共同建设的 Minecraft 社区。服务器中一些热爱创造的小伙伴花费了大量心力建造出各种漂亮的建筑，希望刚加入的朋友不要随意破坏，&lt;strong&gt;尊重他人的劳动成果&lt;/strong&gt;。&lt;/p&gt;</description></item><item><title>赞助</title><link>https://orzmc.jokerhub.cn/sponsor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/sponsor/</guid><description>&lt;hr&gt;
@@ -32,29 +35,115 @@
  &lt;img src="https://orzmc.jokerhub.cn/images/alipay_sponsor.png" alt="alipay" loading="lazy" decoding="async" class="mw-100" referrerpolicy="no-referrer" /&gt;
 
 &lt;/p&gt;</description></item><item><title>自研插件</title><link>https://orzmc.jokerhub.cn/plugin/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://orzmc.jokerhub.cn/plugin/</guid><description>&lt;hr&gt;
-&lt;p&gt;服务器使用自研插件 &lt;strong&gt;
+&lt;p&gt;服务器由自研插件 &lt;strong&gt;
 
 
 
 
 &lt;a href="https://hangar.papermc.io/OrzMC/OrzMC" target="_blank" rel="noopener noreferrer"&gt;OrzMC&lt;/a&gt;
-&lt;/strong&gt; 来辅助运营服务器，
-插件已发布到 &lt;strong&gt;
+&lt;/strong&gt; 辅助运营管理。它是一个面向 Paper / Folia 的服务端管理插件，把准入、权限、通知、群机器人等日常运维工作收拢到一套系统里。&lt;/p&gt;
+&lt;p&gt;发布与源码：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
 
 
 
 
-&lt;a href="https://hangar.papermc.io" target="_blank" rel="noopener noreferrer"&gt;Hangar&lt;/a&gt;
-&lt;/strong&gt; 和 &lt;strong&gt;
+&lt;a href="https://hangar.papermc.io/OrzMC/OrzMC" target="_blank" rel="noopener noreferrer"&gt;Hangar&lt;/a&gt;
+（Paper 生态发布平台）&lt;/li&gt;
+&lt;li&gt;
 
 
 
 
 &lt;a href="https://modrinth.com/plugin/orzmc" target="_blank" rel="noopener noreferrer"&gt;Modrinth&lt;/a&gt;
-&lt;/strong&gt; 平台。&lt;/p&gt;
-&lt;hr&gt;
+&lt;/li&gt;
+&lt;li&gt;
 
-&lt;h1 id="插件功能" class="relative"&gt;
- 插件功能&lt;a href="#%e6%8f%92%e4%bb%b6%e5%8a%9f%e8%83%bd" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
-&lt;/h1&gt;
-&lt;p&gt;新手进服会获得新手指南，&lt;strong&gt;/guide&lt;/strong&gt; 命令可以打开新手指南。&lt;/p&gt;</description></item></channel></rss>
+
+
+
+&lt;a href="https://github.com/OrzMC/OrzMCPlugin" target="_blank" rel="noopener noreferrer"&gt;GitHub 源码&lt;/a&gt;
+ · 
+
+
+
+
+&lt;a href="https://github.com/OrzMC/OrzMCPlugin/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer"&gt;更新日志&lt;/a&gt;
+ · 
+
+
+
+
+&lt;a href="https://github.com/OrzMC/OrzMCPlugin/blob/main/docs/features.md" target="_blank" rel="noopener noreferrer"&gt;功能文档&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="功能总览" class="relative"&gt;
+ 功能总览&lt;a href="#%e5%8a%9f%e8%83%bd%e6%80%bb%e8%a7%88" aria-label="链接到本节" data-tooltip="点击复制链接" class="anchor-link ml2 gray hover-dark-gray"&gt;🔗&lt;/a&gt;
+&lt;/h2&gt;
+&lt;table&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th style="text-align: left"&gt;功能模块&lt;/th&gt;
+					&lt;th style="text-align: left"&gt;说明&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;权限系统（Rank &amp;amp; Review）&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（&lt;code&gt;/apply&lt;/code&gt;、&lt;code&gt;/review&lt;/code&gt;）、手动升降级；启动时自动创建权限组，无需手工配置&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;白名单管理&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;多平台机器人（双通道）&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;&lt;code&gt;im.yml&lt;/code&gt; 的 &lt;code&gt;backend&lt;/code&gt; 在 &lt;strong&gt;EasyBot 网关&lt;/strong&gt;（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 &lt;strong&gt;内置直连 builtin&lt;/strong&gt;（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间&lt;strong&gt;二选一&lt;/strong&gt;；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;跨服传送门&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;TNT 保护&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（&lt;code&gt;×N&lt;/code&gt; + 首个坐标），并控制重生锚爆炸行为&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;安全控制&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;传送弓&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;世界维护&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;插件自更新&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 &lt;code&gt;plugins/update/&lt;/code&gt;，重启即完成升级&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;玩家通知&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;新手指南书&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td style="text-align: left"&gt;&lt;strong&gt;运行时配置&lt;/strong&gt;&lt;/td&gt;
+					&lt;td style="text-align: left"&gt;游戏内 &lt;code&gt;/config&lt;/code&gt; 管理 29 项运行时配置，支持 &lt;code&gt;list / get / set / reset / dump / reload&lt;/code&gt;，修改后热重载生效&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;玩家常用入口（&lt;code&gt;/guide&lt;/code&gt; 新手书、&lt;code&gt;/menu&lt;/code&gt; 菜单、&lt;code&gt;/apply&lt;/code&gt; 晋升申请等）详见
+
+
+
+
+&lt;a href="https://orzmc.jokerhub.cn/user/" &gt;玩家手册&lt;/a&gt;
+。&lt;/p&gt;</description></item></channel></rss>
