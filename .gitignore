@@ -3,3 +3,6 @@ resources
 public
 .hugo_build.lock
 .vscode/
+# 兜底：编辑器交换文件 / IDE 目录
+*.swp
+.idea/

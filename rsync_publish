@@ -42,8 +42,8 @@ usage() {
 环境变量:
   变量            默认值                说明
   LOCAL_WEB_ROOT  /var/www              本地站点目录（相对 Homebrew 前缀；绝对路径则直接用）
-  REMOTE_HOST     ubuntu@jokerhub.cn    远程主机
-  REMOTE_WEB_ROOT /var/www/html         远程站点目录
+  REMOTE_HOST     （必填，无默认）      远程主机，如 ubuntu@host（-r 时必填）
+  REMOTE_WEB_ROOT （必填，无默认）      远程站点目录（-r 时必填）
   RSYNC_OPTS      -rlptzv               rsync 选项（--delete 恒开启）
 
 说明:
@@ -85,9 +85,11 @@ command -v rsync >/dev/null 2>&1 || die "未找到 rsync"
 
 SITE_PUB_DIR="${SCRIPT_DIR}/public"
 LOCAL_WEB_ROOT="${LOCAL_WEB_ROOT:-/var/www}"
-REMOTE_HOST="${REMOTE_HOST:-ubuntu@jokerhub.cn}"
-REMOTE_WEB_ROOT="${REMOTE_WEB_ROOT:-/var/www/html}"
 RSYNC_OPTS="${RSYNC_OPTS:--rlptzv}"
+# 远程目标不再内置默认主机/路径（避免把服务器拓扑写进仓库）：-r 时二者必须由环境变量提供
+if [ "${DO_REMOTE}" = true ] && { [ -z "${REMOTE_HOST:-}" ] || [ -z "${REMOTE_WEB_ROOT:-}" ]; }; then
+  die "远程发布（-r）需要环境变量 REMOTE_HOST（如 user@host）与 REMOTE_WEB_ROOT"
+fi
 
 # 构建（多个目标只需构建一次）
 log "开始构建站点 (production) ..."
