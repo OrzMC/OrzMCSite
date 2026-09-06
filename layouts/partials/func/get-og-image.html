@@ -1,10 +1,22 @@
-{{- /* 解析页面社交分享图：images[0] → featured_image → 站点默认图，输出绝对 URL */ -}}
-{{- $img := site.Params.default_og_image | compare.Default "/images/og-default.png" -}}
+{{- /* 解析页面社交分享图：images[0] → featured_image → 站点默认图，输出绝对 URL。
+      若值为 /images/... 且命中 assets/images/ 下的全局资源（文章/页面 featured_image 走构建期管线），
+      输出构建期生成的 1280px PNG 档（≤源宽），避免把几 MB 的原始母版发布上线供爬虫抓取；
+      否则按 static 路径输出 absURL。 */ -}}
+{{- $raw := site.Params.default_og_image | compare.Default "/images/og-default.png" -}}
 {{- with .Params.images -}}
-  {{- $img = index . 0 -}}
+  {{- $raw = index . 0 -}}
 {{- else -}}
   {{- with .Params.featured_image -}}
-    {{- $img = . -}}
+    {{- $raw = . -}}
   {{- end -}}
 {{- end -}}
-{{- return ($img | absURL) -}}
+{{- $url := $raw | absURL -}}
+{{- if strings.HasPrefix $raw "/images/" -}}
+  {{- with $res := resources.Get (strings.TrimPrefix "/" $raw) -}}
+    {{- /* 分享图用 ≤1280 的 PNG 档：大于社交最低宽 1200，且避免发布原始大图 */ -}}
+    {{- $w := 1280 -}}
+    {{- if lt $res.Width 1280 }}{{ $w = $res.Width }}{{ end -}}
+    {{- $url = (($res.Process (printf "resize %dx png" $w)).RelPermalink) | absURL -}}
+  {{- end -}}
+{{- end -}}
+{{- return $url -}}

@@ -105,16 +105,112 @@ html[data-theme="light"] .highlight pre { margin: 0; }
 img { border-radius: 1px; }
 .mw-100 { max-width: 100%; height: auto; }
 
-/* 响应式 hero：<picture> 全出血覆盖，复刻主题 cover bg-top（水平居中、垂直顶对齐） */
-.site-hero-header { position: relative; }
-.site-hero-media,
-.site-hero-img {
+/* hero 显示模式（frontmatter hero_display: cover | fit，默认 fit）
+   cover = 全出血：<picture> 绝对定位铺满 header，object-fit:cover 中心顶对齐裁切，标题压图；
+   fit   = 等比全宽：图按源图宽高比 width:100%;height:auto 显示，不裁不拉伸，主体任何视口完整可见。 */
+.site-hero-header.site-hero--cover { position: relative; }
+.site-hero--cover .site-hero-media,
+.site-hero--cover .site-hero-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center top;
+}
+/* fit 显示（默认，hero_display: fit）。结构：.site-hero-stage(relative) 内先放
+   <picture>（决定高度），再叠 .site-hero-overlay（absolute inset0 + flex 列）：
+   .site-hero-nav 占自然高度（不猜高度），.site-hero-main(flex:1) 承载标题——
+   标题在“导航下方剩余区域”内定位/居中，天然扣除导航高度。
+   - ≥60em（导航单行）：图按源宽高比等比全宽（不裁不拉伸），导航悬浮图顶渐变遮罩，
+     标题在导航下方剩余区水平垂直居中（文字投影）；
+   - <60em（导航 flex-wrap 折行）：导航仍悬浮图顶；图改 cover + 左对齐（右侧可裁，素材主体靠左），
+     hero 高 clamp 兜底，标题在导航下方剩余区底部居左（max-width 收窄），与导航物理分离。 */
+.site-hero--fit .site-hero-stage { position: relative; }
+.site-hero--fit .site-hero-media,
+.site-hero--fit .site-hero-img {
+  display: block;
+  width: 100%;
+  height: auto; /* ≥60em：等比全宽不裁剪 */
+}
+/* 图文分离底座：整图轻微压暗（默认 ~20%），让悬浮的白字与任何底色都有基础对比；
+   需要更亮/更暗的页面可把数值调高（0=不压）——优先于改单条投影 */
+.site-hero--fit .site-hero-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, var(--hero-dim, 0.05)); /* 整图极轻压暗 5%（默认），文字与图基础分离且几乎不改画面 */
+}
+/* <60em：竖向 band + cover 左对齐裁右 */
+.site-hero--fit .site-hero-stage {
+  height: clamp(360px, 72vh, 560px);
+  overflow: hidden;
+}
+.site-hero--fit .site-hero-media { position: absolute; inset: 0; }
+.site-hero--fit .site-hero-media,
+.site-hero--fit .site-hero-img { width: 100%; height: 100%; }
+.site-hero--fit .site-hero-img { object-fit: cover; object-position: left center; }
+/* 悬浮层 */
+.site-hero--fit .site-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none; /* 空区域不挡图；导航等可交互元素单独恢复 */
+}
+.site-hero--fit .site-hero-nav {
+  flex: 0 0 auto;
+  pointer-events: auto;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.5) 55%, transparent 100%);
+}
+.site-hero--fit .site-hero-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;      /* <60em：标题落在剩余区底部 */
+  align-items: flex-start;
+  padding: 0 0 clamp(1rem, 5vw, 2.5rem) clamp(1rem, 4vw, 2rem);
+  min-height: 0;
+  background: linear-gradient(180deg, transparent 25%, rgba(0, 0, 0, 0.4) 100%); /* 左下标题专属衬底 */
+}
+.site-hero--fit .site-hero-title {
+  max-width: min(32rem, 76%);
+  text-align: left;
+}
+.site-hero--fit .site-hero-title h1,
+.site-hero--fit .site-hero-title h2 {
+  /* 三层投影：1px 勾边保证字形边缘锐利 + 中距晕 + 远光晕，任意底色都可读 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 2px 12px rgba(0, 0, 0, 0.92), 0 12px 42px rgba(0, 0, 0, 0.55);
+}
+@media (min-width: 60em) {
+  .site-hero--fit .site-hero-stage { height: auto; overflow: visible; }
+  .site-hero--fit .site-hero-media { position: static; }
+  .site-hero--fit .site-hero-img { position: static; width: 100%; height: auto; object-fit: initial; object-position: initial; }
+  .site-hero--fit .site-hero-nav {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 45%, transparent 100%);
+  }
+  .site-hero--fit .site-hero-main {
+    justify-content: center;      /* ≥60em：在导航下方剩余区内居中 */
+    align-items: center;
+    padding: 0 2rem;
+    background: none;             /* 居中态靠整图压暗层+投影，不加局部渐变 */
+    /* 光学中心微调：剩余区几何居中仍偏下（导航让位所致），
+       整体再上移 ~6% 使标题重心落在图面 ~45–48%，上下留白更平衡、不显下沉 */
+    transform: translateY(-6%);
+  }
+  .site-hero--fit .site-hero-title {
+    max-width: none;
+    width: 100%;
+    text-align: center;
+  }
+  .site-hero--fit .site-hero-title h2 {
+    max-width: min(44rem, 82%);   /* 描述限宽，避免一行拉满失焦 */
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* TOC sticky layout */

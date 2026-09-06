@@ -3,6 +3,7 @@ menu:
   main:
     weight: 4
 title: 自研插件
+featured_image: "/images/minecraft_plugin.png"
 ---
 
 ---

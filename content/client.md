@@ -4,6 +4,7 @@ menu:
     name: "客户端"
     weight: 2
 title: 客户端启动器
+featured_image: "/images/minecraft_client.png"
 toc: true
 ---
 ---

@@ -1,51 +1,15 @@
-{{/* 覆盖主题 site-header.html：hero 改为 <picture> 响应式加载（多档 WebP/PNG，见 AGENTS.md 图片约定）。
-    featured_image 仍从页面 frontmatter 读取；变体路径按约定从 featured_image 派生（_640/_1280/_1920/_2560 的 .webp/.png + _3840.webp 全分辨率）。
-    sizes 分段抬档的原因：手机 hero 是竖容器，object-fit:cover 按高填满导致图横向放大 ~2.7x，sizes=100vw 的朴素选档会欠采样发糊——
-    故手机(<48em)用 180vw 按 DPR 抬档（DPR2→1920w、DPR3→2560w）；平板(48-60em)用 120vw 防过载；桌面(≥60em)是 1:1 保持 100vw。
-    2560 档兼顾 DPR1.25-1.5 笔记本与 2K 屏（缺它会让这些屏直跳 3840w 白掏流量）；3840 档 = Retina 桌面 2x 兜底。
-    换 hero 图时需用 ffmpeg 重跑变体生成命令并保持此派生约定，无需改动本文件逻辑。 */}}
-{{ $featured_image := partials.Include "func/GetFeaturedImage.html" . }}
-{{ if $featured_image }}
-  {{/* 从 .Params.featured_image（原始值，如 /images/minecraft_night.png）派生变体路径 */}}
-  {{ $dir := "" }}
-  {{ $stem := "" }}
-  {{ with .Params.featured_image }}
-    {{ $rel := strings.Trim . "/" }}
-    {{ $dir = path.Dir $rel }}
-    {{ $stem = strings.TrimSuffix (path.Ext $rel) (path.Base $rel) }}
-  {{ end }}
-  {{ $w640 := printf "%s/%s_640.webp" $dir $stem | urls.RelURL }}
-  {{ $w1280 := printf "%s/%s_1280.webp" $dir $stem | urls.RelURL }}
-  {{ $w1920 := printf "%s/%s_1920.webp" $dir $stem | urls.RelURL }}
-  {{ $w2560 := printf "%s/%s_2560.webp" $dir $stem | urls.RelURL }}
-  {{ $w3840 := printf "%s/%s_3840.webp" $dir $stem | urls.RelURL }}
-  {{ $p640 := printf "%s/%s_640.png" $dir $stem | urls.RelURL }}
-  {{ $p1280 := printf "%s/%s_1280.png" $dir $stem | urls.RelURL }}
-  {{ $p1920 := printf "%s/%s_1920.png" $dir $stem | urls.RelURL }}
-  {{ $cover_dimming_class := .Param "cover_dimming_class" | compare.Default "bg-black-15" }}
-  {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv4 pv6-l ph3 ph4-ns" }}
-  {{ $sizes := "(min-width:60em) 100vw, (min-width:48em) 120vw, 180vw" }}
-  <header class="relative site-hero-header">
-    <picture class="site-hero-media">
-      <source type="image/webp" srcset="{{ $w640 }} 640w, {{ $w1280 }} 1280w, {{ $w1920 }} 1920w, {{ $w2560 }} 2560w, {{ $w3840 }} 3840w" sizes="{{ $sizes }}">
-      <source type="image/png" srcset="{{ $p640 }} 640w, {{ $p1280 }} 1280w, {{ $p1920 }} 1920w" sizes="{{ $sizes }}">
-      <img class="site-hero-img" src="{{ $p1280 }}" alt=""{{ if .IsHome }} fetchpriority="high"{{ end }}>
-    </picture>
-    <div class="relative {{ $cover_dimming_class }}">
-      {{ partials.Include "site-navigation.html" .}}
-      <div class="{{ $header_section_class }}">
-        <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
-          {{ .Title | compare.Default .Site.Title }}
-        </h1>
-        {{ with .Params.description }}
-          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3">
-            {{ . }}
-          </h2>
-        {{ end }}
-      </div>
-    </div>
-  </header>
-{{ else }}
+{{/* 覆盖主题 site-header.html：页面 featured_image → 响应式 hero。
+    所有 featured_image（首页/赞助/client/user/plugin/文章页）统一走 assets/images/ 构建期管线：
+    源文件放 assets/images/<file>，frontmatter 写 featured_image: "/images/<file>"，由
+    func/hero-variants.html 在编译期生成多档变体并引用发布产物——无需手工预生成变体、无需登记源宽。
+
+    显示模式（frontmatter `hero_display: "cover" | "fit"`，默认 fit）：
+    - fit：图按源图宽高比全宽显示（width:100%; height:auto），不裁不拉伸，任何视口主体完整可见；
+      结构 = 黑底导航条 → 全宽图 → 下方黑底标题/描述条。sizes=100vw。
+    - cover：旧的全出血海报模式——<picture> 绝对定位铺满 header，object-fit:cover 中心顶对齐裁切，
+      标题压图（cover_dimming_class 调暗层）。页面未声明 featured_image（或资源缺失）时回退纯黑 header。 */}}
+{{- $hero := partials.Include "func/hero-variants.html" . -}}
+{{- if not $hero.ok -}}
   <header>
     <div class="pb3-m pb6-l {{ .Site.Params.background_color_class | compare.Default "bg-black" }}">
       {{ partials.Include "site-navigation.html" . }}
@@ -62,4 +26,58 @@
       </div>
     </div>
   </header>
-{{ end }}
+{{- else if eq $hero.mode "cover" -}}
+  {{ $cover_dimming_class := .Param "cover_dimming_class" | compare.Default "bg-black-15" }}
+  {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv4 pv6-l ph3 ph4-ns" }}
+  <header class="site-hero-header site-hero--cover">
+    <picture class="site-hero-media">
+      <source type="image/webp" srcset="{{ $hero.webp }}" sizes="{{ $hero.sizes }}">
+      <source type="image/png" srcset="{{ $hero.png }}" sizes="{{ $hero.sizes }}">
+      <img class="site-hero-img" src="{{ $hero.fb }}" alt=""{{ if .IsHome }} fetchpriority="high"{{ end }}>
+    </picture>
+    <div class="relative {{ $cover_dimming_class }}">
+      {{ partials.Include "site-navigation.html" .}}
+      <div class="{{ $header_section_class }}">
+        <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
+          {{ .Title | compare.Default .Site.Title }}
+        </h1>
+        {{ with .Params.description }}
+          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3">
+            {{ . }}
+          </h2>
+        {{ end }}
+      </div>
+    </div>
+  </header>
+{{- else -}}
+  {{- /* fit 模式：全宽等比图（不裁不拉伸，主体可见），导航与标题悬浮在图上方
+      （顶部渐变遮罩保证导航可读；标题水平垂直居中 + 文字投影）。 */ -}}
+  <header class="site-hero-header site-hero--fit">
+    <div class="relative site-hero-stage">
+      <picture class="site-hero-media">
+        <source type="image/webp" srcset="{{ $hero.webp }}" sizes="{{ $hero.sizes }}">
+        <source type="image/png" srcset="{{ $hero.png }}" sizes="{{ $hero.sizes }}">
+        <img class="site-hero-img" src="{{ $hero.fb }}" alt=""{{ if .IsHome }} fetchpriority="high"{{ end }}>
+      </picture>
+      {{/* 悬浮层：flex 列布局——导航占自然高度，标题在“导航下方剩余区”内定位/居中，
+          因此标题居中计算天然扣除了导航高度（无需猜导航像素高） */}}
+      <div class="site-hero-overlay">
+        <div class="site-hero-nav">
+          {{ partials.Include "site-navigation.html" . }}
+        </div>
+        <div class="site-hero-main">
+          <div class="site-hero-title">
+            <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
+              {{ .Title | compare.Default .Site.Title }}
+            </h1>
+            {{ with .Params.description }}
+              <h2 class="fw1 f5 f3-l white-80 mt3">
+                {{ . }}
+              </h2>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+{{- end -}}

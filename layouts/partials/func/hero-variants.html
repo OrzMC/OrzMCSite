@@ -1,0 +1,54 @@
+{{- /* 计算页面 hero（featured_image）的响应式档位（assets/images/ 构建期管线）。
+      约定：frontmatter `featured_image: "/images/<file>"` 的文件放在 `assets/images/<file>`，
+      Hugo 在编译期按源图原生宽度自动生成变体（webp q90 / png 兜底），无需手工预生成、无需登记源宽。
+      页面无 featured_image 或资源缺失时 ok=false，调用方回退纯色 header。
+      返回 dict：ok(bool)、webp(srcset 串)、png(srcset 串)、fb(<img> 降级 png URL)、sizes(srcset 尺寸规则)。
+      site-header.html 渲染 <picture>、head-additions.html 首页 preload 均引用本 partial，保证两处档位一致。 */ -}}
+{{- $ok := false -}}
+{{- $webp := "" -}}
+{{- $png := "" -}}
+{{- $fb := "" -}}
+{{- /* 显示模式：默认 fit（图按自身比例全宽，不裁剪，sizes=100vw）；frontmatter 可设
+      hero_display: "cover" 回退旧的全出血 cover（sizes 需分段抬档，见下）。 */ -}}
+{{- $mode := .Param "hero_display" | compare.Default "fit" -}}
+{{- $sizes := "100vw" -}}
+{{- if eq $mode "cover" -}}
+  {{- /* cover 的 sizes 抬档原因：手机 hero 是竖容器，object-fit:cover 按高填满导致图横向放大 ~2.7x */ -}}
+  {{- $sizes = "(min-width:60em) 100vw, (min-width:48em) 120vw, 180vw" -}}
+{{- end -}}
+{{- with .Params.featured_image -}}
+  {{- if strings.HasPrefix . "/images/" -}}
+    {{- /* 注意：本 Hugo 版本 strings.TrimPrefix/TrimSuffix 参数序为 (prefix/suffix, s) */ -}}
+    {{- with $img := resources.Get (strings.TrimPrefix "/" .) -}}
+      {{- if eq $img.MediaType.SubType "png" "jpg" "jpeg" "webp" "gif" -}}
+        {{- $native := $img.Width -}}
+        {{- /* 标准档位链上限 = min(标准档, 源宽)；源宽不是标准档时把原生宽补为最高 webp 档，
+              不做超采样的 2560/3840 假档。 */ -}}
+        {{- $webpTiers := collections.Slice -}}
+        {{- range $w := collections.Slice 640 1280 1920 2560 3840 -}}
+          {{- if le $w $native -}}{{- $webpTiers = $webpTiers | collections.Append $w -}}{{- end -}}
+        {{- end -}}
+        {{- if and (gt $native 1280) (not (collections.In $webpTiers $native)) -}}
+          {{- $webpTiers = $webpTiers | collections.Append $native -}}
+        {{- end -}}
+        {{- range $i, $w := $webpTiers -}}
+          {{- $u := ($img.Process (printf "resize %dx webp q90" $w)).RelPermalink -}}
+          {{- if $i }}{{ $webp = printf "%s, " $webp }}{{ end -}}
+          {{- $webp = printf "%s%s %dw" $webp $u $w -}}
+        {{- end -}}
+        {{- range $w := collections.Slice 640 1280 1920 -}}
+          {{- if le $w $native -}}
+            {{- $u := ($img.Process (printf "resize %dx png" $w)).RelPermalink -}}
+            {{- if $png }}{{ $png = printf "%s, " $png }}{{ end -}}
+            {{- $png = printf "%s%s %dw" $png $u $w -}}
+          {{- end -}}
+        {{- end -}}
+        {{- $fbw := 1280 -}}
+        {{- if lt $native 1280 }}{{ $fbw = $native }}{{ end -}}
+        {{- $fb = ($img.Process (printf "resize %dx png" $fbw)).RelPermalink -}}
+        {{- $ok = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "ok" $ok "mode" $mode "webp" $webp "png" $png "fb" $fb "sizes" $sizes) -}}

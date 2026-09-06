@@ -4,6 +4,7 @@ menu:
     weight: 3
 toc: true
 title: 玩家手册
+featured_image: "/images/minecraft_user.png"
 ---
 
 ## 欢迎加入 OrzMC
