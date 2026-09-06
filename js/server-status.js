@@ -440,6 +440,7 @@
           var panel = openPanels.get(server.key);
           if (!panel) {
             panel = buildPlayerList(plist);   // 首次点击才构建（头像按需加载）
+            panel.id = 'server-status-players-' + server.key; // 供 aria-controls 关联
             openPanels.set(server.key, panel);
           }
           if (panel.parentNode) {
@@ -450,6 +451,7 @@
           }
           var open = !!panel.parentNode;
           pbtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          pbtn.setAttribute('aria-controls', panel.id);
         });
         meta.appendChild(pbtn);
       } else {
