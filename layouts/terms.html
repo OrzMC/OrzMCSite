@@ -1,22 +1,22 @@
-{{/* 覆盖主题 terms：标签/分类索引页。直接用标签原名（避免 inflect.Humanize 破坏拉丁文，如 WebMC→Webmc） */}}
+{{/* 覆盖主题 terms：标签/分类词条页（/tags/paper、/categories/客户端）。
+    页题 h1 由 site-header fallback 输出（Kind=term 强制叠字，直接用词条原名，不经
+    inflect.Humanize——避免破坏拉丁文如 WebMC→Webmc）。
+    正文与文章归档一致：该词条下文章用 summary 卡片网格渲染。 */}}
 {{ define "main" }}
-  <article class="cf pa3 pa4-m pa4-l">
-    <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
-      {{ .Content }}
+  <article class="pa3 pa4-ns">
+    <div class="mw8 center">
+      {{ with .Content }}
+        <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
+          {{ . }}
+        </div>
+      {{ end }}
+      <aside class="mt5 posts-grid">
+        {{ range .Pages }}
+          <div class="relative">
+            {{ .Render "summary" }}
+          </div>
+        {{ end }}
+      </aside>
     </div>
   </article>
-  <div class="mw8 center">
-    <section class="ph4">
-      {{ range $term := .Data.Pages }}
-        <h2 class="f1">
-          <a href="{{ $term.RelPermalink }}" class="link blue hover-black">
-            {{ $term.LinkTitle }}
-          </a>
-        </h2>
-        {{ range $term.Pages }}
-          {{ .Render "summary" }}
-        {{ end }}
-      {{ end }}
-    </section>
-  </div>
 {{ end }}

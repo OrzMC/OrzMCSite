@@ -5,31 +5,47 @@
 
     显示模式（frontmatter `hero_display: "cover" | "fit"`，默认 fit）：
     - fit：图按源图宽高比全宽显示（width:100%; height:auto），不裁不拉伸，任何视口主体完整可见；
-      结构 = 黑底导航条 → 全宽图 → 下方黑底标题/描述条。sizes=100vw。
-    - cover：旧的全出血海报模式——<picture> 绝对定位铺满 header，object-fit:cover 中心顶对齐裁切，
-      标题压图（cover_dimming_class 调暗层）。页面未声明 featured_image（或资源缺失）时回退纯黑 header。 */}}
+      sizes=100vw。
+    - cover：旧的全出血海报模式——<picture> 绝对定位铺满 header，object-fit:cover 中心顶对齐裁切。
+      页面未声明 featured_image（或资源缺失）时回退纯黑 header。
+
+    标题/描述输出开关（frontmatter/site 参数 `hero_title`，**默认 false = 不叠字**）：
+    页面主标题与描述由正文内容区承担（见 single.html 的 h1/h2 逻辑），site-header 只做导航+图，
+    避免同页双标题。需在图面叠字时（如首页，已设 hero_title: true）逐页开启。
+    - fit + 关：悬浮层只剩导航（顶渐变），主图纯展示；
+    - cover + 关：导航压图，图片区域靠 .site-hero--no-text 的 min-height 撑起；
+    - 无图回退 + 关：纯黑导航条，无标题文字。 */}}
 {{- $hero := partials.Include "func/hero-variants.html" . -}}
+{{- /* 标题/描述开关：
+     - single 类页面（Kind=page，正文有内容区标题）默认不叠字（hero_title 缺省 false）；
+     - 列表类页面（Kind=section/taxonomy/term：文章归档/分类/标签）没有正文标题区，
+       必须由 fallback header 输出 h1，否则整页无 h1（回归：73 页无 h1 即此因）；
+     - 任意页面 frontmatter hero_title: true 可强制叠字（正文标题自动降 h2）。 */ -}}
+{{- $showText := false -}}
+{{- if .Param "hero_title" }}{{ $showText = true }}{{ end -}}
+{{- if in (collections.Slice "section" "taxonomy" "term") .Kind }}{{ $showText = true }}{{ end -}}
 {{- if not $hero.ok -}}
   <header>
-    <div class="pb3-m pb6-l {{ .Site.Params.background_color_class | compare.Default "bg-black" }}">
+    <div class="{{ if $showText }}pb3-m pb6-l {{ end }}{{ .Site.Params.background_color_class | compare.Default "bg-black" }}">
       {{ partials.Include "site-navigation.html" . }}
-      {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv3 ph3 ph4-ns" }}
-      <div class="{{ $header_section_class }}">
-        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          {{ .Title | compare.Default .Site.Title }}
-        </h1>
-        {{ with .Params.description }}
-          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
-            {{ . }}
-          </h2>
-        {{ end }}
-      </div>
+      {{ if $showText }}
+        {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv3 ph3 ph4-ns" }}
+        <div class="{{ $header_section_class }}">
+          <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+            {{ .Title | compare.Default .Site.Title }}
+          </h1>
+          {{ with .Params.description }}
+            <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
+              {{ . }}
+            </h2>
+          {{ end }}
+        </div>
+      {{ end }}
     </div>
   </header>
 {{- else if eq $hero.mode "cover" -}}
   {{ $cover_dimming_class := .Param "cover_dimming_class" | compare.Default "bg-black-15" }}
-  {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv4 pv6-l ph3 ph4-ns" }}
-  <header class="site-hero-header site-hero--cover">
+  <header class="site-hero-header site-hero--cover{{ if not $showText }} site-hero--no-text{{ end }}">
     <picture class="site-hero-media">
       <source type="image/webp" srcset="{{ $hero.webp }}" sizes="{{ $hero.sizes }}">
       <source type="image/png" srcset="{{ $hero.png }}" sizes="{{ $hero.sizes }}">
@@ -37,46 +53,50 @@
     </picture>
     <div class="relative {{ $cover_dimming_class }}">
       {{ partials.Include "site-navigation.html" .}}
-      <div class="{{ $header_section_class }}">
-        <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
-          {{ .Title | compare.Default .Site.Title }}
-        </h1>
-        {{ with .Params.description }}
-          <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3">
-            {{ . }}
-          </h2>
-        {{ end }}
-      </div>
+      {{ if $showText }}
+        {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv4 pv6-l ph3 ph4-ns" }}
+        <div class="{{ $header_section_class }}">
+          <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
+            {{ .Title | compare.Default .Site.Title }}
+          </h1>
+          {{ with .Params.description }}
+            <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3">
+              {{ . }}
+            </h2>
+          {{ end }}
+        </div>
+      {{ end }}
     </div>
   </header>
 {{- else -}}
-  {{- /* fit 模式：全宽等比图（不裁不拉伸，主体可见），导航与标题悬浮在图上方
-      （顶部渐变遮罩保证导航可读；标题水平垂直居中 + 文字投影）。 */ -}}
-  <header class="site-hero-header site-hero--fit">
+  {{- /* fit 模式：全宽等比图（不裁不拉伸，主体可见）。标题叠字默认关闭（hero_title=false），
+      此时悬浮层只含导航（顶部渐变遮罩保证可读）；开启后标题在“导航下方剩余区”内定位/居中
+      （flex 列布局，居中计算天然扣除导航高度，无需猜导航像素高）。 */ -}}
+  <header class="site-hero-header site-hero--fit{{ if not $showText }} site-hero--no-text{{ end }}">
     <div class="relative site-hero-stage">
       <picture class="site-hero-media">
         <source type="image/webp" srcset="{{ $hero.webp }}" sizes="{{ $hero.sizes }}">
         <source type="image/png" srcset="{{ $hero.png }}" sizes="{{ $hero.sizes }}">
         <img class="site-hero-img" src="{{ $hero.fb }}" alt=""{{ if .IsHome }} fetchpriority="high"{{ end }}>
       </picture>
-      {{/* 悬浮层：flex 列布局——导航占自然高度，标题在“导航下方剩余区”内定位/居中，
-          因此标题居中计算天然扣除了导航高度（无需猜导航像素高） */}}
       <div class="site-hero-overlay">
         <div class="site-hero-nav">
           {{ partials.Include "site-navigation.html" . }}
         </div>
-        <div class="site-hero-main">
-          <div class="site-hero-title">
-            <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
-              {{ .Title | compare.Default .Site.Title }}
-            </h1>
-            {{ with .Params.description }}
-              <h2 class="fw1 f5 f3-l white-80 mt3">
-                {{ . }}
-              </h2>
-            {{ end }}
+        {{ if $showText }}
+          <div class="site-hero-main">
+            <div class="site-hero-title">
+              <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
+                {{ .Title | compare.Default .Site.Title }}
+              </h1>
+              {{ with .Params.description }}
+                <h2 class="fw1 f5 f3-l white-80 mt3">
+                  {{ . }}
+                </h2>
+              {{ end }}
+            </div>
           </div>
-        </div>
+        {{ end }}
       </div>
     </div>
   </header>

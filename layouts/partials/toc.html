@@ -1,6 +1,15 @@
-{{ if .Params.toc }}
-<nav class="ba b--black-10 br2 bg-near-white pa3" role="navigation" aria-label="目录" aria-labelledby="toc-title">
-  <h2 id="toc-title" class="f6 silver mb2">目录</h2>
-  {{ .TableOfContents }}
-</nav>
-{{ end }}
+{{- /* 目录 partial（单份导航 markup），接受 (dict "ctx" 页面 "uid" 唯一标识)。
+      页面 toc:true 时由 single.html 在桌面 sticky 侧栏与移动端 <details> 各渲染一次
+      （两份实例在 DOM 中共存、断点 CSS 切换显隐）。uid 只用于给 Hugo 生成的
+      TableOfContents id 加后缀避免同页重复 id；**视觉样式不再依赖该 id**——外层 nav
+      挂 .site-toc 类，custom.css 以 .site-toc 后代选择器统一定制（列表去点/紧凑/链接色）。 */ -}}
+{{- $page := compare.Default . .ctx -}}
+{{- $uid := compare.Default "main" .uid -}}
+{{- if $page.Params.toc -}}
+  {{- $tocID := printf "TableOfContents-%s" $uid -}}
+  {{- $tocHTML := strings.Replace $page.TableOfContents `id="TableOfContents"` (printf `id="%s"` $tocID) -}}
+  <nav class="site-toc ba b--black-10 br2 bg-near-white pa3" role="navigation" aria-label="目录" aria-labelledby="toc-title-{{ $uid }}">
+    <h2 id="toc-title-{{ $uid }}" class="f6 silver mb2">目录</h2>
+    {{ $tocHTML | safeHTML }}
+  </nav>
+{{- end -}}

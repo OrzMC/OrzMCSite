@@ -4,7 +4,7 @@
 {{- $lang := "zh-CN" -}}
 {{- $name := "OrzMC" -}}
 {{- $logo := "/images/favicon.png" | absURL -}}
-{{- $og := partial "func/get-og-image.html" . -}}
+{{- $og := partials.Include "func/get-og-image.html" . -}}
 
 {{- /* Organization.sameAs：从 params.ananke.social 汇总 */ -}}
 {{- $sameAs := collections.Slice -}}
@@ -51,7 +51,7 @@
     "@type" "Article"
     "headline" .Title
     "description" (.Description | compare.Default .Summary)
-    "image" $og
+    "image" $og.url
     "author" (dict "@type" "Organization" "name" $name "url" $siteURL)
     "publisher" (dict "@type" "Organization" "name" $name "url" $siteURL "logo" (dict "@type" "ImageObject" "url" $logo))
     "datePublished" $published
@@ -65,7 +65,7 @@
 
 {{- /* BreadcrumbList：与可见面包屑同源 */ -}}
 {{- $items := collections.Slice -}}
-{{- $crumbs := partial "func/breadcrumbs.html" . -}}
+{{- $crumbs := partials.Include "func/breadcrumbs.html" . -}}
 {{- range $i, $crumb := $crumbs -}}
   {{- $items = $items | collections.Append (dict
     "@type" "ListItem"

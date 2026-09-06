@@ -36,7 +36,9 @@
           {{- if $i }}{{ $webp = printf "%s, " $webp }}{{ end -}}
           {{- $webp = printf "%s%s %dw" $webp $u $w -}}
         {{- end -}}
-        {{- range $w := collections.Slice 640 1280 1920 -}}
+        {{- /* png 只保留 640/1280 兜底档：1920 png 档（可达 ~1.5MB）仅服务无 <picture> 的老浏览器，
+              而 <img> 兜底(1280) 已覆盖，故去掉 1920 防产物膨胀 */ -}}
+        {{- range $w := collections.Slice 640 1280 -}}
           {{- if le $w $native -}}
             {{- $u := ($img.Process (printf "resize %dx png" $w)).RelPermalink -}}
             {{- if $png }}{{ $png = printf "%s, " $png }}{{ end -}}

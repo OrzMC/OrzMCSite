@@ -1,0 +1,24 @@
+{{/* 覆盖主题 taxonomy.html（标签/分类总览页 /tags/、/categories/）：
+    主题原实现逐词条 .Render "summary"，词条名被渲染成 h1（实测 /tags/ 33 个 h1），
+    且每词条重复拉取摘要——语义与体积都差。
+    本实现改为：页题 h1 由 site-header fallback 输出（Kind=taxonomy 强制叠字），
+    正文只输出紧凑词条云（词条链接 + 文章数），不再重复摘要。 */}}
+{{ define "main" }}
+  <article class="pa3 pa4-ns">
+    <div class="mw8 center">
+      {{ with .Content }}
+        <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
+          {{ . }}
+        </div>
+      {{ end }}
+      <div class="flex flex-wrap mt4">
+        {{- range .Pages -}}
+          <a class="link f5 br-pill ba b--black-10 bg-white ph3 pv2 dib black sans-serif no-underline mr2 mb2 dim"
+             href="{{ .RelPermalink }}">
+            {{- .LinkTitle }} <span class="silver f6">({{ len .Pages }})</span>
+          </a>
+        {{- end -}}
+      </div>
+    </div>
+  </article>
+{{ end }}

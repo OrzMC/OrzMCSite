@@ -14,8 +14,8 @@
   {{- range (.GetTerms "tags" | first 6) }}<meta property="article:tag" content="{{ .LinkTitle }}">{{ end }}
 {{- end }}
 
-{{- $og := partial "func/get-og-image.html" . }}
-<meta property="og:image" content="{{ $og }}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+{{- $og := partials.Include "func/get-og-image.html" . }}
+<meta property="og:image" content="{{ $og.url }}">
+<meta property="og:image:width" content="{{ $og.width }}">
+<meta property="og:image:height" content="{{ $og.height }}">
 <meta property="og:image:alt" content="{{ .Title | compare.Default site.Title }}">

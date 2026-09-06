@@ -7,8 +7,13 @@ default_og_image = "/images/og-default.png"
 site_logo = ""
 description = "Minecraft 服务器与玩法指南、更新记录与社区动态"
 author = "Joker"
+# site-header 是否在 hero 图/黑底区叠加页面标题与描述；默认 false（页面标题由正文内容区承担，避免双标题）
+# 页面 frontmatter 可逐页覆盖为 true（如首页）；真时正文标题自动降级 h2 防同页双 h1
+hero_title = false
 body_classes = "avenir bg-near-white"
 text_color = "black"
+# 列表/归档日期显示格式（文章页头用 ISO 日期，二者保持一致的中文站习惯）
+date_format = "2006-01-02"
 
 featured_image_class = "cover bg-top"
 cover_dimming_class = "bg-black-15"

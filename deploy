@@ -125,6 +125,9 @@ if [ ! -f "${SITE_PUB_DIR}/index.html" ]; then
 fi
 echo "${SITE_DOMAIN}" > "${SITE_PUB_DIR}/CNAME"
 
+# 删除主题 static 目录自带的未引用样例图（Ananke 示例残留，避免每次发布都带进 gh-pages）
+find "${SITE_PUB_DIR}" -name "gohugo-default-sample-hero-image*" -delete 2>/dev/null || true
+
 # 提交并推送
 git -C "${SITE_PUB_DIR}" add --all
 if git -C "${SITE_PUB_DIR}" diff --cached --quiet; then

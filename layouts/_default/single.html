@@ -3,33 +3,35 @@
   {{ partials.Include "breadcrumbs.html" . }}
   <div class="ph3 ph5-l pv3 pv4-l flex-l mw8 center">
     {{ if .Params.toc }}
+      {{/* 桌面 sticky 侧栏与移动端 <details> 各引一份 TOC；两份实例在 DOM 中共存、由断点 CSS 切换显隐。
+          必须传唯一 uid——toc.html 会给 nav/标题/Hugo 生成的 id 加后缀，避免同页重复 ID。 */}}
       <aside class="dn db-l w-30-l pr4-l order-1 toc-sticky">
-        {{ partials.Include "toc.html" . }}
+        {{ partials.Include "toc.html" (dict "ctx" . "uid" "desktop") }}
       </aside>
       <div class="dn-l mb3">
         <details class="ba b--black-10 br2 bg-near-white pa3">
           <summary class="fw5 pointer">目录</summary>
-          {{ partials.Include "toc.html" . }}
+          {{ partials.Include "toc.html" (dict "ctx" . "uid" "mobile") }}
         </details>
       </div>
-      <section class="w-70-l order-2 f5 center measure-wide lh-copy nested-links mid-gray article-content">
-        <header class="mb3">
-          <h2 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h2>
-          {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
-          {{ if compare.Eq .Section "posts" }}{{ with .Date }}<time class="f6 mid-gray db mt2" datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "2006-01-02" }}</time>{{ end }}{{ end }}
-        </header>
-        {{ .Content }}
-      </section>
-    {{ else }}
-      <section class="w-100 f5 center measure-wide lh-copy nested-links mid-gray article-content">
-        <header class="mb3">
-          <h2 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h2>
-          {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
-          {{ if compare.Eq .Section "posts" }}{{ with .Date }}<time class="f6 mid-gray db mt2" datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "2006-01-02" }}</time>{{ end }}{{ end }}
-        </header>
-        {{ .Content }}
-      </section>
     {{ end }}
+    <section class="{{ if .Params.toc }}w-70-l order-2{{ else }}w-100{{ end }} f5 center measure-wide lh-copy nested-links mid-gray article-content">
+      <header class="mb3">
+        {{- /* 正文主标题：默认 h1（site-header 不叠字时它是页面唯一 h1）；
+              hero_title=true（hero 叠字、以 h1 输出）时回退 h2，避免同页双 h1。
+              注：不能动态拼 `<{{ $tag }}>`——变量值在 HTML 上下文会被转义成 &lt;h1&gt;，必须写死标签。 */ -}}
+        {{- if .Param "hero_title" -}}
+          <h2 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h2>
+        {{- else -}}
+          <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
+        {{- end -}}
+        {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
+        {{ if compare.Eq .Section "posts" }}{{ with .Date }}
+          <time class="f6 mid-gray db mt2" datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "2006-01-02" }}</time>
+        {{ end }}{{ end }}
+      </header>
+      {{ .Content }}
+    </section>
   </div>
   {{ if compare.Eq .Section "posts" }}
   {{/* 标签 / 分类胶囊 */}}
@@ -50,21 +52,22 @@
     </section>
     {{ end }}
     <div class="flex justify-between">
-      {{ $pages := .CurrentSection.Pages.ByDate.Reverse }}
-      {{ $.Scratch.Set "found" false }}
-      {{ range $pages }}
-        {{ if $.Scratch.Get "found" }}
-          {{ if not ($.Scratch.Get "next") }}
-            {{ $.Scratch.Set "next" . }}
-          {{ end }}
-        {{ else if compare.Eq .RelPermalink $.RelPermalink }}
-          {{ $.Scratch.Set "found" true }}
-        {{ else }}
-          {{ $.Scratch.Set "prev" . }}
-        {{ end }}
-      {{ end }}
-      {{ with ($.Scratch.Get "next") }}<a class="link dim" href="{{ .RelPermalink }}">← {{ .Title }}</a>{{ else }}<span></span>{{ end }}
-      {{ with ($.Scratch.Get "prev") }}<a class="link dim" href="{{ .RelPermalink }}">{{ .Title }} →</a>{{ else }}<span></span>{{ end }}
+      {{- /* 上一篇/下一篇：按日期倒序找当前页在序列中的前后邻居（新风格变量赋值，替代 $.Scratch） */ -}}
+      {{- $pages := .CurrentSection.Pages.ByDate.Reverse -}}
+      {{- $prev := "" -}}
+      {{- $next := "" -}}
+      {{- $found := false -}}
+      {{- range $pages -}}
+        {{- if $found -}}
+          {{- if not $next }}{{ $next = . }}{{ end -}}
+        {{- else if compare.Eq .RelPermalink $.RelPermalink -}}
+          {{- $found = true -}}
+        {{- else -}}
+          {{- $prev = . -}}
+        {{- end -}}
+      {{- end -}}
+      {{- with $next }}<a class="link dim" href="{{ .RelPermalink }}">← {{ .Title }}</a>{{ else }}<span></span>{{ end -}}
+      {{- with $prev }}<a class="link dim" href="{{ .RelPermalink }}">{{ .Title }} →</a>{{ else }}<span></span>{{ end -}}
     </div>
   </footer>
   {{ end }}

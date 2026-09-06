@@ -10,7 +10,7 @@ html[data-theme="dark"] .mid-gray { color: #b5b5b5; }
 html[data-theme="dark"] .silver { color: #9aa3b2; }
 html[data-theme="dark"] a { color: #9bd1ff; }
 html[data-theme="dark"] a:hover { color: #c2e1ff; }
-html[data-theme="dark"] #TableOfContents a { color: #9bd1ff; }
+html[data-theme="dark"] .site-toc a { color: #9bd1ff; }
 html[data-theme="dark"] .anchor-link::after { background: rgba(255, 255, 255, 0.15); color: #fff; }
 html[data-theme="dark"] pre { background: #1b1f2a; color: #e6e6e6; }
 html[data-theme="dark"] :not(pre) > code { background: #1f2430; color: #e6e6e6; border-color: #2d3342; }
@@ -109,6 +109,8 @@ img { border-radius: 1px; }
    cover = 全出血：<picture> 绝对定位铺满 header，object-fit:cover 中心顶对齐裁切，标题压图；
    fit   = 等比全宽：图按源图宽高比 width:100%;height:auto 显示，不裁不拉伸，主体任何视口完整可见。 */
 .site-hero-header.site-hero--cover { position: relative; }
+/* cover 模式 hero_title=false（默认不叠字）时内容只剩导航，absolute 图需要容器有高度才能铺满 */
+.site-hero--cover.site-hero--no-text { min-height: 42vh; }
 .site-hero--cover .site-hero-media,
 .site-hero--cover .site-hero-img {
   position: absolute;
@@ -145,8 +147,20 @@ img { border-radius: 1px; }
 }
 /* <60em：竖向 band + cover 左对齐裁右 */
 .site-hero--fit .site-hero-stage {
-  height: clamp(360px, 72vh, 560px);
+  /* 下限 500px 而非 360px：<60em 导航折行最多 ~341px（320px 宽社交图标折两行），
+     360px 下限时标题块会顶进导航末行图标区（320×568 / 360×640 实测重叠）；
+     500px 保证 导航 + 标题(≈130px) 恒可容纳 */
+  height: clamp(500px, 72vh, 560px);
   overflow: hidden;
+}
+/* 不叠字（hero_title=false，标题区不存在）时无需为标题预留高度：<60em 下限回到 360px，
+   图可更矮、内容更早出现（叠字页仍按上方 500px 下限）。
+   注意必须限定在 <60em：若写成全局规则，其特异性(0,3,0)会压过桌面断点的 height:auto，
+   把桌面 fit hero 钉死在 560px（3:1 横幅图实际 ~230px 高，图下方空出大片空白——实测回归）。 */
+@media (max-width: 60em) {
+  .site-hero--fit.site-hero--no-text .site-hero-stage {
+    height: clamp(360px, 72vh, 560px);
+  }
 }
 .site-hero--fit .site-hero-media { position: absolute; inset: 0; }
 .site-hero--fit .site-hero-media,
@@ -218,13 +232,13 @@ img { border-radius: 1px; }
 .toc-sticky::-webkit-scrollbar { width: 0; height: 0; }
 
 /* Compact Table of Contents */
-#TableOfContents { font-size: .9rem; line-height: 1.4; }
-#TableOfContents ul, #TableOfContents ol { margin: 0; padding-left: 0; list-style: none; }
-#TableOfContents > ul { padding-left: 0; }
-#TableOfContents ul ul { margin-top: .25rem; padding-left: .75rem; }
-#TableOfContents li { margin: .2rem 0; }
-#TableOfContents a { display: block; text-decoration: none; color: #0b00e4; padding: .2rem 0; word-break: break-word; overflow-wrap: anywhere; white-space: normal; }
-#TableOfContents a:hover { text-decoration: underline; }
+/* 页内目录（.site-toc，类选择器——实例 id 带后缀不固定，不能用 #TableOfContents） */
+.site-toc { font-size: .9rem; line-height: 1.4; }
+.site-toc ul, .site-toc ol { margin: 0; padding-left: 0; list-style: none; }
+.site-toc ul ul { margin-top: .25rem; padding-left: .75rem; }
+.site-toc li { margin: .2rem 0; }
+.site-toc a { display: block; text-decoration: none; color: #0b00e4; padding: .2rem 0; word-break: break-word; overflow-wrap: anywhere; white-space: normal; }
+.site-toc a:hover { text-decoration: underline; }
 
 /* Heading anchors */
 h1 .anchor-link, h2 .anchor-link, h3 .anchor-link, h4 .anchor-link, h5 .anchor-link, h6 .anchor-link {
@@ -522,3 +536,31 @@ html[data-theme="dark"] .sponsor-cta__disclaimer { color: #9aa3b2; }
   html[data-theme="dark"] .theme-toggle::after { transform: translateY(-50%) translateX(2.2rem); }
   html[data-theme="dark"] .theme-toggle::before { right: auto; left: 0.75rem; }
 }
+
+/* 正文页头标题：.article-content h1/h2 正文字级(0,1,1)会压过 Tachyons .f1(0,1,0)，
+   标题显示得比类名意图小。header 内标题不参与正文字级，恢复大标题并清掉多余上下边距 */
+.article-content > header h1,
+.article-content > header h2 {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.25;
+  margin: 0 0 0.4rem;
+}
+
+/* 移动端 TOC：<details> 的 summary「目录」已是标签，展开后面板内 .site-toc 的 h2 标题
+   再显示一次即重复（桌面侧栏没有 summary，仍保留 h2） */
+.dn-l details .site-toc h2 { display: none; }
+
+/* 正文里超长无空格的行内 code（如长指令路径）允许断词折行，防页面级横向滚动 */
+.article-content :not(pre) > code { overflow-wrap: anywhere; }
+
+/* 文章容器横向兜底裁切：个别超长无断点行（如 Dracula 高亮行）经嵌套滚动区计算仍会把
+   内容顶出页面（375 视口实测 scrollWidth 428→可横向拖动）；pre/表格自身带横向滚动，
+   容器只做裁边。overflow-x:hidden 作旧浏览器回退，@supports 优先 clip（避免生成滚动上下文） */
+.article-content { overflow-x: hidden; }
+@supports (overflow: clip) {
+  .article-content { overflow-x: clip; }
+}
+
+/* 主内容底部留白：主题 baseof 给 <main class=pb7> 的 pb7=16rem(256px) 在正文页末尾
+   （最后一段之后、footer 之前）过空，收窄到 4rem（main.pb7 特异性(0,2,0) 需压过 .pb7(0,1,0)） */
+main.pb7 { padding-bottom: 4rem; }
