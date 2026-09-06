@@ -66,6 +66,14 @@ pre:not([style*="background"]) {
   -webkit-overflow-scrolling: touch;
 }
 
+/* 主题 _code.css 在内部 code 上叠了 1.5em 内边距与 line-height:2，与上方 .highlight pre
+   的 0.8rem 内边距叠加后四周留白过大、行距过疏；清零内层 padding，间距统一由 pre 控制 */
+.highlight pre code {
+  display: block;
+  padding: 0;
+  line-height: 1.65;
+}
+
 /* Inline code */
 :not(pre) > code {
   background: #e8eaf0;
@@ -150,29 +158,43 @@ html[data-theme="light"] .nested-links a.sponsor-cta__btn,
 html[data-theme="light"] .nested-links a.sponsor-cta__btn:hover { color: #fff; }
 html[data-theme="light"] .nested-links a.sponsor-cta__card-link { color: #0b00e4; }
 
-/* Tables */
-table {
+/* Tables（正文 markdown 表格）：亮/暗两套配色，网格线 + 交替行底色 + 高对比表头，
+   避免行与页面背景融为一体；横向溢出由下方响应式规则接管 */
+.article-content table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 8px;
-  overflow: hidden;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
+  margin: 0 0 1.2rem;
 }
-th, td { padding: 0.6rem 0.8rem; }
-th {
-  background: #d1d5df;
-  font-weight: 600;
+.article-content th,
+.article-content td {
+  padding: 0.55rem 0.85rem;
   text-align: left;
-  border-bottom: 2px solid #b5bbc8;
+  vertical-align: top;
+  border: 1px solid #d9dde6;
+  line-height: 1.55;
+  /* 长路径 / URL / 命令等无空格长串可折行（anywhere 会参与表格 min-content 计算，
+     避免单列被撑超宽、其余列被迫一字一行的窄列折行）；同时兼容旧版 Safari */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
-td { border-bottom: 1px solid #e1e1e1; }
-tbody tr:nth-child(even) { background: #f4f5f8; }
-html[data-theme="dark"] th {
-  background: #2a2f3a;
-  border-bottom-color: #3a4050;
+.article-content thead th {
+  background: #e8ebf2;
+  color: #20242e;
+  font-weight: 700;
+  border-bottom: 2px solid #c2c8d6;
 }
-html[data-theme="dark"] td { border-bottom-color: #242a37; }
-html[data-theme="dark"] tbody tr:nth-child(even) { background: #1a1e28; }
+.article-content tbody tr:nth-child(odd)  { background: #ffffff; }
+.article-content tbody tr:nth-child(even) { background: #f3f5f9; }
+html[data-theme="dark"] .article-content th,
+html[data-theme="dark"] .article-content td { border-color: #2b3346; }
+html[data-theme="dark"] .article-content thead th {
+  background: #2f3749;
+  color: #eef1f6;
+  border-bottom-color: #46516a;
+}
+html[data-theme="dark"] .article-content tbody tr:nth-child(odd)  { background: #171c26; }
+html[data-theme="dark"] .article-content tbody tr:nth-child(even) { background: #1d2330; }
 /* Responsive table wrapper */
 .article-content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
@@ -187,7 +209,9 @@ html[data-theme="dark"] tbody tr:nth-child(even) { background: #1a1e28; }
 .article-content h4 { font-size: 1.1rem; margin: 1.2rem 0 0.5rem; }
 .article-content h5, .article-content h6 { font-size: 1rem; margin: 1rem 0 0.4rem; }
 .article-content p { margin: 0 0 1rem; }
-.article-content ul, .article-content ol { margin: 0 0 1rem 1.5rem; }
+/* 列表缩进：浏览器默认给 ul/ol 约 2.5rem 左内边距，叠加原有 1.5rem 外边距会过深；
+   改为由内边距单独控制（项目符号/编号留在内边距区），嵌套层级自动逐级递增 */
+.article-content ul, .article-content ol { margin: 0 0 1rem; padding-left: 1.6rem; }
 .article-content li { margin-bottom: 0.3rem; }
 .article-content blockquote {
   margin: 1.2rem 0;
@@ -197,6 +221,9 @@ html[data-theme="dark"] tbody tr:nth-child(even) { background: #1a1e28; }
   border-radius: 0 6px 6px 0;
   color: #555;
 }
+/* 引用块内段落自带 margin-bottom，会叠加在 padding 上使底部留白过大；收齐首尾外边距 */
+.article-content blockquote > *:first-child { margin-top: 0; }
+.article-content blockquote > *:last-child { margin-bottom: 0; }
 html[data-theme="dark"] .article-content blockquote {
   border-left-color: #3a4050;
   background: #1a1e28;

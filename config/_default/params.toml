@@ -20,7 +20,8 @@ mainSections = ["posts"]
 
 [ananke]
 show_recent_posts = true
-copy_code = false
+# 代码块显示「Copy」一键复制按钮（主题 render-codeblock 钩子，需 JS；见 site-scripts.html）
+copy_code = true
 custom_css = ["custom.css", "server-status.css"]
 
 [ananke.social]
