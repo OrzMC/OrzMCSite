@@ -47,62 +47,66 @@ GitHub 源码
   功能总览🔗
 
 
-	
-			
-					功能模块
-					说明
-			
-	
-	
-			
-					权限系统（Rank & Review）
-					四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（/apply、/review）、手动升降级；启动时自动创建权限组，无需手工配置
-			
-			
-					白名单管理
-					管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示
-			
-			
-					多平台机器人（双通道）
-					im.yml 的 backend 在 EasyBot 网关（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 内置直连 builtin（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间二选一；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板
-			
-			
-					跨服传送门
-					管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送
-			
-			
-					TNT 保护
-					限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（×N + 首个坐标），并控制重生锚爆炸行为
-			
-			
-					安全控制
-					GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固
-			
-			
-					传送弓
-					射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地
-			
-			
-					世界维护
-					一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换
-			
-			
-					插件自更新
-					定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 plugins/update/，重启即完成升级
-			
-			
-					玩家通知
-					进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊
-			
-			
-					新手指南书
-					新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案
-			
-			
-					运行时配置
-					游戏内 /config 管理 29 项运行时配置，支持 list / get / set / reset / dump / reload，修改后热重载生效
-			
-	
+  
+    
+      
+        
+          功能模块
+          说明
+        
+      
+      
+        
+          权限系统（Rank & Review）
+          四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（/apply、/review）、手动升降级；启动时自动创建权限组，无需手工配置
+        
+        
+          白名单管理
+          管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示
+        
+        
+          多平台机器人（双通道）
+          im.yml 的 backend 在 EasyBot 网关（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 内置直连 builtin（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间二选一；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板
+        
+        
+          跨服传送门
+          管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送
+        
+        
+          TNT 保护
+          限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（×N + 首个坐标），并控制重生锚爆炸行为
+        
+        
+          安全控制
+          GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固
+        
+        
+          传送弓
+          射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地
+        
+        
+          世界维护
+          一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换
+        
+        
+          插件自更新
+          定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 plugins/update/，重启即完成升级
+        
+        
+          玩家通知
+          进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊
+        
+        
+          新手指南书
+          新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案
+        
+        
+          运行时配置
+          游戏内 /config 管理 29 项运行时配置，支持 list / get / set / reset / dump / reload，修改后热重载生效
+        
+      
+    
+  
 
 玩家常用入口（/guide 新手书、/menu 菜单、/apply 晋升申请等）详见
 
@@ -110,7 +114,7 @@ GitHub 源码
 
 
 玩家手册
-。"><meta name=generator content="Hugo 0.165.0"><meta name=robots content="index, follow"><meta name=author content="Joker"><link rel=stylesheet href=/ananke/css/main.f8219e721c9bb10a7dd64dee453cb41d6900edb4303ae8a98497b669ce6444d3.css integrity="sha256-+CGechybsQp91k3uRTy0HWkA7bQwOuiphJe2ac5kRNM=" crossorigin=anonymous><script>(function(){var e,n,t=document.documentElement,s="theme",o=function(){return"dark"};try{n=localStorage.getItem(s)}catch{}t.setAttribute("data-theme",n||o()),e=document.querySelector('meta[name="theme-color"]'),e&&e.setAttribute("content",t.getAttribute("data-theme")==="dark"?"#0f172a":"#f4f4f4")})(),document.addEventListener("DOMContentLoaded",function(){var t,n,s,e=function(e){document.documentElement.setAttribute("data-theme",e);var t,n,s=document.querySelector('meta[name="theme-color"]');s&&s.setAttribute("content",e==="dark"?"#0f172a":"#f4f4f4"),t=document.getElementById("theme-toggle"),t&&(n=t.querySelector(".theme-toggle__label"),n?n.textContent=e==="dark"?"白天":"夜间":t.textContent=e==="dark"?"白天":"夜间",t.setAttribute("aria-label",e==="dark"?"切换到白天模式":"切换到夜间模式"),t.setAttribute("aria-pressed",e==="dark"?"true":"false"))};try{t=localStorage.getItem("theme")}catch{}e(t||"dark"),n=document.getElementById("theme-toggle"),n&&n.addEventListener("click",function(){var n=document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light",t=n==="dark"?"light":"dark";e(t);try{localStorage.setItem("theme",t)}catch{}}),s=document.querySelectorAll(".anchor-link"),s.forEach(function(e){e.addEventListener("click",function(t){t.preventDefault();var n,s,i,a=e.getAttribute("href")||"",o=location.origin+location.pathname+location.search+a;try{history.replaceState(null,"",o)}catch{}if(s=function(){try{e.setAttribute("data-tooltip","点击复制链接")}catch{}},i=function(){try{e.setAttribute("data-tooltip","已复制"),setTimeout(s,1500)}catch{}},navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(o).then(i).catch(s);else try{n=document.createElement("input"),n.style.position="fixed",n.style.opacity="0",n.value=o,document.body.appendChild(n),n.select(),document.execCommand("copy"),document.body.removeChild(n),i()}catch{s()}})})})</script><script>(function(){"use strict";function t(){for(var n,t=document.querySelectorAll(".code-block .code-copy[hidden]"),e=0;e<t.length;e++)t[e].hidden=!1,n=t[e].querySelector(".code-copy-label"),n&&(n.textContent="复制")}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",t):t();function e(e){var t=e.querySelector(".code-copy-label");e.classList.add("is-copied"),t&&(t.textContent="已复制"),window.setTimeout(function(){e.classList.remove("is-copied"),t&&(t.textContent="复制")},2e3)}function n(e){var n,t=document.createElement("textarea");t.value=e,t.setAttribute("readonly",""),t.style.position="absolute",t.style.left="-9999px",document.body.appendChild(t),t.select(),n=!1;try{n=document.execCommand("copy")}catch{n=!1}return document.body.removeChild(t),n}function s(t){var s,o,a,i=t.closest(".code-block");if(!i)return;if(s=i.querySelector("pre"),!s)return;a=s.querySelector("code")||s,o=a.innerText,navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(o).then(function(){e(t)},function(){n(o)&&e(t)}):n(o)&&e(t)}document.addEventListener("click",function(e){var t=e.target.closest(".code-copy");t&&s(t)})})()</script><link rel=icon href=/images/favicon.png type=image/png><link rel=apple-touch-icon href=/apple-touch-icon.png><link rel=canonical href=https://orzmc.jokerhub.cn/plugin/><meta property="og:title" content="自研插件"><meta property="og:description" content="
+。"><meta name=generator content="Hugo 0.165.0"><meta name=robots content="index, follow"><meta name=author content="Joker"><link rel=stylesheet href=/ananke/css/main.73fba1f4c43cfda0b1890ca736291c3eb9cec0cfceacd3c992cb0a3b47037c77.css integrity="sha256-c/uh9MQ8/aCxiQynNikcPrnOwM/OrNPJkssKO0cDfHc=" crossorigin=anonymous><script>(function(){var e,n,t=document.documentElement,s="theme",o=function(){return"dark"};try{n=localStorage.getItem(s)}catch{}t.setAttribute("data-theme",n||o()),e=document.querySelector('meta[name="theme-color"]'),e&&e.setAttribute("content",t.getAttribute("data-theme")==="dark"?"#0f172a":"#f4f4f4")})(),document.addEventListener("DOMContentLoaded",function(){var t,n,s,e=function(e){document.documentElement.setAttribute("data-theme",e);var t,n,s=document.querySelector('meta[name="theme-color"]');s&&s.setAttribute("content",e==="dark"?"#0f172a":"#f4f4f4"),t=document.getElementById("theme-toggle"),t&&(n=t.querySelector(".theme-toggle__label"),n?n.textContent=e==="dark"?"白天":"夜间":t.textContent=e==="dark"?"白天":"夜间",t.setAttribute("aria-label",e==="dark"?"切换到白天模式":"切换到夜间模式"),t.setAttribute("aria-pressed",e==="dark"?"true":"false"))};try{t=localStorage.getItem("theme")}catch{}e(t||"dark"),n=document.getElementById("theme-toggle"),n&&n.addEventListener("click",function(){var n=document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light",t=n==="dark"?"light":"dark";e(t);try{localStorage.setItem("theme",t)}catch{}}),s=document.querySelectorAll(".anchor-link"),s.forEach(function(e){e.addEventListener("click",function(t){t.preventDefault();var n,s,i,a=e.getAttribute("href")||"",o=location.origin+location.pathname+location.search+a;try{history.replaceState(null,"",o)}catch{}if(s=function(){try{e.setAttribute("data-tooltip","点击复制链接")}catch{}},i=function(){try{e.setAttribute("data-tooltip","已复制"),setTimeout(s,1500)}catch{}},navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(o).then(i).catch(s);else try{n=document.createElement("input"),n.style.position="fixed",n.style.opacity="0",n.value=o,document.body.appendChild(n),n.select(),document.execCommand("copy"),document.body.removeChild(n),i()}catch{s()}})})})</script><script>(function(){"use strict";function t(){for(var n,t=document.querySelectorAll(".code-block .code-copy[hidden]"),e=0;e<t.length;e++)t[e].hidden=!1,n=t[e].querySelector(".code-copy-label"),n&&(n.textContent="复制")}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",t):t();function e(e){var t=e.querySelector(".code-copy-label");e.classList.add("is-copied"),t&&(t.textContent="已复制"),window.setTimeout(function(){e.classList.remove("is-copied"),t&&(t.textContent="复制")},2e3)}function n(e){var n,t=document.createElement("textarea");t.value=e,t.setAttribute("readonly",""),t.style.position="absolute",t.style.left="-9999px",document.body.appendChild(t),t.select(),n=!1;try{n=document.execCommand("copy")}catch{n=!1}return document.body.removeChild(t),n}function s(t){var s,o,a,i=t.closest(".code-block");if(!i)return;if(s=i.querySelector("pre"),!s)return;a=s.querySelector("code")||s,o=a.innerText,navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(o).then(function(){e(t)},function(){n(o)&&e(t)}):n(o)&&e(t)}document.addEventListener("click",function(e){var t=e.target.closest(".code-copy");t&&s(t)})})()</script><script>(function(){"use strict";function t(e){var n,s,t=e.querySelector(".table-scroll");if(!t)return;s=t.scrollWidth-t.clientWidth,n=s>1,e.classList.toggle("is-scrollable",n),e.classList.toggle("at-end",n&&t.scrollLeft>=s-1),n?t.setAttribute("tabindex","0"):t.removeAttribute("tabindex")}function e(){for(var n=document.querySelectorAll(".table-wrap"),e=0;e<n.length;e++)t(n[e])}function n(){for(var n,o,a,i=document.querySelectorAll(".table-scroll"),s=0;s<i.length;s++)i[s].addEventListener("scroll",function(){t(this.parentNode)},{passive:!0});if(e(),window.ResizeObserver)for(a=new ResizeObserver(e),o=document.querySelectorAll(".table-wrap"),n=0;n<o.length;n++)a.observe(o[n]);else window.addEventListener("resize",e);window.addEventListener("load",e)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",n):n()})()</script><link rel=icon href=/images/favicon.png type=image/png><link rel=apple-touch-icon href=/apple-touch-icon.png><link rel=canonical href=https://orzmc.jokerhub.cn/plugin/><meta property="og:title" content="自研插件"><meta property="og:description" content="
 服务器由自研插件 
 
 
@@ -159,62 +163,66 @@ GitHub 源码
   功能总览🔗
 
 
-	
-			
-					功能模块
-					说明
-			
-	
-	
-			
-					权限系统（Rank & Review）
-					四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（/apply、/review）、手动升降级；启动时自动创建权限组，无需手工配置
-			
-			
-					白名单管理
-					管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示
-			
-			
-					多平台机器人（双通道）
-					im.yml 的 backend 在 EasyBot 网关（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 内置直连 builtin（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间二选一；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板
-			
-			
-					跨服传送门
-					管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送
-			
-			
-					TNT 保护
-					限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（×N + 首个坐标），并控制重生锚爆炸行为
-			
-			
-					安全控制
-					GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固
-			
-			
-					传送弓
-					射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地
-			
-			
-					世界维护
-					一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换
-			
-			
-					插件自更新
-					定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 plugins/update/，重启即完成升级
-			
-			
-					玩家通知
-					进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊
-			
-			
-					新手指南书
-					新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案
-			
-			
-					运行时配置
-					游戏内 /config 管理 29 项运行时配置，支持 list / get / set / reset / dump / reload，修改后热重载生效
-			
-	
+  
+    
+      
+        
+          功能模块
+          说明
+        
+      
+      
+        
+          权限系统（Rank & Review）
+          四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（/apply、/review）、手动升降级；启动时自动创建权限组，无需手工配置
+        
+        
+          白名单管理
+          管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示
+        
+        
+          多平台机器人（双通道）
+          im.yml 的 backend 在 EasyBot 网关（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 内置直连 builtin（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间二选一；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板
+        
+        
+          跨服传送门
+          管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送
+        
+        
+          TNT 保护
+          限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（×N + 首个坐标），并控制重生锚爆炸行为
+        
+        
+          安全控制
+          GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固
+        
+        
+          传送弓
+          射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地
+        
+        
+          世界维护
+          一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换
+        
+        
+          插件自更新
+          定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 plugins/update/，重启即完成升级
+        
+        
+          玩家通知
+          进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊
+        
+        
+          新手指南书
+          新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案
+        
+        
+          运行时配置
+          游戏内 /config 管理 29 项运行时配置，支持 list / get / set / reset / dump / reload，修改后热重载生效
+        
+      
+    
+  
 
 玩家常用入口（/guide 新手书、/menu 菜单、/apply 晋升申请等）详见
 
@@ -271,62 +279,66 @@ GitHub 源码
   功能总览🔗
 
 
-	
-			
-					功能模块
-					说明
-			
-	
-	
-			
-					权限系统（Rank & Review）
-					四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（/apply、/review）、手动升降级；启动时自动创建权限组，无需手工配置
-			
-			
-					白名单管理
-					管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示
-			
-			
-					多平台机器人（双通道）
-					im.yml 的 backend 在 EasyBot 网关（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 内置直连 builtin（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间二选一；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板
-			
-			
-					跨服传送门
-					管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送
-			
-			
-					TNT 保护
-					限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（×N + 首个坐标），并控制重生锚爆炸行为
-			
-			
-					安全控制
-					GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固
-			
-			
-					传送弓
-					射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地
-			
-			
-					世界维护
-					一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换
-			
-			
-					插件自更新
-					定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 plugins/update/，重启即完成升级
-			
-			
-					玩家通知
-					进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊
-			
-			
-					新手指南书
-					新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案
-			
-			
-					运行时配置
-					游戏内 /config 管理 29 项运行时配置，支持 list / get / set / reset / dump / reload，修改后热重载生效
-			
-	
+  
+    
+      
+        
+          功能模块
+          说明
+        
+      
+      
+        
+          权限系统（Rank & Review）
+          四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（/apply、/review）、手动升降级；启动时自动创建权限组，无需手工配置
+        
+        
+          白名单管理
+          管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示
+        
+        
+          多平台机器人（双通道）
+          im.yml 的 backend 在 EasyBot 网关（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 内置直连 builtin（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间二选一；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板
+        
+        
+          跨服传送门
+          管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送
+        
+        
+          TNT 保护
+          限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（×N + 首个坐标），并控制重生锚爆炸行为
+        
+        
+          安全控制
+          GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固
+        
+        
+          传送弓
+          射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地
+        
+        
+          世界维护
+          一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换
+        
+        
+          插件自更新
+          定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 plugins/update/，重启即完成升级
+        
+        
+          玩家通知
+          进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊
+        
+        
+          新手指南书
+          新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案
+        
+        
+          运行时配置
+          游戏内 /config 管理 29 项运行时配置，支持 list / get / set / reset / dump / reload，修改后热重载生效
+        
+      
+    
+  
 
 玩家常用入口（/guide 新手书、/menu 菜单、/apply 晋升申请等）详见
 
@@ -350,7 +362,7 @@ GitHub 源码
 ·
 <a href=https://github.com/OrzMC/OrzMCPlugin/blob/main/CHANGELOG.md target=_blank rel="noopener noreferrer">更新日志</a>
 ·
-<a href=https://github.com/OrzMC/OrzMCPlugin/blob/main/docs/features.md target=_blank rel="noopener noreferrer">功能文档</a></li></ul><h2 id=功能总览 class=relative>功能总览<a href=#%e5%8a%9f%e8%83%bd%e6%80%bb%e8%a7%88 aria-label=链接到本节 data-tooltip=点击复制链接 class="anchor-link ml2 gray hover-dark-gray">🔗</a></h2><table><thead><tr><th style=text-align:left>功能模块</th><th style=text-align:left>说明</th></tr></thead><tbody><tr><td style=text-align:left><strong>权限系统（Rank & Review）</strong></td><td style=text-align:left>四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（<code>/apply</code>、<code>/review</code>）、手动升降级；启动时自动创建权限组，无需手工配置</td></tr><tr><td style=text-align:left><strong>白名单管理</strong></td><td style=text-align:left>管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示</td></tr><tr><td style=text-align:left><strong>多平台机器人（双通道）</strong></td><td style=text-align:left><code>im.yml</code> 的 <code>backend</code> 在 <strong>EasyBot 网关</strong>（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 <strong>内置直连 builtin</strong>（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间<strong>二选一</strong>；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板</td></tr><tr><td style=text-align:left><strong>跨服传送门</strong></td><td style=text-align:left>管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送</td></tr><tr><td style=text-align:left><strong>TNT 保护</strong></td><td style=text-align:left>限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（<code>×N</code> + 首个坐标），并控制重生锚爆炸行为</td></tr><tr><td style=text-align:left><strong>安全控制</strong></td><td style=text-align:left>GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固</td></tr><tr><td style=text-align:left><strong>传送弓</strong></td><td style=text-align:left>射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地</td></tr><tr><td style=text-align:left><strong>世界维护</strong></td><td style=text-align:left>一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换</td></tr><tr><td style=text-align:left><strong>插件自更新</strong></td><td style=text-align:left>定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 <code>plugins/update/</code>，重启即完成升级</td></tr><tr><td style=text-align:left><strong>玩家通知</strong></td><td style=text-align:left>进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊</td></tr><tr><td style=text-align:left><strong>新手指南书</strong></td><td style=text-align:left>新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案</td></tr><tr><td style=text-align:left><strong>运行时配置</strong></td><td style=text-align:left>游戏内 <code>/config</code> 管理 29 项运行时配置，支持 <code>list / get / set / reset / dump / reload</code>，修改后热重载生效</td></tr></tbody></table><p>玩家常用入口（<code>/guide</code> 新手书、<code>/menu</code> 菜单、<code>/apply</code> 晋升申请等）详见
+<a href=https://github.com/OrzMC/OrzMCPlugin/blob/main/docs/features.md target=_blank rel="noopener noreferrer">功能文档</a></li></ul><h2 id=功能总览 class=relative>功能总览<a href=#%e5%8a%9f%e8%83%bd%e6%80%bb%e8%a7%88 aria-label=链接到本节 data-tooltip=点击复制链接 class="anchor-link ml2 gray hover-dark-gray">🔗</a></h2><div class=table-wrap><div class=table-scroll tabindex=0 role=region aria-label=表格，可左右滑动查看><table><thead><tr><th style=text-align:left>功能模块</th><th style=text-align:left>说明</th></tr></thead><tbody><tr><td style=text-align:left><strong>权限系统（Rank & Review）</strong></td><td style=text-align:left>四级玩家权限链（访客 → 成员 → 建造者 → 管理员），基于 LuckPerms：自动晋升、申请/审核（<code>/apply</code>、<code>/review</code>）、手动升降级；启动时自动创建权限组，无需手工配置</td></tr><tr><td style=text-align:left><strong>白名单管理</strong></td><td style=text-align:left>管理员可通过机器人命令添加 / 移除白名单，自动清理不活跃玩家；未在白名单内被踢出的玩家会收到友好提示</td></tr><tr><td style=text-align:left><strong>多平台机器人（双通道）</strong></td><td style=text-align:left><code>im.yml</code> 的 <code>backend</code> 在 <strong>EasyBot 网关</strong>（默认：经外部网关统一接入 QQ / Telegram / Discord / 飞书 / 微信）与 <strong>内置直连 builtin</strong>（插件直连官方 API，已落地 QQ / 飞书 / Telegram / Discord，无需外部网关进程）之间<strong>二选一</strong>；两通道的业务命令与通知语义一致，11 个机器人命令 + 50+ 可定制消息模板</td></tr><tr><td style=text-align:left><strong>跨服传送门</strong></td><td style=text-align:left>管理员创建传送门，玩家踩上即跨服传送，可选先验证登录再传送</td></tr><tr><td style=text-align:left><strong>TNT 保护</strong></td><td style=text-align:left>限制 TNT 可放置区域（可设区域白名单豁免）；爆炸告警在群聊聚合提示（<code>×N</code> + 首个坐标），并控制重生锚爆炸行为</td></tr><tr><td style=text-align:left><strong>安全控制</strong></td><td style=text-align:left>GeoIP 国家限制进服、IP 黑名单（精确 IP / CIDR / 通配符）、玩家名拒入规则（精确 / 前缀 / 后缀 / 关键词 / glob / 正则）、可选二次登录校验；另有危险命令拦截与审计、聊天反垃圾、进服限流与漏洞加固</td></tr><tr><td style=text-align:left><strong>传送弓</strong></td><td style=text-align:left>射箭传送到落点，自动寻找安全落点、加载飞行路径区块，远距离射击稳定落地</td></tr><tr><td style=text-align:left><strong>世界维护</strong></td><td style=text-align:left>一键备份或优化地图，实时进度提示，维护期间服务器 MOTD 自动切换</td></tr><tr><td style=text-align:left><strong>插件自更新</strong></td><td style=text-align:left>定时查询 Hangar 新版本（正式版 / 开发版通道），sha256 校验后下载到 <code>plugins/update/</code>，重启即完成升级</td></tr><tr><td style=text-align:left><strong>玩家通知</strong></td><td style=text-align:left>进出服 / 被踢出时推送详情（世界、坐标、在线人数、权限组）到群聊</td></tr><tr><td style=text-align:left><strong>新手指南书</strong></td><td style=text-align:left>新玩家首次进服自动获得指南书，内容可通过 YAML 自定义引导文案</td></tr><tr><td style=text-align:left><strong>运行时配置</strong></td><td style=text-align:left>游戏内 <code>/config</code> 管理 29 项运行时配置，支持 <code>list / get / set / reset / dump / reload</code>，修改后热重载生效</td></tr></tbody></table></div></div><p>玩家常用入口（<code>/guide</code> 新手书、<code>/menu</code> 菜单、<code>/apply</code> 晋升申请等）详见
 <a href=/user/>玩家手册</a>
 。</p><h2 id=部署与兼容 class=relative>部署与兼容<a href=#%e9%83%a8%e7%bd%b2%e4%b8%8e%e5%85%bc%e5%ae%b9 aria-label=链接到本节 data-tooltip=点击复制链接 class="anchor-link ml2 gray hover-dark-gray">🔗</a></h2><ul><li>面向 <strong>Paper</strong> 服务端开发，同一 JAR 同时兼容 <strong>Folia</strong>（<code>folia-supported: true</code>）；因兼容 Bukkit / Spigot API，对相关插件开发者同样友好。</li><li>可选依赖
 <a href=https://luckperms.net/ target=_blank rel="noopener noreferrer">LuckPerms</a>
