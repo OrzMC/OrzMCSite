@@ -1,0 +1,34 @@
+{{- /* Markdown 表格渲染钩子：把默认表格包进横向滚动容器。
+   .table-wrap（外层，position:relative，承载右缘滚动提示遮罩）
+     └ .table-scroll（内层，overflow-x:auto，真正的滚动视口；tabindex 支持键盘翻看）
+         └ table
+   表格尺寸策略见 assets/ananke/css/custom.css 的 .table-wrap 区块：
+   窄屏保底列宽、超宽才横向滚动，避免列被压到一字一行。 */ -}}
+<div class="table-wrap">
+  <div class="table-scroll" tabindex="0" role="region" aria-label="表格，可左右滑动查看">
+    <table>
+      {{- with .THead }}
+      <thead>
+        {{- range . }}
+        <tr>
+          {{- range . }}
+          <th{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</th>
+          {{- end }}
+        </tr>
+        {{- end }}
+      </thead>
+      {{- end }}
+      {{- with .TBody }}
+      <tbody>
+        {{- range . }}
+        <tr>
+          {{- range . }}
+          <td{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</td>
+          {{- end }}
+        </tr>
+        {{- end }}
+      </tbody>
+      {{- end }}
+    </table>
+  </div>
+</div>

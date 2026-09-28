@@ -269,12 +269,26 @@ html[data-theme="light"] .nested-links a.sponsor-cta__btn:hover { color: #fff; }
 html[data-theme="light"] .nested-links a.sponsor-cta__card-link { color: #0b00e4; }
 
 /* Tables（正文 markdown 表格）：亮/暗两套配色，网格线 + 交替行底色 + 高对比表头，
-   避免行与页面背景融为一体；横向溢出由下方响应式规则接管 */
+   避免行与页面背景融为一体。滚动/列宽策略见下方 .table-wrap 区块 */
+.article-content {
+  /* 窄屏表格总宽上限：手机/平板容器窄，允许表格比容器宽（横向滚动）以换取可读列宽；
+     桌面容器本身够宽，下面的媒体查询会把上限放宽到 100%（避免多余的横向滚动条） */
+  --table-max: 800px;
+}
+@media (min-width: 48em) {
+  .article-content { --table-max: 100%; }
+}
 .article-content table {
-  width: 100%;
+  /* 三个 width 联动实现「自适应」：
+     - max-content：按不换行的自然宽布局，短表保持原样不产生多余滚动
+     - min-width:100%：桌面/容器够宽时铺满整行（min-width 优先级高于 max-width）
+     - max-width:var(--table-max)：长文本表封顶到可读宽度后正常折行 */
+  width: max-content;
+  min-width: 100%;
+  max-width: var(--table-max, 800px);
   border-collapse: collapse;
   font-size: 0.85rem;
-  margin: 0 0 1.2rem;
+  margin: 0;
 }
 .article-content th,
 .article-content td {
@@ -283,10 +297,18 @@ html[data-theme="light"] .nested-links a.sponsor-cta__card-link { color: #0b00e4
   vertical-align: top;
   border: 1px solid #d9dde6;
   line-height: 1.55;
-  /* 长路径 / URL / 命令等无空格长串可折行（anywhere 会参与表格 min-content 计算，
-     避免单列被撑超宽、其余列被迫一字一行的窄列折行）；同时兼容旧版 Safari */
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  /* 列宽上下限，是「短列不被压到一字一行」的关键：
+     - min-width：给列一个内容地板（7em ≈ 5 个汉字 + 内边距），防止 auto 布局把
+       窄列（min-content 对 CJK 只有 1 字）挤成单字列——这正是「不到五字也换行」的根因
+     - max-width：给列封顶，长文本在此宽内折行，不把整张表撑到无限宽
+     两者配合再加 --table-max，才能让每列都接近自己的自然宽，而不是少数长列吃掉全部宽度 */
+  min-width: 7em;
+  max-width: 32em;
+  /* 长路径 / URL / 命令等无空格长串可折行；这里用 break-word 而非 anywhere /
+     word-break:break-word——后者会把 min-content 缩到单字符参与列宽计算，
+     CJK 内容会被压成一字一行、行高暴涨（旧版 Safari 由 break-word 兜底） */
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 .article-content thead th {
   background: #e8ebf2;
@@ -305,8 +327,36 @@ html[data-theme="dark"] .article-content thead th {
 }
 html[data-theme="dark"] .article-content tbody tr:nth-child(odd)  { background: #171c26; }
 html[data-theme="dark"] .article-content tbody tr:nth-child(even) { background: #1d2330; }
-/* Responsive table wrapper */
-.article-content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* Responsive table：外层承载滚动提示遮罩，内层才是滚动视口 */
+.article-content .table-wrap { position: relative; margin: 0 0 1.2rem; }
+.article-content .table-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain; /* 滑动到边缘时不带动整页横向回弹 */
+  -webkit-overflow-scrolling: touch;
+}
+.article-content .table-scroll:focus-visible {
+  outline: 2px solid #0b00e4;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* 右缘渐隐提示：仅在确实可横向滚动且未滚到最右时显示（class 由 site-scripts.html 切换），
+   遮罩本身 pointer-events:none，不挡表格交互 */
+.article-content .table-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  background: linear-gradient(to left, rgba(15, 23, 42, 0.16), rgba(15, 23, 42, 0));
+}
+.article-content .table-wrap.is-scrollable:not(.at-end)::after { opacity: 1; }
+html[data-theme="dark"] .article-content .table-wrap::after {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+}
 
 /* Article typography scale */
 .article-content {

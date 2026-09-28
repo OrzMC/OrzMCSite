@@ -142,3 +142,51 @@ document.addEventListener('DOMContentLoaded',function(){
 })();
 </script>
 {{- end -}}
+<script>
+/* 正文表格横向滚动的渐进增强：给确实需要滚动的 .table-wrap 加 .is-scrollable
+   （显示右缘渐隐提示），滚到最右时加 .at-end 收起提示。纯装饰，JS 未执行时
+   滚动本身仍可用（靠 .table-scroll 的 overflow-x:auto）。 */
+(function () {
+  "use strict";
+  function update(wrap) {
+    var scroller = wrap.querySelector(".table-scroll");
+    if (!scroller) return;
+    var overflow = scroller.scrollWidth - scroller.clientWidth;
+    var scrollable = overflow > 1;
+    wrap.classList.toggle("is-scrollable", scrollable);
+    wrap.classList.toggle("at-end", scrollable && scroller.scrollLeft >= overflow - 1);
+    /* 只有真能滚动的表格才进入 Tab 序列，避免给静态表格加无意义的焦点停靠 */
+    if (scrollable) scroller.setAttribute("tabindex", "0");
+    else scroller.removeAttribute("tabindex");
+  }
+  function updateAll() {
+    var wraps = document.querySelectorAll(".table-wrap");
+    for (var i = 0; i < wraps.length; i++) update(wraps[i]);
+  }
+  function init() {
+    var scrollers = document.querySelectorAll(".table-scroll");
+    for (var i = 0; i < scrollers.length; i++) {
+      scrollers[i].addEventListener(
+        "scroll",
+        function () { update(this.parentNode); },
+        { passive: true }
+      );
+    }
+    updateAll();
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(updateAll);
+      var wraps = document.querySelectorAll(".table-wrap");
+      for (var j = 0; j < wraps.length; j++) ro.observe(wraps[j]);
+    } else {
+      window.addEventListener("resize", updateAll);
+    }
+    /* 字体/图片加载完成后表格宽度可能变化，补一次测量 */
+    window.addEventListener("load", updateAll);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
