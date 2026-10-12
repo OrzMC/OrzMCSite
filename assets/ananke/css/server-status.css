@@ -1,5 +1,5 @@
 /* 服务器实时状态卡片组件 — 对齐站点暗/亮色 token（见 custom.css）。
-   设计：左侧状态色条 + 状态胶囊徽章 + 信息标签 chip + 柔和阴影 + hover 抬升。 */
+   设计：整圈状态色边框（与全站卡片统一）+ 状态胶囊徽章 + 信息标签 chip + 柔和阴影 + hover 抬升。 */
 .server-status {
   --ss-bg: #ffffff;
   --ss-border: #e5e7eb;
@@ -55,11 +55,11 @@ html[data-theme="dark"] .server-status {
   .server-status--cols-2 .server-status__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* 卡片 */
+/* 卡片：整圈状态色边框，状态由 is-* 类着色（与全站卡片边框风格统一） */
 .server-status__card {
   position: relative;
   background: var(--ss-bg);
-  border: 1px solid var(--ss-border);
+  border: 1.5px solid var(--ss-wait);
   border-radius: 12px;
   padding: 1rem 1.1rem 0.85rem;
   color: var(--ss-text);
@@ -73,23 +73,11 @@ html[data-theme="dark"] .server-status {
 .server-status__card:hover {
   transform: translateY(-2px);
   box-shadow: var(--ss-shadow-hover);
-  border-color: var(--ss-border-strong);
 }
-/* 左侧状态色条（dashboard 风格，按状态着色） */
-.server-status__card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.8rem;
-  bottom: 0.8rem;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--ss-wait);
-}
-.server-status__card.is-online::before { background: var(--ss-online); }
-.server-status__card.is-offline::before { background: var(--ss-offline); }
-.server-status__card.is-sleeping::before { background: var(--ss-sleeping); }
-.server-status__card.is-error::before { background: var(--ss-offline); }
+.server-status__card.is-online { border-color: var(--ss-online); }
+.server-status__card.is-offline { border-color: var(--ss-offline); }
+.server-status__card.is-sleeping { border-color: var(--ss-sleeping); }
+.server-status__card.is-error { border-color: var(--ss-offline); }
 
 /* 头部：图标 + 名称 + 状态胶囊徽章 */
 .server-status__card-head {

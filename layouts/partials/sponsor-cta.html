@@ -1,30 +1,52 @@
 {{- /* 赞助/返佣 CTA 区块 partial（配置驱动，见 params.toml [sponsor]）。
   使用场景：/sponsor 页通过 {{< sponsor-cta >}} shortcode 嵌入。
-  优雅降级：afdian_url 与所有 affiliate url 均为空时，整个区块不输出任何内容。
+  三种赞助方式各自独立成卡片、按配置是否设置决定显示，顺序：支付宝小荷包 → 爱发电 → 云服务器推荐。
+  优雅降级：三种方式全部未配置时，整个区块不输出任何内容。
   注意：不用 {{ return }} 短路（在 partials.Include 下不可靠），改为 if 整体包裹。 */ -}}
 {{- $s := site.Params.sponsor -}}
 {{- $hasCards := false -}}
 {{- range $s.affiliate }}{{ if .url }}{{ $hasCards = true }}{{ end }}{{ end -}}
-{{- if or $s.afdian_url $hasCards -}}
+{{- $xhbImage := $s.alipay_xiaohebao_image | default "" -}}
+{{- $xhbTitle := $s.alipay_xiaohebao_title | default "支付宝小荷包" -}}
+{{- if or $xhbImage $s.afdian_url $hasCards -}}
 <section class="sponsor-cta">
   <h2>💖 支持我们</h2>
-  {{- with $s.afdian_url -}}
-  <p class="sponsor-cta__intro">{{ $s.afdian_note | default "在爱发电支持我们，所有赞助公开透明，全部用于服务器运营。" }}</p>
-  <p><a class="sponsor-cta__btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">⚡ 前往爱发电支持我们</a></p>
-  {{- end -}}
-  {{- if $hasCards -}}
-  <div class="sponsor-cta__grid">
-    {{- range $s.affiliate -}}
-      {{- if .url -}}
-      <a class="summary-card sponsor-cta__card" href="{{ .url }}" target="_blank" rel="sponsored noopener noreferrer">
-        <span class="sponsor-cta__card-name">{{ .name }}</span>
-        <span class="sponsor-cta__card-desc">{{ .description }}</span>
-        <span class="sponsor-cta__card-link">前往了解 →</span>
-      </a>
-      {{- end -}}
+  <div class="sponsor-cta__methods">
+    {{- with $xhbImage -}}
+    <div class="sponsor-cta__method sponsor-cta__method--xhb">
+      <div class="sponsor-cta__xhb-text">
+        <h3 class="sponsor-cta__method-title">💰 {{ $xhbTitle }}</h3>
+        {{- with $s.alipay_xiaohebao_note }}<p class="sponsor-cta__method-desc">{{ . }}</p>{{ end -}}
+      </div>
+      <figure class="sponsor-cta__xhb-figure">
+        <img class="sponsor-cta__xhb-img" src="{{ . | relURL }}" alt="{{ $xhbTitle }}加入引导图" loading="lazy" decoding="async">
+      </figure>
+    </div>
+    {{- end -}}
+    {{- with $s.afdian_url -}}
+    <div class="sponsor-cta__method sponsor-cta__method--afdian">
+      <h3 class="sponsor-cta__method-title">⚡ 爱发电</h3>
+      <p class="sponsor-cta__method-desc">{{ $s.afdian_note | default "在爱发电支持我们，所有赞助公开透明，全部用于服务器运营。" }}</p>
+      <p class="sponsor-cta__method-action"><a class="sponsor-cta__btn" href="{{ . }}" target="_blank" rel="noopener noreferrer">前往爱发电支持我们</a></p>
+    </div>
+    {{- end -}}
+    {{- if $hasCards -}}
+    <div class="sponsor-cta__method sponsor-cta__method--servers">
+      <h3 class="sponsor-cta__method-title">☁️ 云服务器推荐</h3>
+      <div class="sponsor-cta__grid">
+        {{- range $s.affiliate -}}
+          {{- if .url -}}
+          <a class="summary-card sponsor-cta__card" href="{{ .url }}" target="_blank" rel="sponsored noopener noreferrer">
+            <span class="sponsor-cta__card-name">{{ .name }}</span>
+            <span class="sponsor-cta__card-desc">{{ .description }}</span>
+            <span class="sponsor-cta__card-link">前往了解 →</span>
+          </a>
+          {{- end -}}
+        {{- end -}}
+      </div>
+      <p class="sponsor-cta__disclaimer">通过以上链接购买服务器，本站可获得少量推广佣金，价格与官方一致，感谢支持 🧡</p>
+    </div>
     {{- end -}}
   </div>
-  <p class="sponsor-cta__disclaimer">通过以上链接购买服务器，本站可获得少量推广佣金，价格与官方一致，感谢支持 🧡</p>
-  {{- end -}}
 </section>
 {{- end -}}

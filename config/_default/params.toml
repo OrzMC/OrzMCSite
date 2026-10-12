@@ -174,9 +174,16 @@ body = """
 # 赞助/返佣 CTA 区块（仅 /sponsor 页展示，见 layouts/shortcodes/sponsor-cta.html）
 # 配置驱动：对应链接为空时该条目自动隐藏，无需改模板。填入真实推广链接即可生效。
 [sponsor]
+# 支付宝小荷包赞助
+alipay_xiaohebao_title = "支付宝小荷包"
+alipay_xiaohebao_note = "扫码关注小荷包，投币赞助，荷包动态公布资金使用情况。"
+alipay_xiaohebao_image = "/images/alipay_xiaohebao.jpg"
+
+# 爱发电赞助
 afdian_url = "https://ifdian.net/a/orzmc"
 afdian_note = "在爱发电支持我们，所有赞助公开透明，全部用于服务器运营。"
 
+# 云服务器购买返佣
 [[sponsor.affiliate]]
 name = "腾讯云"
 description = "腾讯轻量，一键开服"
