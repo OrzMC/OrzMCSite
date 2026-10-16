@@ -644,6 +644,39 @@ html[data-theme="dark"] .sponsor-cta__disclaimer { color: #9aa3b2; }
   .site-footer__copyright { width: auto; }
 }
 
+/* 页脚合规块：顶部分隔线 + 免责声明 + 隐私/组织链接（不再暴露个人邮箱）。
+   页脚恒为 bg-black，故只依赖白色透明度，不随主题切换。 */
+.site-footer__compliance {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  font-size: 0.7rem;
+  line-height: 1.7;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+.site-footer__line { margin: 0; }
+.site-footer__links {
+  margin: 0.3rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem 0.6rem;
+}
+.site-footer__links a {
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.site-footer__links a:hover,
+.site-footer__links a:focus-visible {
+  color: #fff;
+  border-bottom-color: currentColor;
+}
+.site-footer__sep { color: rgba(255, 255, 255, 0.3); }
+
 /* 移动端触控目标 ≥44px + 导航/操作区换行（仅 <60em=960px，桌面零变化） */
 @media (max-width: 60em) {
   .site-nav__brand { display: inline-flex; align-items: center; min-height: 44px; }
