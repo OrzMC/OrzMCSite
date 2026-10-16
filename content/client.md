@@ -69,6 +69,9 @@ orzmc client -v 26.2 -u Steve # 指定版本与玩家名（版本号换成你要
 | `-u <玩家名>` | 游戏内玩家名，默认 `guest` |
 | `-t <模式>` | `vanilla` 原版（默认）/ `fabric` / `forge` |
 | `-m / -x <内存>` | 最小 / 最大内存，默认 `512M` / `2G`，如 `-x 4G` |
+| `--auth` | 正版登录（Microsoft 设备码流程）；不填则以离线方式启动 |
+| `-j <并发>` | 下载并发（1–64，默认 16）；网络延迟高或走代理时调大更快 |
+| `--refresh` | 忽略 24 小时元数据缓存，强制重新拉取 |
 | `--root-dir <目录>` | 游戏数据根目录（默认 `~/minecraft`） |
 | `--help` | 查看完整参数，如 `orzmc client --help` |
 
@@ -77,6 +80,7 @@ orzmc client -v 26.2 -u Steve # 指定版本与玩家名（版本号换成你要
 ```bash
 orzmc list                 # 列出已安装版本
 orzmc remove -v 26.2 --yes # 删除指定版本
+orzmc update               # 升级 orzmc 自身到最新发布（--check 只查询）
 orzmc self-uninstall --yes # 卸载工具本身（游戏数据默认保留）
 ```
 
