@@ -81,7 +81,7 @@ orzmc client -v 26.2 -u Steve # 指定版本与玩家名（版本号换成你要
 orzmc list                 # 列出已安装版本
 orzmc remove -v 26.2 --yes # 删除指定版本
 orzmc update               # 升级 orzmc 自身到最新发布（--check 只查询）
-orzmc self-uninstall --yes # 卸载工具本身（游戏数据默认保留）
+orzmc uninstall --yes # 卸载工具本身（游戏数据默认保留）
 ```
 
 游戏数据默认存放在 `~/minecraft`（Windows 为 `C:\Users\你的用户名\minecraft`），一个版本一个目录；其中 `versions/<版本>/client` 是该版本的游戏目录——**存档、模组、光影都放在这里**。
