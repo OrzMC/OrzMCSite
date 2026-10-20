@@ -52,7 +52,11 @@ irm https://orzmc.github.io/OrzPythonMC/install.ps1 | iex
 备选安装方式：
 
 - 从 [Releases](https://github.com/OrzMC/OrzPythonMC/releases) 下载对应平台二进制（`orzmc-macos-*` / `orzmc-linux-*` / `orzmc-windows-*`）；
-- 已有 Python 3.10+：`python3 -m pip install --user orzmc-app`（或 `uv tool install orzmc-app`）。
+- 已有 Python 3.10+：`python3 -m pip install --user orzmc-app`（或 `uv tool install orzmc-app`）；
+- **Swift 原生实现**（与上面的 `orzmc` 共用同一套命令面规范，macOS / Linux / Windows 均有官方资产）：
+  从 [OrzMCKit Releases](https://github.com/OrzMC/OrzMCKit/releases) 下载对应资产，
+  或在 Windows PowerShell 里执行
+  `irm https://raw.githubusercontent.com/OrzMC/OrzMCKit/main/scripts/install.ps1 | iex`。
 
 ### 启动与常用参数
 
