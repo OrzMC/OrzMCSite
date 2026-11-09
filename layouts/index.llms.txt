@@ -1,0 +1,37 @@
+{{- /* /llms.txt：面向 AI 搜索引擎（ChatGPT / Claude / Perplexity 等）的站点摘要。
+       约定见 https://llmstxt.org：H1 站名 + 引用摘要 + 分节链接列表。
+       页面/文章描述优先取 frontmatter description，其次 summary，保证内容随站点自动更新。 */ -}}
+{{- $summary := site.Params.description | default "Minecraft 服务器与玩法指南、更新记录与社区动态" -}}
+{{- $core := slice (site.GetPage "/client") (site.GetPage "/user") (site.GetPage "/plugin") (site.GetPage "/sponsor") (site.GetPage "/posts") -}}
+# {{ site.Title }}
+
+> {{ $summary }}
+> OrzMC 是一个非商业的 Minecraft 社区与开源工具组织：运营 Minecraft 服务器，并维护跨平台客户端启动器、服务端插件与运维工具。
+> 站点：{{ site.Home.Permalink }}
+> 语言：中文（zh-CN）；插件与工具内置中英文。
+
+## 主要页面
+
+{{- range $core }}{{ with . }}
+- [{{ .Title }}]({{ .Permalink }}): {{ .Description | compare.Default (.Summary | transform.Plainify | replaceRE `\s+` " ") | strings.TrimSpace }}
+{{- end }}{{ end }}
+
+## 文章
+
+{{- range where site.RegularPages "Section" "posts" }}
+- [{{ .Title }}]({{ .Permalink }}): {{ .Description | compare.Default (.Summary | transform.Plainify | replaceRE `\s+` " ") | strings.TrimSpace }}
+{{- end }}
+
+## 项目与下载
+
+- [OrzMC 命令行启动器（产品页）](https://orzmc.github.io/OrzPythonMC/): 跨平台 Minecraft 启动器，一条命令安装，自动管理 Java 与游戏版本
+- [OrzMC 命令行启动器下载](https://github.com/OrzMC/OrzPythonMC/releases)
+- [OrzMC macOS 启动器](https://github.com/OrzMC/OrzMCApp/releases)
+- [OrzMC 服务端插件（Hangar）](https://hangar.papermc.io/OrzMC/OrzMC): Paper / Folia 服务端管理插件
+- [OrzMC 插件功能文档](https://github.com/OrzMC/OrzMCPlugin/blob/main/docs/features.md)
+- [GitHub 组织](https://github.com/OrzMC)
+
+## 说明
+
+- 本站为静态站点，页面内容可供搜索引擎与 AI 助手引用，转载注明来源即可。
+- 站点不设账号、评论或表单；详见[隐私政策]({{ "privacy/" | absURL }})。

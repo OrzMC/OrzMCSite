@@ -1,10 +1,16 @@
 {{/* 覆盖 Hugo 内置 schema（原 Microdata）：输出 JSON-LD 结构化数据
-    WebSite + Organization（全页）；Article（文章）；BreadcrumbList（全页） */}}
+    WebSite + Organization（全页）；WebPage + SoftwareApplication（产品/独立页）；
+    Article（文章）；BreadcrumbList（全页）。
+    对象之间用 @id 关联，便于 AI 搜索引擎与富结果解析站点实体。 */}}
+{{- $page := . -}}
 {{- $siteURL := site.Home.Permalink -}}
+{{- $websiteID := printf "%s#website" $siteURL -}}
+{{- $orgID := printf "%s#organization" $siteURL -}}
 {{- $lang := "zh-CN" -}}
 {{- $name := "OrzMC" -}}
 {{- $logo := "/images/favicon.png" | absURL -}}
 {{- $og := partials.Include "func/get-og-image.html" . -}}
+{{- $siteDesc := site.Params.description -}}
 
 {{- /* Organization.sameAs：从 params.ananke.social 汇总 */ -}}
 {{- $sameAs := collections.Slice -}}
@@ -17,10 +23,12 @@
 {{- $website := dict
   "@context" "https://schema.org"
   "@type" "WebSite"
+  "@id" $websiteID
   "name" site.Title
   "url" $siteURL
-  "description" site.Params.description
+  "description" $siteDesc
   "inLanguage" $lang
+  "publisher" (dict "@id" $orgID)
   "potentialAction" (dict
     "@type" "SearchAction"
     "target" (dict "@type" "EntryPoint" "urlTemplate" (printf "%s?s={search_term_string}" $siteURL))
@@ -30,11 +38,73 @@
 {{- $org := dict
   "@context" "https://schema.org"
   "@type" "Organization"
+  "@id" $orgID
   "name" $name
   "url" $siteURL
+  "description" "OrzMC：Minecraft 社区与开源工具组织，运营 Minecraft 服务器并维护跨平台启动器、服务端插件与运维工具。"
   "logo" (dict "@type" "ImageObject" "url" $logo)
   "sameAs" $sameAs
+  "knowsAbout" (slice "Minecraft" "Minecraft 服务器" "PaperMC" "Folia" "Minecraft 启动器" "Minecraft 服务端插件")
 -}}
+
+{{- /* WebPage / SoftwareApplication：非文章独立页（客户端、插件、玩家手册、赞助、隐私） */ -}}
+{{- $webpage := dict -}}
+{{- $app := dict -}}
+{{- if and .IsPage (ne .Section "posts") -}}
+  {{- $pageDesc := .Description | compare.Default (.Summary | transform.Plainify | replaceRE `\s+` " ") | strings.TrimSpace -}}
+  {{- $webpage = dict
+    "@context" "https://schema.org"
+    "@type" "WebPage"
+    "@id" (printf "%s#webpage" .Permalink)
+    "url" .Permalink
+    "name" .Title
+    "description" $pageDesc
+    "inLanguage" $lang
+    "isPartOf" (dict "@id" $websiteID)
+    "primaryImageOfPage" (dict "@type" "ImageObject" "url" $og.url "width" $og.width "height" $og.height)
+  -}}
+  {{- if not .Lastmod.IsZero -}}
+    {{- $webpage = merge $webpage (dict "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")) -}}
+  {{- end -}}
+  {{- with .File -}}
+    {{- $base := .ContentBaseName -}}
+    {{- $appSpec := dict -}}
+    {{- if eq $base "client" -}}
+      {{- $appSpec = dict
+        "name" "OrzMC 命令行启动器"
+        "applicationCategory" "GameApplication"
+        "operatingSystem" "Windows, macOS, Linux"
+        "downloadUrl" "https://github.com/OrzMC/OrzPythonMC/releases"
+        "softwareHelp" "https://orzmc.github.io/OrzPythonMC/" -}}
+    {{- else if eq $base "plugin" -}}
+      {{- $appSpec = dict
+        "name" "OrzMC 服务端插件"
+        "applicationCategory" "ServerApplication"
+        "operatingSystem" "Paper 26.2+, Folia"
+        "downloadUrl" "https://hangar.papermc.io/OrzMC/OrzMC"
+        "softwareHelp" "https://github.com/OrzMC/OrzMCPlugin/blob/main/docs/features.md" -}}
+    {{- end -}}
+    {{- with $appSpec -}}
+      {{- $appID := printf "%s#software" $page.Permalink -}}
+      {{- $app = dict
+        "@context" "https://schema.org"
+        "@type" "SoftwareApplication"
+        "@id" $appID
+        "name" .name
+        "description" $pageDesc
+        "applicationCategory" .applicationCategory
+        "operatingSystem" .operatingSystem
+        "url" $page.Permalink
+        "downloadUrl" .downloadUrl
+        "softwareHelp" .softwareHelp
+        "inLanguage" $lang
+        "offers" (dict "@type" "Offer" "price" "0" "priceCurrency" "CNY")
+        "publisher" (dict "@id" $orgID)
+      -}}
+      {{- $webpage = merge $webpage (dict "mainEntity" (dict "@id" $appID)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 
 {{- /* Article：仅文章页，且必须有发布日期 */ -}}
 {{- $article := dict -}}
@@ -46,17 +116,21 @@
   {{- with (.GetTerms "categories") }}{{ range first 1 . }}{{ $section = .Title }}{{ end }}{{ end -}}
   {{- $keywords := collections.Slice -}}
   {{- range .GetTerms "tags" }}{{ $keywords = $keywords | collections.Append .Title }}{{ end -}}
+  {{- $author := dict "@type" "Organization" "name" $name "url" $siteURL -}}
+  {{- with site.Params.author }}{{ $author = dict "@type" "Person" "name" . }}{{ end -}}
   {{- $article = dict
     "@context" "https://schema.org"
     "@type" "Article"
+    "@id" (printf "%s#article" .Permalink)
     "headline" .Title
     "description" (.Description | compare.Default .Summary)
     "image" $og.url
-    "author" (dict "@type" "Organization" "name" $name "url" $siteURL)
-    "publisher" (dict "@type" "Organization" "name" $name "url" $siteURL "logo" (dict "@type" "ImageObject" "url" $logo))
+    "author" $author
+    "publisher" (dict "@type" "Organization" "@id" $orgID "name" $name "url" $siteURL "logo" (dict "@type" "ImageObject" "url" $logo))
     "datePublished" $published
     "dateModified" $modified
     "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+    "isPartOf" (dict "@id" $websiteID)
     "inLanguage" $lang
     "articleSection" $section
     "keywords" $keywords
@@ -81,6 +155,16 @@
 <script type="application/ld+json">
 {{ $org | jsonify (dict "indent" "  ") | safeJS }}
 </script>
+{{ with $webpage }}
+<script type="application/ld+json">
+{{ . | jsonify (dict "indent" "  ") | safeJS }}
+</script>
+{{ end }}
+{{ with $app }}
+<script type="application/ld+json">
+{{ . | jsonify (dict "indent" "  ") | safeJS }}
+</script>
+{{ end }}
 {{ with $article }}
 <script type="application/ld+json">
 {{ . | jsonify (dict "indent" "  ") | safeJS }}

@@ -3,7 +3,7 @@
 <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:site_name" content="{{ site.Title }}">
-<meta property="og:locale" content="{{ site.Language.Locale | replace "-" "_" }}">
+<meta property="og:locale" content="{{ replace (site.Language.Locale | compare.Default "zh-CN") "-" "_" }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 
 {{- if .IsPage }}
@@ -19,3 +19,4 @@
 <meta property="og:image:width" content="{{ $og.width }}">
 <meta property="og:image:height" content="{{ $og.height }}">
 <meta property="og:image:alt" content="{{ .Title | compare.Default site.Title }}">
+<meta property="og:image:secure_url" content="{{ $og.url }}">
