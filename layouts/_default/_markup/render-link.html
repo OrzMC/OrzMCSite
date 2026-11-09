@@ -1,6 +1,7 @@
-{{ $href := .Destination | safeURL }}
-{{ $isHttp := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") }}
-{{ $isProtoRel := strings.HasPrefix $href "//" }}
-{{ $isFtp := strings.HasPrefix $href "ftp://" }}
-{{ $isExternal := or $isHttp (or $isProtoRel $isFtp) }}
-<a href="{{ $href }}" {{ if $isExternal }}target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text }}</a>
+{{- $href := .Destination | safeURL -}}
+{{- $isHttp := or (strings.HasPrefix $href "http://") (strings.HasPrefix $href "https://") -}}
+{{- $isProtoRel := strings.HasPrefix $href "//" -}}
+{{- $isFtp := strings.HasPrefix $href "ftp://" -}}
+{{- $isExternal := or $isHttp (or $isProtoRel $isFtp) -}}
+<a href="{{ $href }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Text }}</a>
+{{- /* 行内链接前后不留空白：否则 CJK 正文里会多出空格，句末标点还可能被挤到单独一行 */ -}}
