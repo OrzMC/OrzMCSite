@@ -1,0 +1,7 @@
+{{- /* 页面标题：分类/标签术语页补「（标签）/（分类）」后缀，避免同名 tag/category 标题重复。 */ -}}
+{{- $title := .Title -}}
+{{- if eq .Kind "term" -}}
+  {{- $label := cond (eq .Section "tags") "标签" "分类" -}}
+  {{- $title = printf "%s（%s）" .Title $label -}}
+{{- end -}}
+{{- return $title -}}
