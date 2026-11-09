@@ -45,3 +45,12 @@
 
 - `llms.txt` 只是给 AI 爬虫的摘要声明，是否收录/引用由各家决定，不保证生效。
 - 更新验证码或 SEO 参数后必须重新发布（push `main`）。
+
+## 日常更新护栏（减少遗忘）
+
+- **CI 阻断**（`scripts/check_content.py`）：标题/描述/图片资源/重复标题；独立页描述必须 20–160 字。
+- **自动生成**：sitemap、llms.txt（主要页面按 `menu.main` 自动收录）、robots、JSON-LD、IndexNow。
+- **新增独立页**：写 `description` + 加进 `menu.main`；产品页还要在 `schema.html` 登记 `SoftwareApplication`。
+- **改 URL**：用 `aliases`，避免旧链接 404。
+- **第三方脚本/分析**：先改 `docs/compliance/privacy.md` 再跑同步器。
+- **定期审计**：`python3 scripts/seo_audit.py`（线上全量）；GitHub Actions `SEO / GEO Audit` 每周一自动跑。
