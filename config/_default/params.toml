@@ -6,6 +6,9 @@ favicon = "/images/favicon.png"
 default_og_image = "/images/og-default.png"
 site_logo = ""
 description = "Minecraft 服务器与玩法指南、更新记录与社区动态"
+# 搜索引擎站长验证（GSC / Bing Webmaster 选「HTML 标记」验证后，把 content 值填在下面并重新发布）
+google_site_verification = ""
+bing_site_verification = ""
 author = "Joker"
 # site-header 是否在 hero 图/黑底区叠加页面标题与描述；默认 false（页面标题由正文内容区承担，避免双标题）
 # 页面 frontmatter 可逐页覆盖为 true（如首页）；真时正文标题自动降级 h2 防同页双 h1

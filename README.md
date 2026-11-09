@@ -19,3 +19,8 @@ git submodule sync
 # 本地预览网站
 ./preview
 ```
+
+## SEO / 搜索引擎提交
+
+sitemap、robots、llms.txt 与 IndexNow 已自动化；Google Search Console / Bing Webmaster 的
+验证与提交步骤见 [`docs/seo-search-engines.md`](docs/seo-search-engines.md)。

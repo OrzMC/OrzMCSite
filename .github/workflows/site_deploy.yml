@@ -54,3 +54,46 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         ./deploy
+
+    - name: Submit URLs to IndexNow
+      continue-on-error: true
+      run: |
+        set -euo pipefail
+        KEY_FILE=$(ls static/*.txt | head -n1)
+        KEY=$(basename "$KEY_FILE" .txt)
+        python3 - "$KEY" <<'PY'
+        import json, re, sys, time, urllib.request
+
+        key = sys.argv[1]
+        host = "https://orzmc.jokerhub.cn"
+
+        # 等 Pages 把 key 文件发布出去（IndexNow 会回源校验），最多等 2 分钟
+        for attempt in range(8):
+            try:
+                body = urllib.request.urlopen(f"{host}/{key}.txt?ts={int(time.time())}", timeout=15).read().decode().strip()
+                if body == key:
+                    break
+            except Exception:
+                pass
+            time.sleep(15)
+        else:
+            print("IndexNow: key file not reachable yet, skip")
+            sys.exit(0)
+
+        sitemap = urllib.request.urlopen(f"{host}/sitemap.xml?ts={int(time.time())}", timeout=30).read().decode()
+        urls = re.findall(r"<loc>(.*?)</loc>", sitemap)
+        payload = {
+            "host": host,
+            "key": key,
+            "keyLocation": f"{host}/{key}.txt",
+            "urlList": urls,
+        }
+        req = urllib.request.Request(
+            "https://api.indexnow.org/indexnow",
+            data=json.dumps(payload).encode(),
+            headers={"Content-Type": "application/json; charset=utf-8"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            print(f"IndexNow: submitted {len(urls)} URLs, HTTP {resp.status}")
+        PY
