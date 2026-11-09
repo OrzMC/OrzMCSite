@@ -1,0 +1,42 @@
+# 🇨🇳 OrzMC
+
+> Minecraft 服务器与玩法指南、更新记录与社区动态
+> OrzMC 是一个非商业的 Minecraft 社区与开源工具组织：运营 Minecraft 服务器，并维护跨平台客户端启动器、服务端插件与运维工具。
+> 站点：https://orzmc.jokerhub.cn/
+> 语言：中文（zh-CN）；插件与工具内置中英文。
+
+## 主要页面
+- [客户端启动器](https://orzmc.jokerhub.cn/client/): OrzMC 客户端启动器选择指南：跨平台命令行启动器与 macOS 图形界面启动器的区别、下载入口与官方文档。
+- [玩家手册](https://orzmc.jokerhub.cn/user/): OrzMC 玩家手册：白名单申请、服务器地址、客户端选择、进服注册登录与常用指令。
+- [自研插件](https://orzmc.jokerhub.cn/plugin/): OrzMC 是面向 Paper / Folia 的服务端管理插件，整合白名单、权限、群机器人、安全防护与世界维护，开箱即用。
+- [赞助](https://orzmc.jokerhub.cn/sponsor/): 无论金额大小，您的名字都将铭刻在服务器的成长史诗中！
+- [文章](https://orzmc.jokerhub.cn/posts/): Minecraft 使用与服务器相关文档
+
+## 文章
+- [怎样开发一个Minecraft启动器(Java版)](https://orzmc.jokerhub.cn/posts/1.client/10.launcher/): 自己动手写一个 Minecraft 启动器：从版本清单到启动命令，客户端和服务端启动器都能照做
+- [Minecraft Web 客户端](https://orzmc.jokerhub.cn/posts/1.client/11.webmc/): 对比 Minecraft 网页客户端方案的版本覆盖、体验完整度与合规风险，给出选型建议。
+- [服主应知应会](https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/): 面向 Minecraft 服务端管理员的迁移、升级、常用配置、指令和安全速查。
+- [服务端运维](https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/): 记录 PaperMC 服务端在 Ubuntu 上的部署依赖、网络、资源包、systemd、定时任务与常见问题。
+- [服务端插件](https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/): 收集 PaperMC 服务端常用插件，按权限安全、建筑地图、玩法经济和运维兼容分类，并记录安装与常见问题。
+- [PaperMC插件开发](https://orzmc.jokerhub.cn/posts/2.server/23.papermc_plugin_dev/): 从一个最小 PaperMC 插件开始，走完 plugin.yml、主类、事件、构建、调试和发布的完整流程。
+- [Minecraft 基岩版服务端](https://orzmc.jokerhub.cn/posts/2.server/24.bedrock_server/): 从下载、首次启动、常用配置到 systemd 托管，完整记录 Minecraft 基岩版服务端的部署与运维。
+- [PaperMC 危险指令与防护](https://orzmc.jokerhub.cn/posts/2.server/25.papermc-dangerous-commands/): 服务端指令中容易造成灾难性后果的操作与场景，以及如何从权限和习惯上规避
+- [对外开服安全清单](https://orzmc.jokerhub.cn/posts/2.server/26.papermc-open-server-checklist/): 从搭建到上线，检查对外开服前需要落实的安全加固与运维项
+- [Paper 与 Folia 双核心插件全景对比](https://orzmc.jokerhub.cn/posts/2.server/27.paper-vs-folia/): Paper 与 Folia 两种核心的差异、插件生态对应关系、下载渠道与启用状态，一张表看懂两个核心开服的状况。
+- [服务器地图大小限制](https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/): 从区块存储模型理解地图占用，用理论极值和实际测量估算容量，并给出世界边界与 mcaselector 备份优化方案。
+- [相关资源链接](https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/): 按官方下载、Wiki、协议、工具和社区分类整理的 Minecraft 资源链接，并标注使用注意点。
+- [Paper 26.1 世界目录结构迁移报告](https://orzmc.jokerhub.cn/posts/3.other/33.world-directory-migration-report/): Paper 26.1 废弃了旧版 Bukkit/CraftBukkit 继承的三目录平铺结构（world/ + world_nether/ + world_the_end/），改为与 Vanilla 原版一致的单目录嵌套维度结构。本文详细记录了从旧版到新版的世界目录结构迁移过程、变化明细、清理建议及 Paper 与 Vanilla 的三方对比。
+
+## 项目与下载
+
+- [OrzMC 命令行启动器（产品页）](https://orzmc.github.io/OrzPythonMC/): 跨平台 Minecraft 启动器，一条命令安装，自动管理 Java 与游戏版本
+- [OrzMC 命令行启动器下载](https://github.com/OrzMC/OrzPythonMC/releases)
+- [OrzMC macOS 启动器](https://github.com/OrzMC/OrzMCApp/releases)
+- [OrzMC 服务端插件（Hangar）](https://hangar.papermc.io/OrzMC/OrzMC): Paper / Folia 服务端管理插件
+- [OrzMC 插件功能文档](https://github.com/OrzMC/OrzMCPlugin/blob/main/docs/features.md)
+- [GitHub 组织](https://github.com/OrzMC)
+
+## 说明
+
+- 本站为静态站点，页面内容可供搜索引擎与 AI 助手引用，转载注明来源即可。
+- 站点不设账号、评论或表单；详见[隐私政策](https://orzmc.jokerhub.cn/privacy/)。
