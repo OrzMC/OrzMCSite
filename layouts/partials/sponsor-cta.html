@@ -10,7 +10,7 @@
 {{- $xhbTitle := $s.alipay_xiaohebao_title | default "支付宝小荷包" -}}
 {{- if or $xhbImage $s.afdian_url $hasCards -}}
 <section class="sponsor-cta">
-  <h2>💖 支持我们</h2>
+  {{/* 区块标题由调用页面的 Markdown 标题提供（这样才会进目录） */}}
   <div class="sponsor-cta__methods">
     {{- with $xhbImage -}}
     <div class="sponsor-cta__method sponsor-cta__method--xhb">
