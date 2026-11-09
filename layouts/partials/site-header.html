@@ -34,7 +34,7 @@
           <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
             {{ .Title | compare.Default .Site.Title }}
           </h1>
-          {{ with .Params.description }}
+          {{ with (compare.Default .Params.description (.Param "hero_description")) }}
             <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
               {{ . }}
             </h2>
@@ -49,7 +49,7 @@
     <picture class="site-hero-media">
       <source type="image/webp" srcset="{{ $hero.webp }}" sizes="{{ $hero.sizes }}">
       <source type="image/png" srcset="{{ $hero.png }}" sizes="{{ $hero.sizes }}">
-      <img class="site-hero-img" src="{{ $hero.fb }}" alt=""{{ if .IsHome }} fetchpriority="high"{{ end }}>
+      <img class="site-hero-img" src="{{ $hero.fb }}" alt="" fetchpriority="high">
     </picture>
     <div class="relative {{ $cover_dimming_class }}">
       {{ partials.Include "site-navigation.html" .}}
@@ -59,7 +59,7 @@
           <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
             {{ .Title | compare.Default .Site.Title }}
           </h1>
-          {{ with .Params.description }}
+          {{ with (compare.Default .Params.description (.Param "hero_description")) }}
             <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3">
               {{ . }}
             </h2>
@@ -77,7 +77,7 @@
       <picture class="site-hero-media">
         <source type="image/webp" srcset="{{ $hero.webp }}" sizes="{{ $hero.sizes }}">
         <source type="image/png" srcset="{{ $hero.png }}" sizes="{{ $hero.sizes }}">
-        <img class="site-hero-img" src="{{ $hero.fb }}" alt=""{{ if .IsHome }} fetchpriority="high"{{ end }}>
+        <img class="site-hero-img" src="{{ $hero.fb }}" alt="" fetchpriority="high">
       </picture>
       <div class="site-hero-overlay">
         <div class="site-hero-nav">
@@ -89,7 +89,7 @@
               <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
                 {{ .Title | compare.Default .Site.Title }}
               </h1>
-              {{ with .Params.description }}
+              {{ with (compare.Default .Params.description (.Param "hero_description")) }}
                 <h2 class="fw1 f5 f3-l white-80 mt3">
                   {{ . }}
                 </h2>

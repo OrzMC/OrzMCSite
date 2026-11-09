@@ -5,6 +5,7 @@ menu:
 title: 自研插件
 featured_image: "/images/minecraft_plugin.png"
 toc: true
+description: "OrzMC 是面向 Paper / Folia 的服务端管理插件，整合白名单、权限、群机器人、安全防护与世界维护，开箱即用。"
 ---
 
 ---

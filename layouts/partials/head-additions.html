@@ -5,7 +5,7 @@
 <link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
 <meta name="theme-color" content="#0f172a">
 <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
-{{ if .IsHome }}{{ $hero := partials.Include "func/hero-variants.html" . }}{{ if $hero.ok }}{{/* printf+safe.HTML：避免 Hugo 把 imagesrcset 动作输出当 URL 转义（空格→%20）；配合 tdewolff keepQuotes 保留引号 */}}{{ printf "<link rel=\"preload\" as=\"image\" type=\"image/webp\" imagesrcset=\"%s\" imagesizes=\"%s\">" $hero.webp $hero.sizes | safe.HTML }}{{ end }}{{ end }}
+{{ if .Params.featured_image }}{{ $hero := partials.Include "func/hero-variants.html" . }}{{ if $hero.ok }}{{/* printf+safe.HTML：避免 Hugo 把 imagesrcset 动作输出当 URL 转义（空格→%20）；配合 tdewolff keepQuotes 保留引号 */}}{{ printf "<link rel=\"preload\" as=\"image\" type=\"image/webp\" imagesrcset=\"%s\" imagesizes=\"%s\">" $hero.webp $hero.sizes | safe.HTML }}{{ end }}{{ end }}
 {{/* 不蒜子访问统计：async 不阻塞渲染；busuanzi 内部用 defer JSONP 请求计数 API 并等待 DOM 就绪 */}}
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 {{ partials.Include "hook.html" (dict "hook" "head-end" "context" .) }}

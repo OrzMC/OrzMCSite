@@ -6,6 +6,7 @@ menu:
 title: 客户端启动器
 featured_image: "/images/minecraft_client.png"
 toc: true
+description: "OrzMC 客户端启动器选择指南：跨平台命令行启动器与 macOS 图形界面启动器的区别、下载入口与官方文档。"
 ---
 ---
 

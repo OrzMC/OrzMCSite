@@ -1,0 +1,24 @@
+{{- /* 覆盖主题 robots.txt：生产环境允许抓取（含 AI/LLM 爬虫），非生产禁止。
+       GEO：AI 爬虫显式放行，并在末尾给出 llms.txt 位置（面向 AI 站点的摘要文件）。 */ -}}
+{{ if hugo.IsProduction -}}
+User-agent: *
+Allow: /
+
+# AI / LLM crawlers（显式允许，便于生成式搜索引擎收录与引用）
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+Allow: /
+
+Sitemap: {{ "sitemap.xml" | absURL }}
+# GEO: {{ "llms.txt" | absURL }}
+{{ else -}}
+User-agent: *
+Disallow: /
+{{ end -}}

@@ -5,6 +5,7 @@ menu:
 toc: true
 title: 玩家手册
 featured_image: "/images/minecraft_user.png"
+description: "OrzMC 玩家手册：白名单申请、服务器地址、客户端选择、进服注册登录与常用指令。"
 ---
 
 ## 欢迎加入 OrzMC

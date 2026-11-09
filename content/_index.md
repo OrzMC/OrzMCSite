@@ -4,7 +4,8 @@ menu:
     name: 主页
     weight: 1
 title: "❤️‍🔥 我的世界"
-description: "一个人是冒险，一群人是传奇！"
+description: "OrzMC 是 Minecraft 玩家社区：服务器实时状态、客户端启动器、服务端插件与运维指南。"
+hero_description: "一个人是冒险，一群人是传奇！"
 hero_title: true    # 首页 hero 叠字开启（默认关闭；开启后正文标题自动降为 h2 防双 h1）
 featured_image: "/images/minecraft_homepage.png"
 images: ["/images/og-default.png"]

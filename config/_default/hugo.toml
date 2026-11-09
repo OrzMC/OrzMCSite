@@ -3,12 +3,14 @@ baseURL = "https://orzmc.jokerhub.cn"
 title = "🇨🇳 OrzMC"
 theme = "ananke"
 defaultContentLanguage = "zh-cn"
+locale = "zh-CN"
 enableRobotsTXT = true
 hasCJKLanguage = true
 enableGitInfo = true
 
 [outputs]
-home = ["HTML", "RSS"]
+# LLMS：生成 /llms.txt（面向 AI 搜索引擎的站点摘要，见 layouts/index.llms.txt）
+home = ["HTML", "RSS", "LLMS"]
 # 归档页 /posts/ 生成 HTML：利于爬虫发现与面包屑结构化数据（主页仍列出全部文章）
 section = ["HTML", "RSS"]
 
@@ -38,6 +40,12 @@ lineNumbersInTable = true
 guessSyntax = true
 noClasses = true
 tabWidth = 4
+
+[outputFormats.LLMS]
+mediaType = "text/plain"
+baseName = "llms"
+isPlainText = true
+notAlternative = true
 
 [sitemap]
 changefreq = "weekly"
