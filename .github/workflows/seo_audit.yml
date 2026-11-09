@@ -1,0 +1,19 @@
+name: SEO / GEO Audit
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'   # 每周一 02:00 UTC（北京时间 10:00）
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Audit live site
+        run: python3 scripts/seo_audit.py

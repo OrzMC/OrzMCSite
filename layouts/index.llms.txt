@@ -2,7 +2,9 @@
        约定见 https://llmstxt.org：H1 站名 + 引用摘要 + 分节链接列表。
        页面/文章描述优先取 frontmatter description，其次 summary，保证内容随站点自动更新。 */ -}}
 {{- $summary := site.Params.description | default "Minecraft 服务器与玩法指南、更新记录与社区动态" -}}
-{{- $core := slice (site.GetPage "/client") (site.GetPage "/user") (site.GetPage "/plugin") (site.GetPage "/sponsor") (site.GetPage "/posts") -}}
+{{- /* 主要页面 = 主导航里的独立页（按菜单 weight 排序，新增页面只要进导航就自动收录）。
+      隐私政策放到文末「说明」里，不占主要页面。 */ -}}
+{{- $privacy := "privacy/" | relLangURL -}}
 # {{ site.Title }}
 
 > {{ $summary }}
@@ -12,9 +14,16 @@
 
 ## 主要页面
 
-{{- range $core }}{{ with . }}
+{{- range site.Menus.main }}
+{{- with .Page }}
+{{- if and .IsPage (ne .RelPermalink $privacy) }}
 - [{{ .Title }}]({{ .Permalink }}): {{ .Description | compare.Default (.Summary | transform.Plainify | replaceRE `\s+` " ") | strings.TrimSpace }}
-{{- end }}{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- with site.GetPage "/posts" }}
+- [{{ .Title }}]({{ .Permalink }}): {{ .Description | compare.Default (.Summary | transform.Plainify | replaceRE `\s+` " ") | strings.TrimSpace }}
+{{- end }}
 
 ## 文章
 

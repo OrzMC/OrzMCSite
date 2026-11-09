@@ -24,3 +24,5 @@ git submodule sync
 
 sitemap、robots、llms.txt 与 IndexNow 已自动化；Google Search Console / Bing Webmaster 的
 验证与提交步骤见 [`docs/seo-search-engines.md`](docs/seo-search-engines.md)。
+
+发布后/定期审计线上 SEO：`python3 scripts/seo_audit.py`（每周一由 Actions 自动跑）。

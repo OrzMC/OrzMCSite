@@ -15,7 +15,9 @@ OrzMC 私服官网：Hugo 静态站（Ananke 主题），中文 Minecraft 服务
 hugo -e production --minify --gc   # 等价生产构建到 public/（deploy 内部调用）
 ```
 
-没有测试与 lint。`./rsync_publish` 是发布到本地/远程 Nginx 的备用路径，一般不用于线上。
+没有传统测试与 lint。`scripts/check_content.py` 校验文章结构与 GEO/SEO 护栏（CI 已跑）；
+`scripts/seo_audit.py` 审计线上 sitemap 全部 URL（发布后/定期手动跑）。
+`./rsync_publish` 是发布到本地/远程 Nginx 的备用路径，一般不用于线上。
 
 ## 架构与关键约定
 
@@ -63,6 +65,19 @@ hugo -e production --minify --gc   # 等价生产构建到 public/（deploy 内�
 - TOML 带连字符的键（如 `site.Params.ananke.social.x-twitter`）必须用 `(index ... "x-twitter")` 访问，点号解析会失败。
 - 本机 `cp` 被 alias 成交互模式，覆盖文件用 `command cp -f`。
 - 移动端/响应式布局验证依赖容器查询，改动布局后需检查 `custom.css` 中 `@container` 规则与暗色模式覆盖。
+
+## 内容更新与 GEO/SEO 护栏
+
+- `scripts/check_content.py`（CI 阻断）：文章 weight/图片资源、title、独立页 `description`（20–160 字）、
+  文章 `summary`/`description`、重复 title；顶层页未进主导航时警告。
+- 发布自动生成：`sitemap.xml`、`llms.txt`（主要页面按 `menu.main` 自动收录，文章自动列出）、
+  robots、canonical/OG/JSON-LD、IndexNow 提交。
+- 新增独立页：写 `description` + 加进 `menu.main`；新增产品/下载页还要在
+  `layouts/partials/schema.html` 的 `SoftwareApplication` 分支登记（client/plugin 为示例）。
+- 改 URL：优先不改；必须改用 `aliases` 生成跳转页，并更新内链。
+- 新增第三方脚本/分析：改父仓库 `docs/compliance/privacy.md` → `python3 scripts/sync_compliance.py` → 发布。
+- 发布后/每周：`python3 scripts/seo_audit.py` 审计线上全量；GSC/Bing 与 AI 引用观察见
+  [`docs/seo-search-engines.md`](docs/seo-search-engines.md)。
 
 ## 内容结构
 
