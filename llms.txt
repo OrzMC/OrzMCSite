@@ -25,7 +25,7 @@
 - [Paper 与 Folia 双核心插件全景对比](https://orzmc.jokerhub.cn/posts/2.server/27.paper-vs-folia/): Paper 与 Folia 两种核心的差异、插件生态对应关系、下载渠道与启用状态，一张表看懂两个核心开服的状况。
 - [服务器地图大小限制](https://orzmc.jokerhub.cn/posts/3.other/31.worldsize/): 从区块存储模型理解地图占用，用理论极值和实际测量估算容量，并给出世界边界与 mcaselector 备份优化方案。
 - [相关资源链接](https://orzmc.jokerhub.cn/posts/3.other/32.minecraft_resources/): 按官方下载、Wiki、协议、工具和社区分类整理的 Minecraft 资源链接，并标注使用注意点。
-- [Paper 26.1 世界目录结构迁移报告](https://orzmc.jokerhub.cn/posts/3.other/33.world-directory-migration-report/): Paper 26.1 废弃了旧版 Bukkit/CraftBukkit 继承的三目录平铺结构（world/ + world_nether/ + world_the_end/），改为与 Vanilla 原版一致的单目录嵌套维度结构。本文详细记录了从旧版到新版的世界目录结构迁移过程、变化明细、清理建议及 Paper 与 Vanilla 的三方对比。
+- [Paper 26.1 世界目录结构迁移报告](https://orzmc.jokerhub.cn/posts/3.other/33.world-directory-migration-report/): Paper 26.1 废弃了旧版 Bukkit/CraftBukkit 的三目录平铺结构（world/ + world_nether/ + world_the_end/），改为与 Vanilla 一致的嵌套维度结构；本文记录迁移过程、变化明细、清理建议与 Paper/Vanilla 对比。
 
 ## 项目与下载
 
