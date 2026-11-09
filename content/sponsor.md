@@ -6,9 +6,12 @@ title: "赞助"
 description: "无论金额大小，您的名字都将铭刻在服务器的成长史诗中！"
 featured_image: "/images/minecraft_sponsor.png"
 images: ["/images/og-default.png"]
+toc: true
 ---
 
 ---
+
+## 💖支持我们
 
 {{< sponsor-cta >}}
 
