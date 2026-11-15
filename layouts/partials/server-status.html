@@ -7,11 +7,13 @@
 {{- $ov := dict -}}
 {{- /* 兼容 shortcode 传入的 (dict "overrides" …)；误以 page 上下文调用时取空覆盖 */ -}}
 {{- if reflect.IsMap . -}}{{- $ov = index . "overrides" | default dict -}}{{- end -}}
+{{- /* web_client_url：「在浏览器中玩」按钮指向的 Web 客户端页（空 = 不显示按钮） */ -}}
 {{- $cfg := dict
     "refresh_interval" ($raw.refresh_interval | compare.Default 60)
     "api"              ($raw.api | compare.Default "https://api.mcstatus.io/v2/status/java")
     "show_address"     ($raw.show_address | compare.Default false)
     "tabs"             ($raw.tabs | compare.Default false)
+    "web_client_url"   ($raw.web_client_url | default "")
     "servers"          ($raw.servers | default collections.Slice)
     "info_panels"      ($raw.info_panels | default collections.Slice)
     "show_info"        false

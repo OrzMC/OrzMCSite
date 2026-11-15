@@ -20,6 +20,7 @@
   var tabsEl = null;        // Tab 栏节点（多服务器共用一块展示区域时创建）
   var tabsEnabled = false;   // 是否启用 Tab 切换（配置 tabs=true 且服务器数 > 1）
   var activeKey = null;      // 当前选中的服务器 key（跨刷新保留）
+  var webClientUrl = '';     // 「在浏览器中玩」打开的客户端地址（配置 web_client_url，空=不显示按钮）
 
   /* 地址防爬虫：配置 JSON 里的 host 是替换表密文，明文地址不会出现在 HTML 中；
      卡片默认以固定掩码显示，点击复制。替换表由模板单点维护（partial
@@ -34,6 +35,7 @@
   var CHECK_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
   var EYE_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   var EYE_OFF_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  var EXTERNAL_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
   /* 玩家头像：mc-heads.net 按 UUID 返回方形头像（公开服务；玩家 UUID 本身公开，非敏感信息）。
      条目渲染时才按需加载，不进入配置 JSON。 */
   var PLAYER_AVATAR = 'https://mc-heads.net/avatar/';
@@ -574,8 +576,8 @@
         ));
       }
 
-      /* Web 客户端（浏览器 / Eaglercraft）：wss://<host>:<port>/ —— 浏览器客户端只接受
-         TLS 直连地址，整串（含协议、端口与结尾斜杠）都可由用户直接复制粘贴到 Web 客户端。 */
+      /* Web 客户端（浏览器 / Eaglercraft）：wss://<host>:<port> —— 浏览器客户端只接受
+         TLS 直连地址；与 Java/基岩一致不带结尾斜杠（整串可直接复制粘贴进 Web 客户端）。 */
       if (server.webAddress) {
         actions.appendChild(buildAddrPill(
           'Web客户端连接地址', server.webAddress, !!addrState.web,
@@ -586,6 +588,33 @@
           },
           'web'
         ));
+
+        /* 「在浏览器中玩」：新标签打开官方 Web 客户端（版本由 web_client_url 决定），
+           点击时顺手把本服地址写入剪贴板，用户到客户端里「直连」直接粘贴即可。
+           不自托管客户端：75 MiB 单文件不适合放 GitHub Pages，也不打自家家宽上行。 */
+        if (webClientUrl) {
+          var play = document.createElement('a');
+          play.className = 'server-status__play';
+          play.href = webClientUrl;
+          play.target = '_blank';
+          play.rel = 'noopener noreferrer';
+          play.title = '新标签打开 Web 客户端，并复制本服地址（到客户端里「直连」粘贴）';
+          play.innerHTML = EXTERNAL_ICON + '<span>在浏览器中玩</span>';
+          play.addEventListener('click', function () {
+            function flash() {
+              var label = play.querySelector('span');
+              if (!label) return;
+              label.textContent = '已复制地址，去粘贴';
+              setTimeout(function () { label.textContent = '在浏览器中玩'; }, 3000);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(server.webAddress).then(flash, flash);
+            } else {
+              fallbackCopy(server.webAddress, flash);
+            }
+          });
+          actions.appendChild(play);
+        }
       }
     }
 
@@ -759,6 +788,7 @@
     /* refresh_interval=0 表示关闭自动刷新（仅手动） */
     refreshInterval = (cfg.refresh_interval > 0) ? cfg.refresh_interval : 0;
     api = String(cfg.api || 'https://api.mcstatus.io/v2/status/java').replace(/\/+$/, '');
+    webClientUrl = String(cfg.web_client_url || '');
     servers = (cfg.servers || []).map(function (s, i) {
       var host = decodeHost(s.host || '');
       var port = s.port || 25565;
@@ -785,7 +815,7 @@
         port: port,
         bedrockHost: bedrockHost,
         bedrockPort: hasBedrock ? (s.bedrock_port || 19132) : 0,
-        webAddress: hasWeb ? ('wss://' + webHost + ':' + webPort + '/') : '',
+        webAddress: hasWeb ? ('wss://' + webHost + ':' + webPort) : '',
         note: s.note || '',
         links: s.links || [],
         /* 自动刷新间隔（秒）：per-server refresh_interval 优先，否则回退全局；0/负 = 仅手动 */
