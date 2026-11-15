@@ -116,11 +116,13 @@ html[data-theme="dark"] .server-status {
 /* 未选中的卡片：节点保留但不占位（用 !important 压过 .server-status__card 的 display:flex） */
 .server-status__card.is-tab-hidden { display: none !important; }
 
-/* 卡片：整圈状态色边框，状态由 is-* 类着色（与全站卡片边框风格统一） */
+/* 卡片：中性 1px 边框 + 阴影；状态色只出现在徽章/色点，不再整圈描边。
+   is-online / is-offline / is-sleeping / is-error 仍由 JS 加上，供徽章等内部元素着色。 */
 .server-status__card {
   position: relative;
   background: var(--ss-bg);
-  border: 1.5px solid var(--ss-wait);
+  /* 中性边框：不再用状态色描边（状态由徽章色点/文案表达，卡片本体保持克制） */
+  border: 1px solid var(--ss-border);
   border-radius: 12px;
   padding: 0.85rem 1rem 0.8rem;
   color: var(--ss-text);
@@ -135,10 +137,6 @@ html[data-theme="dark"] .server-status {
   transform: translateY(-2px);
   box-shadow: var(--ss-shadow-hover);
 }
-.server-status__card.is-online { border-color: var(--ss-online); }
-.server-status__card.is-offline { border-color: var(--ss-offline); }
-.server-status__card.is-sleeping { border-color: var(--ss-sleeping); }
-.server-status__card.is-error { border-color: var(--ss-offline); }
 
 /* 头部：图标 + 名称 + 状态胶囊徽章 */
 .server-status__card-head {
@@ -447,30 +445,33 @@ html[data-theme="dark"] .server-status {
   background: var(--ss-online-bg);
 }
 
-/* 「在浏览器中玩」：卡片里唯一的外链动作（仅当该服配了 Web 地址且 web_client_url 非空）。
-   做成胶囊，与地址胶囊/社群链接同档；外链图标用 Web 端标识色，hover 边框同色。 */
-.server-status__play {
-  align-self: flex-start;
-  display: inline-flex;
+/* 「在浏览器中玩」主操作：整行按钮，与地址胶囊同高（--ss-row-h），Web 端标识色填充——
+   它是卡片里唯一「直接进游戏」的动作，优先级高于地址复制，放在操作区第一行。
+   仅当该服支持 Eaglercraft（配了 Web 地址）且配置了 web_client_url 时渲染。 */
+/* 提权：正文容器被 Ananke 包 .nested-links，且自定义 html[data-theme="dark"] a(#9bd1ff)
+   会压过裸类选择器——按钮文字色/装饰必须用 .server-status .server-status__play 同容器提权 */
+.server-status .server-status__play {
+  display: flex;
   align-items: center;
-  gap: 0.35rem;
-  border: 1px solid var(--ss-border);
-  border-radius: 999px;
-  padding: 0.28rem 0.7rem;
-  background: var(--ss-tag-bg);
-  color: var(--ss-text);
-  font-size: 0.78rem;
-  font-weight: 600;
-  line-height: 1.5;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: var(--ss-row-h);
+  padding: 0 0.9rem;
+  border: 1px solid var(--ss-web);
+  border-radius: 10px;
+  background: var(--ss-web);
+  color: #17131f;            /* 亮/暗主题下紫底都用深色字，对比度足够 */
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: filter 0.15s ease, transform 0.15s ease;
 }
-.server-status__play svg { display: block; color: var(--ss-web); }
-.server-status__play:hover {
-  background: var(--ss-tag-bg-strong);
-  border-color: var(--ss-web);
-}
-.server-status__play:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 2px; }
+.server-status .server-status__play svg { display: block; opacity: 0.9; }
+.server-status .server-status__play:hover { filter: brightness(1.06); text-decoration: none; }
+.server-status .server-status__play:active { transform: translateY(1px); }
+.server-status .server-status__play:focus-visible { outline: 2px solid var(--ss-text); outline-offset: 2px; }
 
 /* 社区链接（QQ 群 / QQ 频道 / Discord） */
 .server-status__links {

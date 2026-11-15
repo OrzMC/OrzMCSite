@@ -35,7 +35,7 @@
   var CHECK_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
   var EYE_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   var EYE_OFF_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
-  var EXTERNAL_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+  var PLAY_ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72c0 .8.87 1.3 1.56.9l11-6.86a1.05 1.05 0 0 0 0-1.8l-11-6.86A1.05 1.05 0 0 0 8 5.14z"/></svg>';
   /* 玩家头像：mc-heads.net 按 UUID 返回方形头像（公开服务；玩家 UUID 本身公开，非敏感信息）。
      条目渲染时才按需加载，不进入配置 JSON。 */
   var PLAYER_AVATAR = 'https://mc-heads.net/avatar/';
@@ -315,6 +315,37 @@
     return addr;
   }
 
+  /* 「在浏览器中玩」主操作按钮：整行、与地址胶囊同高（--ss-row-h），Web 端标识色填充。
+     点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进剪贴板并短暂换文案，
+     用户切回页面填地址时能看到反馈。 */
+  function buildPlayLink(addressText) {
+    var play = document.createElement('a');
+    play.className = 'server-status__play';
+    play.href = webClientUrl;
+    play.target = '_blank';
+    play.rel = 'noopener noreferrer';
+    play.title = '新标签打开 Web 客户端，并复制本服连接地址（到客户端「直连」粘贴）';
+    var label = document.createElement('span');
+    label.className = 'server-status__play-label';
+    label.textContent = '在浏览器中玩';
+    play.innerHTML = PLAY_ICON;
+    play.appendChild(label);
+
+    play.addEventListener('click', function () {
+      function flash() {
+        var text = label.textContent;
+        label.textContent = '已复制地址，去粘贴';
+        setTimeout(function () { label.textContent = text; }, 3000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(addressText).then(flash, flash);
+      } else {
+        fallbackCopy(addressText, flash);
+      }
+    });
+    return play;
+  }
+
   /* 取不到真实头像时回退 Steve/Alex 默认头像：按名称哈希稳定分配（同一玩家恒同一
      默认头像），保证两种默认头像都被用到，不会全是一张脸。 */
   function defaultHead(name) {
@@ -538,9 +569,18 @@
       card.appendChild(note);
     }
 
-    /* ── 用户操作区：地址复制（标签+复制按钮合一）+ 社区链接 ── */
+    /* ── 用户操作区：「在浏览器中玩」（主操作，若该服支持）+ 地址胶囊 + 社区链接 ── */
     var actions = document.createElement('div');
     actions.className = 'server-status__actions';
+
+    /* 「在浏览器中玩」：只要该服支持 Eaglercraft（配了 web 地址）就显示——不看 show_address，
+       因为这是「能不能用浏览器玩」的能力开关；反之没适配的服不会出现这个入口。
+       点击 = 复制本服 wss:// 地址 + 新标签打开官方 Web 客户端（版本由 web_client_url 决定），
+       用户到客户端「多人游戏 → 直连」粘贴即可。不自托管客户端：75 MiB 单文件既不适合放
+       GitHub Pages（仓库/带宽），也不该打自家家宽上行。 */
+    if (server.webAddress && webClientUrl) {
+      actions.appendChild(buildPlayLink(server.webAddress));
+    }
 
     /* 地址胶囊：仅当 show_address=true（server.show）时显示；false 则地址彻底隐藏，
        不渲染任何胶囊（无掩码/复制/眼睛）。胶囊默认掩码 + 眼睛切换 + 复制按钮，
@@ -588,33 +628,6 @@
           },
           'web'
         ));
-
-        /* 「在浏览器中玩」：新标签打开官方 Web 客户端（版本由 web_client_url 决定），
-           点击时顺手把本服地址写入剪贴板，用户到客户端里「直连」直接粘贴即可。
-           不自托管客户端：75 MiB 单文件不适合放 GitHub Pages，也不打自家家宽上行。 */
-        if (webClientUrl) {
-          var play = document.createElement('a');
-          play.className = 'server-status__play';
-          play.href = webClientUrl;
-          play.target = '_blank';
-          play.rel = 'noopener noreferrer';
-          play.title = '新标签打开 Web 客户端，并复制本服地址（到客户端里「直连」粘贴）';
-          play.innerHTML = EXTERNAL_ICON + '<span>在浏览器中玩</span>';
-          play.addEventListener('click', function () {
-            function flash() {
-              var label = play.querySelector('span');
-              if (!label) return;
-              label.textContent = '已复制地址，去粘贴';
-              setTimeout(function () { label.textContent = '在浏览器中玩'; }, 3000);
-            }
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(server.webAddress).then(flash, flash);
-            } else {
-              fallbackCopy(server.webAddress, flash);
-            }
-          });
-          actions.appendChild(play);
-        }
       }
     }
 
