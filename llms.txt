@@ -14,7 +14,7 @@
 
 ## 文章
 - [怎样开发一个Minecraft启动器(Java版)](https://orzmc.jokerhub.cn/posts/1.client/10.launcher/): 自己动手写一个 Minecraft 启动器：从版本清单到启动命令，客户端和服务端启动器都能照做
-- [Minecraft Web 客户端](https://orzmc.jokerhub.cn/posts/1.client/11.webmc/): 对比 Minecraft 网页客户端方案的版本覆盖、体验完整度与合规风险，给出选型建议。
+- [Minecraft Web 客户端](https://orzmc.jokerhub.cn/posts/1.client/11.webmc/): 浏览器里玩 Minecraft 的三条路线（官方 Classic / Eaglercraft / 中文整合站）现状对比，以及 Java 服务器接入 Eaglercraft 客户端的最佳实践与实测结论。
 - [服主应知应会](https://orzmc.jokerhub.cn/posts/2.server/20.server_admin/): 面向 Minecraft 服务端管理员的迁移、升级、常用配置、指令和安全速查。
 - [服务端运维](https://orzmc.jokerhub.cn/posts/2.server/21.server_operation/): 记录 PaperMC 服务端在 Ubuntu 上的部署依赖、网络、资源包、systemd、定时任务与常见问题。
 - [服务端插件](https://orzmc.jokerhub.cn/posts/2.server/22.paper_server_plugins/): 收集 PaperMC 服务端常用插件，按权限安全、建筑地图、玩法经济和运维兼容分类，并记录安装与常见问题。
