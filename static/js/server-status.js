@@ -319,15 +319,13 @@
     return addr;
   }
 
-  /* 「在浏览器中玩」主操作按钮 + 复制提示：整行、与地址胶囊同高（--ss-row-h），
-     Web 端标识色填充。点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进
-     剪贴板并把按钮文案短暂换成「已复制地址，去粘贴」。
-     新标签打开后用户看不到本页变化，所以按钮下方常驻一行小字提示「已自动复制地址」，
-     避免用户到客户端里不知道从哪来的地址、又回头找。 */
-  function buildPlayBlock(addressText, key) {
-    var wrap = document.createElement('div');
-    wrap.className = 'server-status__play-wrap';
-
+  /* 「在浏览器中玩」主操作按钮：整行、Web 端标识色填充，**一个 <a> 内两行文本**——
+     主标题「在浏览器中玩」+ 副标题「点击会复制连接地址 · 到客户端「直连」粘贴」。
+     副标题是「点它会顺手复制地址」的唯一提示：新标签打开后本页的临时反馈看不到，
+     所以把提示做进按钮本身（整体仍是一个可点击区域，不额外占一行、关联最直接）。
+     点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进剪贴板，副标题短暂变
+     「已复制地址，去粘贴」。 */
+  function buildPlayBlock(addressText) {
     var play = document.createElement('a');
     play.className = 'server-status__play';
     play.href = webClientUrl;
@@ -335,22 +333,26 @@
     play.rel = 'noopener noreferrer';
     play.title = '新标签打开 Web 客户端，并自动复制本服连接地址（到客户端「直连」粘贴）';
 
+    var text = document.createElement('span');
+    text.className = 'server-status__play-text';
+
     var label = document.createElement('span');
     label.className = 'server-status__play-label';
     label.textContent = '在浏览器中玩';
-    play.innerHTML = BROWSER_ICON;
-    play.appendChild(label);
 
-    var hint = document.createElement('p');
-    hint.className = 'server-status__play-hint';
-    hint.id = 'server-status-play-hint-' + key;
-    hint.textContent = '点击会自动复制本服连接地址，到客户端「多人游戏 → 直连」粘贴';
-    play.setAttribute('aria-describedby', hint.id);
+    var sub = document.createElement('span');
+    sub.className = 'server-status__play-sub';
+    sub.textContent = '点击会复制连接地址 · 到客户端「直连」粘贴';
+
+    text.appendChild(label);
+    text.appendChild(sub);
+    play.innerHTML = BROWSER_ICON;
+    play.appendChild(text);
 
     play.addEventListener('click', function () {
       function flash() {
-        label.textContent = '已复制地址，去粘贴';
-        setTimeout(function () { label.textContent = '在浏览器中玩'; }, 3000);
+        sub.textContent = '已复制地址，去粘贴';
+        setTimeout(function () { sub.textContent = '点击会复制连接地址 · 到客户端「直连」粘贴'; }, 3000);
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(addressText).then(flash, flash);
@@ -358,10 +360,7 @@
         fallbackCopy(addressText, flash);
       }
     });
-
-    wrap.appendChild(play);
-    wrap.appendChild(hint);
-    return wrap;
+    return play;
   }
 
   /* 取不到真实头像时回退 Steve/Alex 默认头像：按名称哈希稳定分配（同一玩家恒同一
@@ -648,7 +647,7 @@
        用户到客户端「多人游戏 → 直连」粘贴即可。不自托管客户端：75 MiB 单文件既不适合放
        GitHub Pages（仓库/带宽），也不该打自家家宽上行。 */
     if (server.webAddress && webClientUrl) {
-      actions.appendChild(buildPlayBlock(server.webAddress, server.key));
+      actions.appendChild(buildPlayBlock(server.webAddress));
     }
 
     /* 社区链接（QQ 群 / QQ 频道 / Discord，公开信息无需加密） */
