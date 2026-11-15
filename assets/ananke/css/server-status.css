@@ -473,6 +473,20 @@ html[data-theme="dark"] .server-status {
 .server-status .server-status__play:active { transform: translateY(1px); }
 .server-status .server-status__play:focus-visible { outline: 2px solid var(--ss-text); outline-offset: 2px; }
 
+/* 按钮下方的常驻提示：新标签打开后本页的「已复制」反馈看不到，这里把「会自动复制地址」
+   明确写出来（点击后文案还会变「已复制地址，去粘贴」）；小字、muted，不抢主按钮视觉。 */
+.server-status__play-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.server-status__play-hint {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--ss-muted);
+}
+
 /* 社区链接（QQ 群 / QQ 频道 / Discord） */
 .server-status__links {
   display: flex;
