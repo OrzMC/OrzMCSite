@@ -17,7 +17,14 @@
   --ss-wait-bg: rgba(107, 114, 128, 0.14);
   --ss-tag-bg: rgba(127, 127, 127, 0.08);
   --ss-tag-bg-strong: rgba(127, 127, 127, 0.16);
-  --ss-web: #a78bfa;   /* Web（Eaglercraft）端标识色：地址胶囊色点 + 「在浏览器中玩」 */
+  --ss-web: #a78bfa;   /* Web（Eaglercraft）端标识色：地址胶囊色点 */
+  /* 「在浏览器中玩」主按钮：亮色 = 饱和紫底 + 白字（#fff / #6d28d9 ≈ 7.1:1），
+     hover 压一档（#5b21b6）、按下再压一档，状态区分明确 */
+  --ss-play-bg: #6d28d9;
+  --ss-play-bg-hover: #5b21b6;
+  --ss-play-bg-active: #4c1d95;
+  --ss-play-border: #5b21b6;
+  --ss-play-fg: #ffffff;
   /* 带背景区块（MOTD / 地址胶囊单行态）的统一行高：让几块背景区高度一致 */
   --ss-row-h: 2.75rem;
   --ss-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 2px 8px rgba(16, 24, 40, 0.05);
@@ -45,6 +52,12 @@ html[data-theme="dark"] .server-status {
   --ss-tag-bg: rgba(255, 255, 255, 0.06);
   --ss-tag-bg-strong: rgba(255, 255, 255, 0.13);
   --ss-web: #c4b5fd;
+  /* 暗色反过来：浅紫底 + 深字，hover/active 逐级提亮 */
+  --ss-play-bg: #a78bfa;
+  --ss-play-bg-hover: #c4b5fd;
+  --ss-play-bg-active: #ddd6fe;
+  --ss-play-border: #c4b5fd;
+  --ss-play-fg: #17131f;
   --ss-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
   --ss-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.40), 0 6px 18px rgba(0, 0, 0, 0.35);
 }
@@ -458,20 +471,42 @@ html[data-theme="dark"] .server-status {
   gap: 0.15rem;
   min-height: var(--ss-row-h);
   padding: 0.45rem 0.9rem;
-  border: 1px solid var(--ss-web);
+  border: 1px solid var(--ss-play-border);
   border-radius: 10px;
-  background: var(--ss-web);
-  color: #17131f;            /* 亮/暗主题下紫底都用深色字，对比度足够 */
+  background: var(--ss-play-bg);
+  color: var(--ss-play-fg);
   text-decoration: none;
-  transition: filter 0.15s ease, transform 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
-.server-status .server-status__play svg { display: block; opacity: 0.9; }
-.server-status .server-status__play:hover { filter: brightness(1.06); text-decoration: none; }
-.server-status .server-status__play:active { transform: translateY(1px); }
-.server-status .server-status__play:focus-visible { outline: 2px solid var(--ss-text); outline-offset: 2px; }
+.server-status .server-status__play svg { display: block; opacity: 0.95; }
+/* hover / 按下：用 token 换底色（不用 filter:brightness，暗色下提亮、亮色下压深，
+   两种主题都是「明显可见的一档变化」），并保证触摸设备不卡在 hover 态 */
+@media (hover: hover) {
+  .server-status .server-status__play:hover {
+    background: var(--ss-play-bg-hover);
+    border-color: var(--ss-play-bg-hover);
+    text-decoration: none;
+  }
+}
+.server-status .server-status__play:active {
+  background: var(--ss-play-bg-active);
+  border-color: var(--ss-play-bg-active);
+  transform: translateY(1px);
+}
+.server-status .server-status__play:focus-visible { outline: 2px solid var(--ss-text); outline-offset: 3px; }
+/* 提权：卡片在 .nested-links 容器内，`html[data-theme="light"] .nested-links a`(#0b00e4) 与
+   `html[data-theme="dark"] a`(#9bd1ff) 的特异性(0,2,2)/(0,1,2) 会压过按钮的文字色，
+   导致两种主题下按钮文字都被染成链接色、对比度骤降。用带 html[data-theme] 的选择器压回来
+   （卡片由 JS 渲染，主题属性此时必已存在）。 */
+html[data-theme] .server-status a.server-status__play,
+html[data-theme] .server-status a.server-status__play:hover,
+html[data-theme] .server-status a.server-status__play:active,
+html[data-theme] .server-status a.server-status__play:visited {
+  color: var(--ss-play-fg);
+}
 
 /* 按钮内两行：第一行「图标 + 主标题」并排（.play-head），第二行副标题（说明会顺手复制地址）。
-   整体仍是一个可点击的 <a>；副标题字号更小、透明度 0.8，居中（折行时也居中）。 */
+   整体仍是一个可点击的 <a>；副标题字号更小、透明度 0.85（实测仍 ≥5:1），居中（折行时也居中）。 */
 .server-status .server-status__play-head {
   display: inline-flex;
   align-items: center;
@@ -489,7 +524,7 @@ html[data-theme="dark"] .server-status {
   font-weight: 500;
   line-height: 1.35;
   text-align: center;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* 社区链接（QQ 群 / QQ 频道 / Discord） */
