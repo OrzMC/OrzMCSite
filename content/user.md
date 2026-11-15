@@ -40,6 +40,17 @@ description: "OrzMC 玩家手册：白名单申请、服务器地址、客户端
 
 > 💡 **/help LoginSecurity** 可查看登录插件的所有可用指令。
 
+#### 不想装客户端？用浏览器直接玩
+
+服务器已接入 [Eaglercraft](https://eaglercraft.com/)（浏览器版 Minecraft，与 Java 版同服同账号）。
+
+1. 点服务器卡片上（或下方链接）的 **在浏览器中玩** → [打开 Web 客户端](https://eaglercraft.com/play?version=26.3)（新标签打开，无需安装）。
+2. 进入游戏后：**多人游戏 → 直连（Direct Connection）**，粘贴服务器卡片上的 **Web客户端连接地址**（`wss://` 开头，点一下就能复制）。
+3. 首次进服同样要 `/register` 注册口令，之后 `/login`；账号与其他端共用（同名 = 同一个玩家）。
+
+> 客户端要求较新的浏览器（WebAssembly GC + WebGL2）。卡顿或掉线时先确认显卡硬件加速已开、只开一个游戏标签、不要让电脑休眠。
+> 完整说明（含服务端适配要点）见 [Minecraft Web 客户端](/posts/1.client/11.webmc/)。
+
 ### 第 3 步：开始游戏
 
 进服后输入 `/guide` 查看新手书，输入 `/menu` 打开服务器菜单。下面从常用指令开始认识这个世界～

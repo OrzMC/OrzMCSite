@@ -17,6 +17,7 @@
   --ss-wait-bg: rgba(107, 114, 128, 0.14);
   --ss-tag-bg: rgba(127, 127, 127, 0.08);
   --ss-tag-bg-strong: rgba(127, 127, 127, 0.16);
+  --ss-web: #a78bfa;   /* Web（Eaglercraft）端标识色：地址胶囊色点 + 「在浏览器中玩」 */
   /* 带背景区块（MOTD / 地址胶囊单行态）的统一行高：让几块背景区高度一致 */
   --ss-row-h: 2.75rem;
   --ss-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 2px 8px rgba(16, 24, 40, 0.05);
@@ -43,6 +44,7 @@ html[data-theme="dark"] .server-status {
   --ss-wait-bg: rgba(139, 147, 161, 0.16);
   --ss-tag-bg: rgba(255, 255, 255, 0.06);
   --ss-tag-bg-strong: rgba(255, 255, 255, 0.13);
+  --ss-web: #c4b5fd;
   --ss-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
   --ss-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.40), 0 6px 18px rgba(0, 0, 0, 0.35);
 }
@@ -367,7 +369,7 @@ html[data-theme="dark"] .server-status {
 }
 .server-status__addr[data-tone="java"] .server-status__addr-dot { background: var(--ss-online); }
 .server-status__addr[data-tone="bedrock"] .server-status__addr-dot { background: #38bdf8; }
-.server-status__addr[data-tone="web"] .server-status__addr-dot { background: #a78bfa; }
+.server-status__addr[data-tone="web"] .server-status__addr-dot { background: var(--ss-web); }
 .server-status__addr-label {
   font-size: 0.72rem;
   font-weight: 600;
@@ -444,6 +446,31 @@ html[data-theme="dark"] .server-status {
   border-color: var(--ss-online);
   background: var(--ss-online-bg);
 }
+
+/* 「在浏览器中玩」：卡片里唯一的外链动作（仅当该服配了 Web 地址且 web_client_url 非空）。
+   做成胶囊，与地址胶囊/社群链接同档；外链图标用 Web 端标识色，hover 边框同色。 */
+.server-status__play {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--ss-border);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  background: var(--ss-tag-bg);
+  color: var(--ss-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.server-status__play svg { display: block; color: var(--ss-web); }
+.server-status__play:hover {
+  background: var(--ss-tag-bg-strong);
+  border-color: var(--ss-web);
+}
+.server-status__play:focus-visible { outline: 2px solid #9bd1ff; outline-offset: 2px; }
 
 /* 社区链接（QQ 群 / QQ 频道 / Discord） */
 .server-status__links {
