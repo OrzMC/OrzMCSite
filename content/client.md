@@ -6,18 +6,17 @@ menu:
 title: 客户端启动器
 featured_image: "/images/minecraft_client.png"
 toc: true
-description: "OrzMC 客户端启动器选择指南：跨平台命令行启动器与 macOS 图形界面启动器的区别、下载入口与官方文档。"
+description: "OrzMC 客户端选择指南：跨平台命令行启动器、macOS 图形界面启动器的下载入口，以及不装启动器用浏览器直接玩的入口。"
 ---
 ---
 
-Minecraft Java 版需要启动器才能运行。本页帮你选一个合适的启动器；安装、登录与使用细节请以各启动器**官方页面**为准。想申请白名单、查服务器地址，见[玩家手册](/user/)。
-
-> 不想装启动器、只想在浏览器里玩？见 [Minecraft Web 客户端](/posts/1.client/11.webmc/)——含 Eaglercraft 26.3 的现状盘点与 Java 服务器适配要点。
+Minecraft Java 版需要启动器才能运行，不想装也可以用浏览器直接玩。本页帮你选一个入口；安装、登录与使用细节以各**官方页面**为准。想申请白名单、查服务器地址，见[玩家手册](/user/)。
 
 ## 选择启动器
 
 | 使用场景 | 推荐 | 下载 / 官方页面 |
 |:--|:--|:--|
+| **不想安装，浏览器直接玩** | **Eaglercraft（Web 客户端）** | [打开 Web 客户端](https://eaglercraft.com/play?version=26.3) · [使用说明](/posts/1.client/11.webmc/) |
 | Windows / macOS / Linux 通用 | **OrzMC 命令行启动器** | [官方页面](https://orzmc.github.io/OrzPythonMC/) · [下载](https://github.com/OrzMC/OrzPythonMC/releases) |
 | 只用 macOS，想要图形界面 | **OrzMC macOS 启动器** | [下载](https://github.com/OrzMC/OrzMCApp/releases) |
 | 想要图形界面和更丰富的管理功能 | **HMCL**（第三方） | [官网](https://hmcl.huangyuhui.net/) |
