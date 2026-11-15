@@ -452,11 +452,12 @@ html[data-theme="dark"] .server-status {
    会压过裸类选择器——按钮文字色/装饰必须用 .server-status .server-status__play 同容器提权 */
 .server-status .server-status__play {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.15rem;
   min-height: var(--ss-row-h);
-  padding: 0.5rem 0.9rem;
+  padding: 0.45rem 0.9rem;
   border: 1px solid var(--ss-web);
   border-radius: 10px;
   background: var(--ss-web);
@@ -469,13 +470,12 @@ html[data-theme="dark"] .server-status {
 .server-status .server-status__play:active { transform: translateY(1px); }
 .server-status .server-status__play:focus-visible { outline: 2px solid var(--ss-text); outline-offset: 2px; }
 
-/* 按钮内两行文本：主标题 + 副标题（副标题说明「点击会顺手复制地址」）。
-   整体仍是一个可点击的 <a>，不额外占行；副标题用略小字号与 0.8 透明度弱化。 */
-.server-status .server-status__play-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.05rem;
-  text-align: left;
+/* 按钮内两行：第一行「图标 + 主标题」并排（.play-head），第二行副标题（说明会顺手复制地址）。
+   整体仍是一个可点击的 <a>；副标题字号更小、透明度 0.8，居中（折行时也居中）。 */
+.server-status .server-status__play-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 0;
 }
 .server-status .server-status__play-label {
@@ -488,6 +488,7 @@ html[data-theme="dark"] .server-status {
   font-size: 0.72rem;
   font-weight: 500;
   line-height: 1.35;
+  text-align: center;
   opacity: 0.8;
 }
 

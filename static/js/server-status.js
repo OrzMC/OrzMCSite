@@ -333,21 +333,22 @@
     play.rel = 'noopener noreferrer';
     play.title = '新标签打开 Web 客户端，并自动复制本服连接地址（到客户端「直连」粘贴）';
 
-    var text = document.createElement('span');
-    text.className = 'server-status__play-text';
+    /* 第一行：图标 + 主标题（同一行）；第二行：副标题（整行居中，不缩进到图标之后） */
+    var head = document.createElement('span');
+    head.className = 'server-status__play-head';
+    head.innerHTML = BROWSER_ICON;
 
     var label = document.createElement('span');
     label.className = 'server-status__play-label';
     label.textContent = '在浏览器中玩';
+    head.appendChild(label);
 
     var sub = document.createElement('span');
     sub.className = 'server-status__play-sub';
     sub.textContent = '点击会复制连接地址 · 到客户端「直连」粘贴';
 
-    text.appendChild(label);
-    text.appendChild(sub);
-    play.innerHTML = BROWSER_ICON;
-    play.appendChild(text);
+    play.appendChild(head);
+    play.appendChild(sub);
 
     play.addEventListener('click', function () {
       function flash() {
