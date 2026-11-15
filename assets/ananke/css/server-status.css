@@ -454,17 +454,13 @@ html[data-theme="dark"] .server-status {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   min-height: var(--ss-row-h);
-  padding: 0 0.9rem;
+  padding: 0.5rem 0.9rem;
   border: 1px solid var(--ss-web);
   border-radius: 10px;
   background: var(--ss-web);
   color: #17131f;            /* 亮/暗主题下紫底都用深色字，对比度足够 */
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1.4;
   text-decoration: none;
   transition: filter 0.15s ease, transform 0.15s ease;
 }
@@ -473,18 +469,26 @@ html[data-theme="dark"] .server-status {
 .server-status .server-status__play:active { transform: translateY(1px); }
 .server-status .server-status__play:focus-visible { outline: 2px solid var(--ss-text); outline-offset: 2px; }
 
-/* 按钮下方的常驻提示：新标签打开后本页的「已复制」反馈看不到，这里把「会自动复制地址」
-   明确写出来（点击后文案还会变「已复制地址，去粘贴」）；小字、muted，不抢主按钮视觉。 */
-.server-status__play-wrap {
+/* 按钮内两行文本：主标题 + 副标题（副标题说明「点击会顺手复制地址」）。
+   整体仍是一个可点击的 <a>，不额外占行；副标题用略小字号与 0.8 透明度弱化。 */
+.server-status .server-status__play-text {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.05rem;
+  text-align: left;
+  min-width: 0;
 }
-.server-status__play-hint {
-  margin: 0;
+.server-status .server-status__play-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+.server-status .server-status__play-sub {
   font-size: 0.72rem;
-  line-height: 1.5;
-  color: var(--ss-muted);
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 0.8;
 }
 
 /* 社区链接（QQ 群 / QQ 频道 / Discord） */
