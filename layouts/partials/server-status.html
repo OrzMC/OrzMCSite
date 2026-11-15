@@ -11,6 +11,7 @@
     "refresh_interval" ($raw.refresh_interval | compare.Default 60)
     "api"              ($raw.api | compare.Default "https://api.mcstatus.io/v2/status/java")
     "show_address"     ($raw.show_address | compare.Default false)
+    "tabs"             ($raw.tabs | compare.Default false)
     "servers"          ($raw.servers | default collections.Slice)
     "info_panels"      ($raw.info_panels | default collections.Slice)
     "show_info"        false
@@ -54,6 +55,20 @@
       {{- $ben = strings.Replace $ben $p (index $cipher $i) -1 -}}
     {{- end -}}
     {{- $sd = merge $sd (dict "bedrock_host" $ben "bedrock_port" ($s.bedrock_port | compare.Default 19132)) -}}
+  {{- end -}}
+  {{- /* Web 客户端（浏览器 / Eaglercraft）地址（可选）：浏览器端只接受 TLS 直连，
+         故出口地址形如 wss://<host>:<port>/（端口与 Java/基岩一致，一律显式展示）。
+         配置了 web_host 或 web_port 才输出，JS 据此渲染「Web客户端」地址胶囊；
+         web_host 缺省沿用 Java 主机（也可指向不同的 Web 访问地址），端口缺省 443
+         （不可用时站点走 18443）。主机同样走替换表加密，明文不进入 HTML；
+         协议/冒号/斜杠在 JS 侧拼接，不参与加密。 */ -}}
+  {{- if or $s.web_host $s.web_port -}}
+    {{- $whost := $s.web_host | default $s.host -}}
+    {{- $wen := $whost | strings.ToLower -}}
+    {{- range $i, $p := $plain -}}
+      {{- $wen = strings.Replace $wen $p (index $cipher $i) -1 -}}
+    {{- end -}}
+    {{- $sd = merge $sd (dict "web_host" $wen "web_port" ($s.web_port | compare.Default 443)) -}}
   {{- end -}}
   {{- /* 仅在 params 显式设置了 show_address 时透传（否则 JS 回退全局默认值） */ -}}
   {{- if isset $s "show_address" -}}{{- $sd = merge $sd (dict "show_address" $s.show_address) -}}{{- end -}}

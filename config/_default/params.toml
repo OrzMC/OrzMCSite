@@ -88,7 +88,22 @@ verbosity = "error"
 [server_status]
 refresh_interval = 10        # 自动刷新间隔（秒）；可被单台服务器覆盖
 show_address = true
+# 多服务器共用一块展示区域：true = 上方 Tab 切换（只显示选中的一张卡，Tab 带在线状态色点），
+# false = 卡片纵向/双列排列。可被 shortcode 参数 tabs="true|false" 逐实例覆盖
+# （仅服务器数 > 1 时生效，首页就是「主服 + 测试服」两个 Tab）。
+tabs = false
 # api = "https://api.mcstatus.io/v2/status/java"   # 可选，覆盖默认状态 API
+
+# 每台服务器可配置三种客户端连接地址（卡片上各占一枚地址胶囊，未配置的客户端不渲染）：
+#   Java 版（host + port，必填）——「Java版客户端连接地址」
+#   基岩版（bedrock_port / bedrock_host）——「基岩版客户端连接地址」
+#   Web 版（web_port / web_host）——「Web客户端连接地址」，浏览器客户端（Eaglercraft）
+#     只接受 TLS 直连，卡片上显示为 wss://<主机>:<端口>/（端口与 Java/基岩一致，一律显式），
+#     可直接复制粘贴进 Web 客户端。
+#     · web_host 缺省 = 与服务器（Java 主机）同一地址；也可填不同的 Web 客户端访问地址
+#       （如独立子域 play.example.com），只写主机名，不要带 wss:// 前缀或结尾斜杠。
+#     · web_port 缺省 443；443 不可用时走 18443（与 mcs./easybot. 同一 TLS 入口端口）。
+#     服务端侧启用方式见 deploy 的 docs/eaglercraft-deploy.md。
 
 [[server_status.servers]]
 name = "国内服 🇨🇳"
@@ -97,6 +112,11 @@ port = 25565
 tags = ["cn"]
 # 基岩版与 Java 版互通、同主机不同端口：配了 bedrock_port 后卡片才显示「基岩版」地址胶囊
 bedrock_port = 19132
+# Web 客户端（Eaglercraft）入口：服务端启用 EAGLER 并配好 TLS 反代后再填。
+# web_port 不写 = 443（=> wss://mc.fantuantim.xyz:443/）；443 不可用时改走 18443。
+# web_host 不写 = 沿用 Java 主机；要指到不同的 Web 访问地址时填主机名（如独立子域）。
+# web_port = 18443                         # => wss://mc.fantuantim.xyz:18443/
+# web_host = "play.fantuantim.xyz"         # => wss://play.fantuantim.xyz:443/（缺省端口 443）
 note = "由群内小伙伴提供机器，解决国内用户访问海外服时容易掉线的问题。"
 links = [
   { label = "QQ玩家群",   url = "https://qm.qq.com/q/l78SLY5eow" },
@@ -111,6 +131,8 @@ port = 25565
 tags = ["i18n"]
 # 基岩版与 Java 版互通、同主机不同端口
 bedrock_port = 19132
+# Web 客户端（Eaglercraft）入口：同上；443 可用时不写端口，不可用时改走 18443
+# web_port = 18443
 note = "无玩家10分钟后自动停止，白名单玩家加入时自动启动。与国内服是物理隔离的。"
 # 可选 per-server 覆盖：show_address = true
 links = [
@@ -125,9 +147,12 @@ port = 25565
 tags = ["dev"]
 # 基岩版与 Java 版互通、同主机不同端口
 bedrock_port = 19132
+# Web 客户端（Eaglercraft）入口：测试服已适配，443 不可用 → 走 18443
+# （=> wss://dev.jokerhub.cn:18443/；主机缺省沿用 Java 主机）
+web_port = 18443
 note = "用来开发和调试用的专用服务器，与线上服务器隔离，随时可能关闭。"
 # 私密服：per-server 覆盖全局 show_address=true，地址彻底隐藏
-show_address = false
+show_address = true
 # 可选 per-server 覆盖：refresh_interval = 30   # 该服单独刷新间隔（秒）
 links = [
   { label = "QQ测试群",    url = "https://qm.qq.com/q/mQEjtMZANq" },

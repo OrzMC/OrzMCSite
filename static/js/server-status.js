@@ -15,8 +15,11 @@
   var results = new Map(); // key -> { status: 'loading'|'online'|'sleeping'|'offline'|'error', data, ts }
   var inflight = new Map(); // key -> Promise（同一台服务器并发请求共享同一个查询）
   var openPanels = new Map(); // key -> 当前展开的玩家列表面板节点（跨刷新保留）
-  var addrReveals = new Map(); // key -> { java, bedrock } 地址明/密文状态（跨刷新保留）
+  var addrReveals = new Map(); // key -> { java, bedrock, web } 地址明/密文状态（跨刷新保留）
   var busy = false;
+  var tabsEl = null;        // Tab 栏节点（多服务器共用一块展示区域时创建）
+  var tabsEnabled = false;   // 是否启用 Tab 切换（配置 tabs=true 且服务器数 > 1）
+  var activeKey = null;      // 当前选中的服务器 key（跨刷新保留）
 
   /* 地址防爬虫：配置 JSON 里的 host 是替换表密文，明文地址不会出现在 HTML 中；
      卡片默认以固定掩码显示，点击复制。替换表由模板单点维护（partial
@@ -24,7 +27,7 @@
      这里在浏览器端按同一表解码出明文用于 API 查询与复制。 */
   var PLAIN_TABLE = '';  // 由配置 JSON 的 cipher_plain 提供
   var CIPHER_TABLE = ''; // 由配置 JSON 的 cipher_mapping 提供
-  var MASK = '••••••••••••••••'; // 16 个 •（密文占位）
+  var MASK = '••••••••••'; // 10 个 •（密文占位）：窄卡（≤320px）也能单行展示不折行
   /* 静态 SVG 图标（固定字符串，无用户输入，innerHTML 安全） */
   var REFRESH_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>';
   var COPY_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
@@ -228,7 +231,7 @@
      顶部版本标签行（色点 + 标签）+ 地址值行（等宽地址 + 分隔线 + 睁眼 + 复制）。
      地址值用主文字色加粗、是面板的视觉重心；复制按钮带「复制」文字比纯图标更易发现；
      点击地址值本身也可复制（与复制按钮一致）。tone 决定标签行色点：
-     'java' 绿 / 'bedrock' 蓝 / 'generic' 灰。
+     'java' 绿 / 'bedrock' 蓝 / 'web' 紫 / 'generic' 灰。
      默认掩码显示；睁眼按钮切换明文；每枚面板独立明/密文状态（Java/基岩互不影响）。
      onToggle(revealed) 回调：切换明文时把状态写回 addrReveals，供刷新后恢复。 */
   function buildAddrPill(label, addressText, initiallyRevealed, onToggle, tone) {
@@ -357,6 +360,13 @@
     var card = document.createElement('article');
     card.className = 'server-status__card is-' + res.status;
     card.dataset.serverKey = server.key;
+    /* Tab 模式：每张卡是一个 tabpanel，与上方 Tab 的 aria-controls 对应 */
+    if (tabsEnabled) {
+      card.id = 'server-status-panel-' + server.key;
+      card.setAttribute('role', 'tabpanel');
+      card.setAttribute('aria-labelledby', 'server-status-tab-' + server.key);
+      card.tabIndex = 0;
+    }
 
     /* ── 信息展示区 ── */
     /* 头部：图标 + 名称 + 状态徽标（状态标签 + 内嵌 ICON 刷新按钮，合一） */
@@ -497,18 +507,19 @@
       card.appendChild(meta);
     }
 
-    /* 在线 / 休眠：彩色 MOTD（休眠态跳过玩家数，0/容量无信息量） */
+    /* 在线 / 休眠：彩色 MOTD（休眠态跳过玩家数，0/容量无信息量）。
+       MOTD 用与地址胶囊同套背景块承载（同圆角/同--ss-row-h 行高），
+       与上方标签行、下方说明文字拉开层次，但不是一行裸文本。 */
     if (res.status === 'online' || res.status === 'sleeping') {
-      if (res.data.motdHtml) {
+      if (res.data.motdHtml || res.data.motdClean) {
+        var motdBlock = document.createElement('div');
+        motdBlock.className = 'server-status__motd-block';
         var motd = document.createElement('div');
         motd.className = 'server-status__motd';
-        motd.innerHTML = sanitizeMotdHtml(res.data.motdHtml);
-        card.appendChild(motd);
-      } else if (res.data.motdClean) {
-        var motdTxt = document.createElement('div');
-        motdTxt.className = 'server-status__motd';
-        motdTxt.textContent = res.data.motdClean;
-        card.appendChild(motdTxt);
+        if (res.data.motdHtml) motd.innerHTML = sanitizeMotdHtml(res.data.motdHtml);
+        else motd.textContent = res.data.motdClean;
+        motdBlock.appendChild(motd);
+        card.appendChild(motdBlock);
       }
     } else if (res.status === 'error') {
       var err = document.createElement('div');
@@ -532,20 +543,23 @@
     /* 地址胶囊：仅当 show_address=true（server.show）时显示；false 则地址彻底隐藏，
        不渲染任何胶囊（无掩码/复制/眼睛）。胶囊默认掩码 + 眼睛切换 + 复制按钮，
        明文只在用户点开眼睛时解码（防爬虫观感）。Java 版必显（若显示），基岩版仅在
-       配置了 bedrock（host 或 port）时显示。两版地址默认都带端口号
-       （Java 25565 / 基岩 19132）——连接需知端口，且整行展示不截断。 */
+       配置了 bedrock（host 或 port）时显示，Web 版（浏览器 / Eaglercraft）仅在配置了
+       web（host 或 port）时显示。三版地址默认都带端口号（Java 25565 / 基岩 19132 /
+       Web 443 省略）——连接需知端口，且整行展示不截断。 */
     if (server.show) {
       /* 地址明/密文状态存 addrReveals（按 server.key）：刷新后按此恢复，不重置回掩码 */
       var addrState = addrReveals.get(server.key) || {};
       var javaAddress = server.host + ':' + server.port;
+      /* 有第二/第三种客户端时才把 Java 版地址显式标注类型（否则「服务器地址」更泛用） */
+      var multiClient = !!(server.bedrockHost || server.webAddress);
       actions.appendChild(buildAddrPill(
-        server.bedrockHost ? 'Java版客户端连接地址' : '服务器地址', javaAddress, !!addrState.java,
+        multiClient ? 'Java版客户端连接地址' : '服务器地址', javaAddress, !!addrState.java,
         function (r) {
           var st = addrReveals.get(server.key) || {};
           st.java = r;
           addrReveals.set(server.key, st);
         },
-        server.bedrockHost ? 'java' : 'generic'
+        multiClient ? 'java' : 'generic'
       ));
 
       if (server.bedrockHost) {
@@ -557,6 +571,20 @@
             addrReveals.set(server.key, st);
           },
           'bedrock'
+        ));
+      }
+
+      /* Web 客户端（浏览器 / Eaglercraft）：wss://<host>:<port>/ —— 浏览器客户端只接受
+         TLS 直连地址，整串（含协议、端口与结尾斜杠）都可由用户直接复制粘贴到 Web 客户端。 */
+      if (server.webAddress) {
+        actions.appendChild(buildAddrPill(
+          'Web客户端连接地址', server.webAddress, !!addrState.web,
+          function (r) {
+            var st = addrReveals.get(server.key) || {};
+            st.web = r;
+            addrReveals.set(server.key, st);
+          },
+          'web'
         ));
       }
     }
@@ -581,6 +609,72 @@
     return card;
   }
 
+  /* ── Tab 切换（多服务器共用一块展示区域）──
+     仅当配置 tabs=true 且服务器数 > 1 时启用：上方一排 Tab（名称 + 状态色点），
+     下方网格同一时间只显示选中的那张卡（其余靠 .is-tab-hidden 隐藏，节点保留，
+     切回时无需重建、玩家面板与地址明/密文状态都还在）。
+     Tab 的状态点随每次刷新同步（在线绿 / 休眠黄 / 离线红 / 查询中灰），
+     未激活的服务器也能一眼看出在线与否。键盘：←/→/Home/End 切换。 */
+  function buildTabs() {
+    tabsEl = document.createElement('div');
+    tabsEl.className = 'server-status__tabs';
+    tabsEl.setAttribute('role', 'tablist');
+    tabsEl.setAttribute('aria-label', '选择服务器');
+    servers.forEach(function (server, idx) {
+      var tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'server-status__tab';
+      tab.id = 'server-status-tab-' + server.key;
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', 'server-status-panel-' + server.key);
+      tab.setAttribute('aria-selected', 'false');
+      tab.tabIndex = -1;
+      var dot = document.createElement('span');
+      dot.className = 'server-status__tab-dot';
+      dot.setAttribute('aria-hidden', 'true');
+      tab.appendChild(dot);
+      tab.appendChild(document.createTextNode(server.name));
+      tab.addEventListener('click', function () { selectTab(server.key); });
+      tab.addEventListener('keydown', function (e) {
+        var next = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = servers[(idx + 1) % servers.length];
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = servers[(idx - 1 + servers.length) % servers.length];
+        else if (e.key === 'Home') next = servers[0];
+        else if (e.key === 'End') next = servers[servers.length - 1];
+        if (!next) return;
+        e.preventDefault();
+        selectTab(next.key, true);
+      });
+      tabsEl.appendChild(tab);
+    });
+    section.insertBefore(tabsEl, grid);
+  }
+
+  function selectTab(key, focus) {
+    activeKey = key;
+    syncTabs();
+    if (focus) {
+      var tab = document.getElementById('server-status-tab-' + key);
+      if (tab) tab.focus();
+    }
+  }
+
+  function syncTabs() {
+    if (!tabsEnabled) return;
+    servers.forEach(function (server) {
+      var active = server.key === activeKey;
+      var tab = document.getElementById('server-status-tab-' + server.key);
+      if (tab) {
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        tab.tabIndex = active ? 0 : -1;
+        var res = results.get(server.key);
+        tab.dataset.status = res ? res.status : 'loading';
+      }
+      var card = findCard(server.key);
+      if (card) card.classList.toggle('is-tab-hidden', !active);
+    });
+  }
+
   function findCard(key) {
     for (var i = 0; i < grid.children.length; i++) {
       if (grid.children[i].dataset.serverKey === key) return grid.children[i];
@@ -601,6 +695,7 @@
     var card = renderCard(server);
     if (!old) {
       grid.appendChild(card);
+      syncTabs();   // 新卡插入后同步 Tab 可见性（否则 Tab 默认全部展开）
       return;
     }
     /* 原地更新：保留卡片节点，只换状态类与内容。
@@ -621,6 +716,7 @@
         openPanels.delete(server.key);   // 新数据不再有玩家列表，放弃恢复
       }
     }
+    syncTabs();   // 重渲染会把 className 重置掉，这里补回 Tab 选中态与隐藏类
   }
 
   function renderAll() {
@@ -671,6 +767,16 @@
          host 缺省时沿用 Java 地址（同主机），端口缺省 19132（Geyser）。 */
       var hasBedrock = s.bedrock_host || s.bedrock_port;
       var bedrockHost = hasBedrock ? decodeHost(s.bedrock_host || host) : '';
+      /* Web 客户端（浏览器 / Eaglercraft）地址：可选。只接受 TLS(wss) 直连，
+         形如 wss://<host>:<port>/；host 缺省沿用 Java 地址（可与服务器不同，如独立子域），
+         端口缺省 443（443 不可用时站点走 18443）。与 Java/基岩一致，端口一律显式展示
+         （不按 URL 惯例省略 443），三枚胶囊观感统一。
+         容错：web_host 误写成完整地址（带 wss:// 或结尾斜杠）也能用。 */
+      var hasWeb = s.web_host || s.web_port;
+      var webHost = hasWeb
+        ? decodeHost(s.web_host || host).replace(/^wss?:\/\//i, '').replace(/\/+$/, '')
+        : '';
+      var webPort = hasWeb ? (s.web_port || 443) : 0;
       return {
         /* 内部索引用作 key：不把明文地址写进 DOM（data-server-key） */
         key: String(i),
@@ -679,6 +785,7 @@
         port: port,
         bedrockHost: bedrockHost,
         bedrockPort: hasBedrock ? (s.bedrock_port || 19132) : 0,
+        webAddress: hasWeb ? ('wss://' + webHost + ':' + webPort + '/') : '',
         note: s.note || '',
         links: s.links || [],
         /* 自动刷新间隔（秒）：per-server refresh_interval 优先，否则回退全局；0/负 = 仅手动 */
@@ -687,6 +794,13 @@
       };
     });
     if (!servers.length) return;
+
+    /* Tab 模式：多服务器共用一块展示区域（配置 tabs=true），默认选中第一台 */
+    tabsEnabled = !!cfg.tabs && servers.length > 1;
+    if (tabsEnabled) {
+      activeKey = servers[0].key;
+      buildTabs();
+    }
 
     renderAll();          // 先显示“查询中”占位，逐台异步更新
     loadAll();

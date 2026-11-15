@@ -3,12 +3,14 @@
     refresh="30"         自动刷新间隔（秒）；0 = 关闭自动刷新，仅手动。也可在 params 里 per-server 覆盖
     columns="2"          卡片列数：1 或 2（默认 1）
     show_address="true"  是否显示服务器地址（false=彻底隐藏；缺省取全局 show_address，可被单台服务器覆盖）
+    tabs="true"          多服务器共用一块展示区域：上方 Tab 切换（缺省 false = 卡片纵向排列）
     servers="国内服,海外服" 仅显示这些服务器（按名称或主机匹配，默认全部）
     info="true|false"    信息面板（进服需知/声明/玩家支持，见 params info_panels）。
                          缺省 = 仅首页显示；true/false 可逐实例显式覆盖
   示例：
     {{< server-status refresh="0" >}}              只手动刷新
     {{< server-status columns="2" refresh="30" >}}  双列 + 30 秒自动刷新
+    {{< server-status tags="cn,dev" tabs="true" >}}   国内服 + 测试服共用一个区域，Tab 切换
  */ -}}
 {{- $show_info := $.Page.IsHome -}}
 {{- $ov := dict -}}
@@ -16,6 +18,7 @@
   {{- with .Get "refresh" }}{{ $ov = merge $ov (dict "refresh_interval" (int .)) }}{{ end -}}
   {{- with .Get "columns" }}{{ $ov = merge $ov (dict "columns" (int .)) }}{{ end -}}
   {{- with .Get "show_address" }}{{ $ov = merge $ov (dict "show_address" (eq . "true")) }}{{ end -}}
+  {{- with .Get "tabs" }}{{ $ov = merge $ov (dict "tabs" (eq . "true")) }}{{ end -}}
   {{- with .Get "servers" }}
     {{- $want := collections.Slice -}}
     {{- range (split . ",") }}{{ $want = $want | append (trim . " ") }}{{ end -}}

@@ -11,4 +11,4 @@ featured_image: "/images/minecraft_homepage.png"
 images: ["/images/og-default.png"]
 ---
 
-{{< server-status tags="cn">}}
+{{< server-status tags="cn,i18n,dev" tabs="true" >}}
