@@ -319,27 +319,38 @@
     return addr;
   }
 
-  /* 「在浏览器中玩」主操作按钮：整行、与地址胶囊同高（--ss-row-h），Web 端标识色填充。
-     点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进剪贴板并短暂换文案，
-     用户切回页面填地址时能看到反馈。 */
-  function buildPlayLink(addressText) {
+  /* 「在浏览器中玩」主操作按钮 + 复制提示：整行、与地址胶囊同高（--ss-row-h），
+     Web 端标识色填充。点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进
+     剪贴板并把按钮文案短暂换成「已复制地址，去粘贴」。
+     新标签打开后用户看不到本页变化，所以按钮下方常驻一行小字提示「已自动复制地址」，
+     避免用户到客户端里不知道从哪来的地址、又回头找。 */
+  function buildPlayBlock(addressText, key) {
+    var wrap = document.createElement('div');
+    wrap.className = 'server-status__play-wrap';
+
     var play = document.createElement('a');
     play.className = 'server-status__play';
     play.href = webClientUrl;
     play.target = '_blank';
     play.rel = 'noopener noreferrer';
-    play.title = '新标签打开 Web 客户端，并复制本服连接地址（到客户端「直连」粘贴）';
+    play.title = '新标签打开 Web 客户端，并自动复制本服连接地址（到客户端「直连」粘贴）';
+
     var label = document.createElement('span');
     label.className = 'server-status__play-label';
     label.textContent = '在浏览器中玩';
     play.innerHTML = BROWSER_ICON;
     play.appendChild(label);
 
+    var hint = document.createElement('p');
+    hint.className = 'server-status__play-hint';
+    hint.id = 'server-status-play-hint-' + key;
+    hint.textContent = '点击会自动复制本服连接地址，到客户端「多人游戏 → 直连」粘贴';
+    play.setAttribute('aria-describedby', hint.id);
+
     play.addEventListener('click', function () {
       function flash() {
-        var text = label.textContent;
         label.textContent = '已复制地址，去粘贴';
-        setTimeout(function () { label.textContent = text; }, 3000);
+        setTimeout(function () { label.textContent = '在浏览器中玩'; }, 3000);
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(addressText).then(flash, flash);
@@ -347,7 +358,10 @@
         fallbackCopy(addressText, flash);
       }
     });
-    return play;
+
+    wrap.appendChild(play);
+    wrap.appendChild(hint);
+    return wrap;
   }
 
   /* 取不到真实头像时回退 Steve/Alex 默认头像：按名称哈希稳定分配（同一玩家恒同一
@@ -573,18 +587,9 @@
       card.appendChild(note);
     }
 
-    /* ── 用户操作区：「在浏览器中玩」（主操作，若该服支持）+ 地址胶囊 + 社区链接 ── */
+    /* ── 用户操作区：地址胶囊 → 「在浏览器中玩」→ 社区链接 ── */
     var actions = document.createElement('div');
     actions.className = 'server-status__actions';
-
-    /* 「在浏览器中玩」：只要该服支持 Eaglercraft（配了 web 地址）就显示——不看 show_address，
-       因为这是「能不能用浏览器玩」的能力开关；反之没适配的服不会出现这个入口。
-       点击 = 复制本服 wss:// 地址 + 新标签打开官方 Web 客户端（版本由 web_client_url 决定），
-       用户到客户端「多人游戏 → 直连」粘贴即可。不自托管客户端：75 MiB 单文件既不适合放
-       GitHub Pages（仓库/带宽），也不该打自家家宽上行。 */
-    if (server.webAddress && webClientUrl) {
-      actions.appendChild(buildPlayLink(server.webAddress));
-    }
 
     /* 地址胶囊：仅当 show_address=true（server.show）时显示；false 则地址彻底隐藏，
        不渲染任何胶囊（无掩码/复制/眼睛）。胶囊默认掩码 + 眼睛切换 + 复制按钮，
@@ -633,6 +638,17 @@
           'web'
         ));
       }
+    }
+
+    /* 「在浏览器中玩」：紧跟 Web 地址胶囊（关联性最强）；地址隐藏（show=false）时
+       没有胶囊，它就落在操作区第一行，仍是卡片里唯一「直接进游戏」的动作。
+       只要该服支持 Eaglercraft（配了 web 地址）就显示——不看 show_address，
+       因为这是「能不能用浏览器玩」的能力开关；没适配的服不会出现这个入口。
+       点击 = 复制本服 wss:// 地址 + 新标签打开官方 Web 客户端（版本由 web_client_url 决定），
+       用户到客户端「多人游戏 → 直连」粘贴即可。不自托管客户端：75 MiB 单文件既不适合放
+       GitHub Pages（仓库/带宽），也不该打自家家宽上行。 */
+    if (server.webAddress && webClientUrl) {
+      actions.appendChild(buildPlayBlock(server.webAddress, server.key));
     }
 
     /* 社区链接（QQ 群 / QQ 频道 / Discord，公开信息无需加密） */
