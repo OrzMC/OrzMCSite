@@ -354,7 +354,17 @@
     play.appendChild(head);
     play.appendChild(sub);
 
-    play.addEventListener('click', function () {
+    play.addEventListener('click', function (e) {
+      /* 显式在新标签打开：不依赖 `<a target>`（部分内置浏览器/WebView 会忽略它、直接在原页加载）。
+         修饰键点击（Ctrl/⌘/Shift/中键）交给浏览器原生行为，不抢。 */
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      var win = window.open(webClientUrl, '_blank');
+      if (win) {
+        e.preventDefault();   // 已在新标签打开 → 阻止锚点默认行为，原页面不跳转
+        try { win.opener = null; } catch (err) {}   // 与 rel=noopener 同等隔离
+      }
+      /* window.open 被拦截时（返回 null）不 preventDefault，退回 <a target="_blank"> 默认行为 */
+
       function flash() {
         sub.textContent = '已复制 Web 客户端连接地址，去粘贴';
         setTimeout(function () { sub.textContent = PLAY_SUB_TEXT; }, 3000);
