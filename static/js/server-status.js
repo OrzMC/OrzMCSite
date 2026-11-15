@@ -40,6 +40,10 @@
      保留本声明即可）。来源 https://lucide.dev/icons/app-window
      原样内联为字符串，不额外请求外部资源。 */
   var BROWSER_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M2 8h20"/><path d="M6 4v4"/></svg>';
+  /* 「在浏览器中玩」按钮的副标题：点它会顺手把「Web 客户端连接地址」写进剪贴板，
+     文案必须点明复制的是什么，否则用户到客户端里不知道该粘什么。 */
+  var PLAY_SUB_TEXT = '点击会复制 Web 客户端连接地址 · 到客户端「直连」粘贴';
+
   /* 玩家头像：mc-heads.net 按 UUID 返回方形头像（公开服务；玩家 UUID 本身公开，非敏感信息）。
      条目渲染时才按需加载，不进入配置 JSON。 */
   var PLAYER_AVATAR = 'https://mc-heads.net/avatar/';
@@ -331,7 +335,7 @@
     play.href = webClientUrl;
     play.target = '_blank';
     play.rel = 'noopener noreferrer';
-    play.title = '新标签打开 Web 客户端，并自动复制本服连接地址（到客户端「直连」粘贴）';
+    play.title = '新标签打开 Web 客户端，并自动复制本服 Web 客户端连接地址（到客户端「直连」粘贴）';
 
     /* 第一行：图标 + 主标题（同一行）；第二行：副标题（整行居中，不缩进到图标之后） */
     var head = document.createElement('span');
@@ -345,15 +349,15 @@
 
     var sub = document.createElement('span');
     sub.className = 'server-status__play-sub';
-    sub.textContent = '点击会复制连接地址 · 到客户端「直连」粘贴';
+    sub.textContent = PLAY_SUB_TEXT;
 
     play.appendChild(head);
     play.appendChild(sub);
 
     play.addEventListener('click', function () {
       function flash() {
-        sub.textContent = '已复制地址，去粘贴';
-        setTimeout(function () { sub.textContent = '点击会复制连接地址 · 到客户端「直连」粘贴'; }, 3000);
+        sub.textContent = '已复制 Web 客户端连接地址，去粘贴';
+        setTimeout(function () { sub.textContent = PLAY_SUB_TEXT; }, 3000);
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(addressText).then(flash, flash);
