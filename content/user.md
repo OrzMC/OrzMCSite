@@ -42,9 +42,9 @@ description: "OrzMC 玩家手册：白名单申请、服务器地址、客户端
 
 #### 不想装客户端？用浏览器直接玩
 
-服务器已接入 [Eaglercraft](https://eaglercraft.com/)（浏览器版 Minecraft，与 Java 版同服同账号）。
+**开发测试服**已接入 [Eaglercraft](https://eaglercraft.com/)（浏览器版 Minecraft，与 Java 版同服同账号）；正式服适配后，对应卡片上也会出现同样的入口。
 
-1. 点服务器卡片上（或下方链接）的 **在浏览器中玩** → [打开 Web 客户端](https://eaglercraft.com/play?version=26.3)（新标签打开，无需安装）。
+1. 在首页服务器卡片切到「开发测试服」，点 **在浏览器中玩**（或直接用下方链接）→ [打开 Web 客户端](https://eaglercraft.com/play?version=26.3)（新标签打开，无需安装）。
 2. 进入游戏后：**多人游戏 → 直连（Direct Connection）**，粘贴服务器卡片上的 **Web客户端连接地址**（`wss://` 开头，点一下就能复制）。
 3. 首次进服同样要 `/register` 注册口令，之后 `/login`；账号与其他端共用（同名 = 同一个玩家）。
 
