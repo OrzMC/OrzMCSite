@@ -124,7 +124,7 @@
       sleeping: !!data.online && probeFailed && /sleeping/i.test(versionName),
       players: { online: players.online || 0, max: players.max || 0, list: players.list || [] },
       version: versionName,
-      protocol: version.protocol,   // 协议版本号（如 47），Java 版标签「Java版 · 版本 · 协议号」用
+      protocol: version.protocol,   // 协议版本号，仅供排障；mcstatus 返回值不可信（常见 47），不上卡片
       motdClean: motdClean,
       motdHtml: joinLines(motd.html),
       icon: data.icon || ''
@@ -536,14 +536,14 @@
         meta.appendChild(ptag);
       }
     }
-    /* 类型标签拆分为 Java 版 / 基岩版 两个，各用自己端的版本号和协议号
-       （不混用）：格式「类型 · 版本 · 协议号」，版本/协议缺失时逐级省略，
-       该类型版本和协议都没有则不渲染该标签；离线/获取失败不渲染。
+    /* 类型标签拆分为 Java 版 / 基岩版 两个，各用自己端的版本号（不混用）：
+       格式「类型 · 版本」，版本缺失则不渲染该标签；离线/获取失败不渲染。
+       不显示协议号：mcstatus.io 的 version.protocol 不可信（对本服真实 762、
+       国内服 Paper 26.3 均返回 47，Hypixel 也返回 47），显示出来是错误信息。
        仅休眠态（Java 端无可用版本号）回退为「版本 …」。 */
     if (res.status === 'online' && res.data) {
       var jParts = ['Java版'];
       if (res.data.version) jParts.push(res.data.version);
-      if (res.data.protocol) jParts.push(String(res.data.protocol));
       if (jParts.length > 1) {
         var jtag = document.createElement('span');
         jtag.className = 'server-status__tag';
@@ -559,7 +559,6 @@
     if (res.bedrock && res.bedrock.online) {
       var bParts = ['基岩版'];
       if (res.bedrock.version) bParts.push(res.bedrock.version);
-      if (res.bedrock.protocol) bParts.push(String(res.bedrock.protocol));
       if (bParts.length > 1) {
         var btag = document.createElement('span');
         btag.className = 'server-status__tag';
