@@ -153,9 +153,10 @@ port = 25565
 tags = ["dev"]
 # 基岩版与 Java 版互通、同主机不同端口
 bedrock_port = 19132
-# Web 客户端（Eaglercraft）入口：443 已可用（2026-11-19），入口回到标准端口
-# （=> wss://dev.jokerhub.cn:443；主机缺省沿用 Java 主机）
-web_port = 443
+# Web 客户端（Eaglercraft）入口：家宽入站 443 被运营商封锁（2026-11-20 外网 8/8 节点 SYN 超时，
+# 路由器 443→192.168.0.33:443 规则存在仍不通），改走高位 18443（路由器 18443→443，外网实测可进）。
+# （=> wss://dev.jokerhub.cn:18443；web_host 缺省沿用 Java 主机）
+web_port = 18443
 note = "用来开发和调试用的专用服务器，与线上服务器隔离，随时可能关闭。"
 # per-server 覆盖全局 show_address：测试服当前设为 true（地址可见，便于验证 Web 入口）
 show_address = true
