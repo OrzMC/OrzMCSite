@@ -21,6 +21,7 @@
   var tabsEnabled = false;   // 是否启用 Tab 切换（配置 tabs=true 且服务器数 > 1）
   var activeKey = null;      // 当前选中的服务器 key（跨刷新保留）
   var webClientUrl = '';     // 「在浏览器中玩」打开的客户端地址（配置 web_client_url，空=不显示按钮）
+  var webClientFallbackUrl = ''; // 兜底自托管客户端模板（配置 web_client_fallback_url，空=不显示）
 
   /* 地址防爬虫：配置 JSON 里的 host 是替换表密文，明文地址不会出现在 HTML 中；
      卡片默认以固定掩码显示，点击复制。替换表由模板单点维护（partial
@@ -329,6 +330,36 @@
      所以把提示做进按钮本身（整体仍是一个可点击区域，不额外占一行、关联最直接）。
      点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进剪贴板，副标题短暂变
      「已复制地址，去粘贴」。 */
+  /* 兜底自托管客户端：模板占位符 {address}/{version}，空则不给入口。
+     例：https://webclient.example.com/?server={address}
+     （自托管客户端需 patch 过 eaglercraftXOpts.joinServer，见 webmc/docs/self-hosted-client.md） */
+  function buildFallbackUrl(addressText, version) {
+    if (!webClientFallbackUrl) return '';
+    var enc = encodeURIComponent(addressText || '');
+    var tpl = webClientFallbackUrl;
+    var hasAddress = tpl.indexOf('{address}') >= 0;
+    var hasVersion = tpl.indexOf('{version}') >= 0;
+    if (hasAddress) tpl = tpl.replace(/\{address\}/g, enc);
+    if (hasVersion) tpl = tpl.replace(/\{version\}/g, encodeURIComponent(version || ''));
+    if (!hasAddress && tpl.indexOf('server=') < 0) {
+      tpl += (tpl.indexOf('?') >= 0 ? '&' : '?') + 'server=' + enc;
+    }
+    return tpl;
+  }
+
+  function buildFallbackLink(addressText, version) {
+    var href = buildFallbackUrl(addressText, version);
+    if (!href) return null;
+    var a = document.createElement('a');
+    a.className = 'server-status__play-fallback';
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = '官方入口不可用？使用备用客户端';
+    a.title = '自托管兜底客户端（官方站不可用时使用）';
+    return a;
+  }
+
   /* 官方站深链：/play?joinServer=<wss地址>&version=<客户端版本>&launch=1
      官方页会把 joinServer 传给客户端并直接进服；launch=1 让页面跳过「启动游戏」按钮
      直接下载/启动（2026-11-22 无头 Edge 实测）。基础参数沿用 web_client_url；
@@ -681,6 +712,8 @@
        GitHub Pages（仓库/带宽），也不该打自家家宽上行。 */
     if (server.webAddress && webClientUrl) {
       actions.appendChild(buildPlayBlock(server.webAddress, server.webVersion));
+      var fallback = buildFallbackLink(server.webAddress, server.webVersion);
+      if (fallback) actions.appendChild(fallback);
     }
 
     /* 社区链接（QQ 群 / QQ 频道 / Discord，公开信息无需加密） */
@@ -854,6 +887,7 @@
     refreshInterval = (cfg.refresh_interval > 0) ? cfg.refresh_interval : 0;
     api = String(cfg.api || 'https://api.mcstatus.io/v2/status/java').replace(/\/+$/, '');
     webClientUrl = String(cfg.web_client_url || '');
+    webClientFallbackUrl = String(cfg.web_client_fallback_url || '');
     servers = (cfg.servers || []).map(function (s, i) {
       var host = decodeHost(s.host || '');
       var port = s.port || 25565;
