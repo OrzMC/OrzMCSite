@@ -14,6 +14,7 @@
     "show_address"     ($raw.show_address | compare.Default false)
     "tabs"             ($raw.tabs | compare.Default false)
     "web_client_url"   ($raw.web_client_url | default "")
+    "web_client_fallback_url" ($raw.web_client_fallback_url | default "")
     "servers"          ($raw.servers | default collections.Slice)
     "info_panels"      ($raw.info_panels | default collections.Slice)
     "show_info"        false
