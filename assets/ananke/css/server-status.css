@@ -527,6 +527,24 @@ html[data-theme] .server-status a.server-status__play:visited {
   opacity: 0.85;
 }
 
+/* 兜底自托管客户端（只在配置 web_client_fallback_url 时渲染）：
+   次级入口，弱化为一行小字，避免分散「在浏览器中玩」的注意力。 */
+.server-status .server-status__play-fallback {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ss-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+html[data-theme] .server-status a.server-status__play-fallback,
+html[data-theme] .server-status a.server-status__play-fallback:visited {
+  color: var(--ss-muted);
+}
+.server-status .server-status__play-fallback:hover {
+  color: var(--ss-text);
+}
+
 /* 社区链接（QQ 群 / QQ 频道 / Discord） */
 .server-status__links {
   display: flex;
