@@ -72,6 +72,9 @@
     {{- end -}}
     {{- $sd = merge $sd (dict "web_host" $wen "web_port" ($s.web_port | compare.Default 443)) -}}
   {{- end -}}
+  {{- /* 逐服客户端版本（可选）：覆盖 web_client_url 里的 version，用于该服用不同客户端版本
+         （如 1.8.8 / 1.12.2 / 26.3）。不参与加密。 */ -}}
+  {{- if $s.web_version -}}{{- $sd = merge $sd (dict "web_version" (string $s.web_version)) -}}{{- end -}}
   {{- /* 仅在 params 显式设置了 show_address 时透传（否则 JS 回退全局默认值） */ -}}
   {{- if isset $s "show_address" -}}{{- $sd = merge $sd (dict "show_address" $s.show_address) -}}{{- end -}}
   {{- /* 仅显式设置 refresh_interval 时透传（否则 JS 回退全局默认值） */ -}}
