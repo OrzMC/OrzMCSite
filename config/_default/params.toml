@@ -95,9 +95,11 @@ tabs = false
 # api = "https://api.mcstatus.io/v2/status/java"   # 可选，覆盖默认状态 API
 # 「在浏览器中玩」按钮（紧跟在卡片上的 Web 地址胶囊下方）：**只要该服配了 Web 地址就显示**，不看 show_address
 # （它是「能不能用浏览器玩」的能力开关；地址隐藏的服同样会出现）。
-# 点击 = 新标签打开该客户端页 + 把本服 wss 地址写入剪贴板（到客户端「多人游戏 → 直连」粘贴）；
-# 按钮内自带副标题提示「点击会复制 Web 客户端连接地址 · 到客户端「直连」粘贴」（整体是一个按钮）。
-# 置空则不显示该按钮；换客户端版本时改这里的 URL 即可。
+# 点击 = 新标签打开官方页，并自动拼上 `&joinServer=<本服 wss 地址>` → 官方客户端直接进服；
+# 同时把地址写入剪贴板备用。按钮副标题「点击直接进服 · 同时复制地址备用」。
+# 官方站已支持 `/play?joinServer=<wss>&version=<ver>`（2026-11 实测，首页服务器目录即此格式），
+# 因此不需要自托管客户端；置空则不显示该按钮。
+# 版本默认取本 URL 里的 `version`；个别服需要不同客户端版本时，在该服配 `web_version`。
 web_client_url = "https://eaglercraft.com/play?version=26.3"
 
 # 每台服务器可配置三种客户端连接地址（卡片上各占一枚地址胶囊，未配置的客户端不渲染）：
@@ -109,6 +111,7 @@ web_client_url = "https://eaglercraft.com/play?version=26.3"
 #     · web_host 缺省 = 与服务器（Java 主机）同一地址；也可填不同的 Web 客户端访问地址
 #       （如独立子域 play.example.com），只写主机名，不要带 wss:// 前缀或结尾斜杠。
 #     · web_port 缺省 443；443 不可用时走 18443（与 mcs./easybot. 同一 TLS 入口端口）。
+#     · web_version 缺省沿用 web_client_url 里的版本；该服要用别的客户端版本时填（如 "1.8.8"）。
 #     服务端侧启用方式见 deploy 的 docs/eaglercraft-deploy.md。
 
 [[server_status.servers]]
@@ -157,6 +160,9 @@ bedrock_port = 19132
 # 路由器 443→192.168.0.33:443 规则存在仍不通），改走高位 18443（路由器 18443→443，外网实测可进）。
 # （=> wss://dev.jokerhub.cn:18443；web_host 缺省沿用 Java 主机）
 web_port = 18443
+# 逐服客户端版本（可选）：不写则沿用 web_client_url 里的 version。
+# 该服要用别的 Eaglercraft 版本时取消注释（如 1.8.8 / 1.12.2 / 26.3）。
+# web_version = "26.3"
 note = "用来开发和调试用的专用服务器，与线上服务器隔离，随时可能关闭。"
 # per-server 覆盖全局 show_address：测试服当前设为 true（地址可见，便于验证 Web 入口）
 show_address = true
