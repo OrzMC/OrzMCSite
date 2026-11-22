@@ -114,7 +114,7 @@ web_client_url = "https://eaglercraft.com/play?version=26.3"
 # web_client_fallback_url = "https://webclient.example.com/?server={address}"
 # 默认为空 = 不显示；需要兜底时填上并发布。托管/patch 步骤见
 # webmc/docs/self-hosted-client.md（注意：客户端 ARR，勿公开分发/入库）。
-web_client_fallback_url = ""
+web_client_fallback_url = "https://webmc.jokerhub.cn/play?version={version}&server={address}"
 
 # 每台服务器可配置三种客户端连接地址（卡片上各占一枚地址胶囊，未配置的客户端不渲染）：
 #   Java 版（host + port，必填）——「Java版客户端连接地址」
