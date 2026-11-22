@@ -40,9 +40,9 @@
      保留本声明即可）。来源 https://lucide.dev/icons/app-window
      原样内联为字符串，不额外请求外部资源。 */
   var BROWSER_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M2 8h20"/><path d="M6 4v4"/></svg>';
-  /* 「在浏览器中玩」按钮的副标题：点它会顺手把「Web 客户端连接地址」写进剪贴板，
-     文案必须点明复制的是什么，否则用户到客户端里不知道该粘什么。 */
-  var PLAY_SUB_TEXT = '点击会复制 Web 客户端连接地址 · 到客户端「直连」粘贴';
+  /* 「在浏览器中玩」按钮的副标题：点它会用官方深链直接进服，同时复制地址备用。
+     （官方站支持 /play?joinServer=<wss>&version=<ver>，无需自托管客户端。） */
+  var PLAY_SUB_TEXT = '点击直接进服 · 同时复制地址备用';
 
   /* 玩家头像：mc-heads.net 按 UUID 返回方形头像（公开服务；玩家 UUID 本身公开，非敏感信息）。
      条目渲染时才按需加载，不进入配置 JSON。 */
@@ -329,13 +329,26 @@
      所以把提示做进按钮本身（整体仍是一个可点击区域，不额外占一行、关联最直接）。
      点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进剪贴板，副标题短暂变
      「已复制地址，去粘贴」。 */
-  function buildPlayBlock(addressText) {
+  /* 官方站深链：/play?joinServer=<wss地址>&version=<客户端版本>
+     官方页会把 joinServer 传给客户端并直接进服（2026-11-22 实测首页服务器目录就是这种链接）。
+     基础参数（如 version）沿用 web_client_url；逐服 web_version 可覆盖版本。 */
+  function buildWebClientLink(addressText, version) {
+    if (!webClientUrl) return '';
+    var u;
+    try { u = new URL(webClientUrl, window.location.href); } catch (err) { return webClientUrl; }
+    if (addressText) u.searchParams.set('joinServer', addressText);
+    if (version) u.searchParams.set('version', version);
+    return u.toString();
+  }
+
+  function buildPlayBlock(addressText, clientVersion) {
+    var playUrl = buildWebClientLink(addressText, clientVersion) || webClientUrl;
     var play = document.createElement('a');
     play.className = 'server-status__play';
-    play.href = webClientUrl;
+    play.href = playUrl;
     play.target = '_blank';
     play.rel = 'noopener noreferrer';
-    play.title = '新标签打开 Web 客户端，并自动复制本服 Web 客户端连接地址（到客户端「直连」粘贴）';
+    play.title = '新标签打开官方 Web 客户端并直接进服（同时复制地址备用）';
 
     /* 第一行：图标 + 主标题（同一行）；第二行：副标题（整行居中，不缩进到图标之后） */
     var head = document.createElement('span');
@@ -358,7 +371,7 @@
       /* 显式在新标签打开：不依赖 `<a target>`（部分内置浏览器/WebView 会忽略它、直接在原页加载）。
          修饰键点击（Ctrl/⌘/Shift/中键）交给浏览器原生行为，不抢。 */
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      var win = window.open(webClientUrl, '_blank');
+      var win = window.open(playUrl, '_blank');
       if (win) {
         e.preventDefault();   // 已在新标签打开 → 阻止锚点默认行为，原页面不跳转
         try { win.opener = null; } catch (err) {}   // 与 rel=noopener 同等隔离
@@ -366,7 +379,7 @@
       /* window.open 被拦截时（返回 null）不 preventDefault，退回 <a target="_blank"> 默认行为 */
 
       function flash() {
-        sub.textContent = '已复制 Web 客户端连接地址，去粘贴';
+        sub.textContent = '已复制地址备用';
         setTimeout(function () { sub.textContent = PLAY_SUB_TEXT; }, 3000);
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -661,7 +674,7 @@
        用户到客户端「多人游戏 → 直连」粘贴即可。不自托管客户端：75 MiB 单文件既不适合放
        GitHub Pages（仓库/带宽），也不该打自家家宽上行。 */
     if (server.webAddress && webClientUrl) {
-      actions.appendChild(buildPlayBlock(server.webAddress));
+      actions.appendChild(buildPlayBlock(server.webAddress, server.webVersion));
     }
 
     /* 社区链接（QQ 群 / QQ 频道 / Discord，公开信息无需加密） */
@@ -862,6 +875,7 @@
         bedrockHost: bedrockHost,
         bedrockPort: hasBedrock ? (s.bedrock_port || 19132) : 0,
         webAddress: hasWeb ? ('wss://' + webHost + ':' + webPort) : '',
+        webVersion: s.web_version || '',
         note: s.note || '',
         links: s.links || [],
         /* 自动刷新间隔（秒）：per-server refresh_interval 优先，否则回退全局；0/负 = 仅手动 */
