@@ -1,4 +1,4 @@
-# 🇨🇳 OrzMC
+# OrzMC
 
 > Minecraft 服务器与玩法指南、更新记录与社区动态
 > OrzMC 是一个非商业的 Minecraft 社区与开源工具组织：运营 Minecraft 服务器，并维护跨平台客户端启动器、服务端插件与运维工具。
