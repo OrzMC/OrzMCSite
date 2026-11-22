@@ -21,16 +21,16 @@
               hero_title=true（hero 叠字、以 h1 输出）时回退 h2，避免同页双 h1。
               注：不能动态拼 `<{{ $tag }}>`——变量值在 HTML 上下文会被转义成 &lt;h1&gt;，必须写死标签。 */ -}}
         {{- if .Param "hero_title" -}}
-          <h2 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h2>
+          <h2 class="f1 fw6 lh-title">{{ partial "func/emoji" (.Title | compare.Default .Site.Title) }}</h2>
         {{- else -}}
-          <h1 class="f1 fw6 lh-title">{{ .Title | compare.Default .Site.Title }}</h1>
+          <h1 class="f1 fw6 lh-title">{{ partial "func/emoji" (.Title | compare.Default .Site.Title) }}</h1>
         {{- end -}}
         {{ with .Params.description }}<p class="mid-gray mt2">{{ . }}</p>{{ end }}
         {{ if compare.Eq .Section "posts" }}{{ with .Date }}
           <time class="f6 mid-gray db mt2" datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "2006-01-02" }}</time>
         {{ end }}{{ end }}
       </header>
-      {{ .Content }}
+      {{ partial "func/emoji" .Content }}
     </section>
   </div>
   {{ if compare.Eq .Section "posts" }}

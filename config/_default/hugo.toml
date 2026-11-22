@@ -1,6 +1,10 @@
 # Site
 baseURL = "https://orzmc.jokerhub.cn"
-title = "🇨🇳 OrzMC"
+# 站点标题：**纯文本**，不带 emoji。
+# 原因：<title>（浏览器标签页）、og:site_name、JSON-LD、RSS、llms.txt 都是纯文本通道，
+# 里面的 emoji 只能由各平台字体渲染 —— 国旗 🇨🇳 在 Windows 上会显示成 "CN" 字母，
+# 标签页永远无法跨平台一致。品牌国旗改为只在**页面内**的视觉位置出现（见 params.brand_mark）。
+title = "OrzMC"
 theme = "ananke"
 defaultContentLanguage = "zh-cn"
 locale = "zh-CN"

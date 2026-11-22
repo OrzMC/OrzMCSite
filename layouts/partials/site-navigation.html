@@ -4,7 +4,9 @@
       {{ with .Site.Params.site_logo }}
         <img src="{{ urls.RelURL . }}" class="w100 mw5-ns" alt="{{ $.Site.Title }}" />
       {{ else }}
-        {{ .Site.Title }}
+        {{/* 品牌标记（国旗）走 emoji 统一管线，与正文 emoji 同一套资产与尺寸。
+             site.Title 本身保持纯文本，保证 <title>/og/llms.txt 跨平台一致。 */}}
+        {{ with site.Params.brand_mark }}{{ partial "func/emoji" . }} {{ end }}{{ .Site.Title }}
       {{ end }}
     </a>
     <div class="flex-l items-center site-nav__actions">

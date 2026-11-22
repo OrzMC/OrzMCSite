@@ -1,0 +1,55 @@
+{{- /* 把 HTML/文本里的 emoji 字符替换为自托管 Twemoji SVG（统一各平台渲染）。
+
+       调用：{{ partial "func/emoji" .Content }}   返回 template.HTML
+       数据：hugo.Data.emoji_map（data/emoji_map.yaml，由 scripts/emoji_assets.py 生成）
+       资产：assets/emoji/*.svg（Twemoji，CC-BY 4.0）
+
+       设计要点：
+       · 顺序：映射表按「字符数降序」，保证「心 + 火」这类 ZWJ 序列先于单颗心命中
+         （模板不排序，直接 range）。
+       · <img alt> 写 HTML 实体（&#x2705;）：读屏与复制粘贴仍得到原 emoji 字符，
+         而字符串层面不含 emoji 字符，所以同一处不会被短序列二次命中。
+       · 先摘出 <script>/<pre>/<code> 段再替换：server-status 之类 shortcode 会把配置
+         以 JSON 塞进 <script type="application/json">，往里插 <img> 会直接破坏 JSON；
+         代码块里的 emoji 同理应保持原字符。
+       · 只用于**可见输出**。meta / og / JSON-LD / RSS / llms.txt 里的文本保持原字符
+         （那里塞 <img> 只会变成字符串垃圾）。 */ -}}
+{{- $out := string . -}}
+
+{{- /* 1. 把不需要替换的片段（script/pre/code）换成占位符搁置 */ -}}
+{{- $stash := collections.Slice -}}
+{{- range $i, $m := findRE `(?s)<script[^>]*>.*?</script>|<pre[^>]*>.*?</pre>|<code[^>]*>.*?</code>` $out -}}
+  {{- $out = strings.Replace $out $m (printf "@@ORZMC_EMOJI_STASH_%d@@" $i) -}}
+  {{- $stash = $stash | collections.Append $m -}}
+{{- end -}}
+
+{{- /* 2. 逐个字符（长序列优先）替换成 <img>
+       · PNG 资产（Apple 源）构建期缩到 128px：160px 原图每张 ~18 KB，128px 足够
+         覆盖 3x 屏上的大标题（1.15em@32px×3 ≈ 110px），体积约降一半。
+       · width/height 只是给浏览器占位比例，真实尺寸由 CSS 的 `.emoji` 决定。 */ -}}
+{{- range hugo.Data.emoji_map -}}
+  {{- $char := .char -}}
+  {{- if strings.Contains $out $char -}}
+    {{- $res := resources.Get (printf "emoji/%s" .file) -}}
+    {{- if $res -}}
+      {{- $tag := "" -}}
+      {{- if strings.HasSuffix .file ".png" -}}
+        {{- /* Apple 源：128px 的 webp 约 5 KB、png 约 15 KB，用 <picture> 让现代浏览器
+               走 webp、老浏览器回退 png（两者都是 128px，视觉一致）。 */ -}}
+        {{- $webp := ($res.Resize "128x128 webp").RelPermalink -}}
+        {{- $png := ($res.Resize "128x128 png").RelPermalink -}}
+        {{- $tag = printf `<picture><source srcset="%s" type="image/webp"><img class="emoji" src="%s" alt="%s" width="32" height="32" decoding="async"></picture>` $webp $png .alt -}}
+      {{- else -}}
+        {{- $tag = printf `<img class="emoji" src="%s" alt="%s" width="32" height="32" decoding="async">` $res.RelPermalink .alt -}}
+      {{- end -}}
+      {{- $out = strings.Replace $out $char $tag -1 -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 3. 还原搁置的片段 */ -}}
+{{- range $i, $m := $stash -}}
+  {{- $out = strings.Replace $out (printf "@@ORZMC_EMOJI_STASH_%d@@" $i) $m -}}
+{{- end -}}
+
+{{- return ($out | safeHTML) -}}

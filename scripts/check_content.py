@@ -43,6 +43,8 @@ seo_entries = []  # (rel, title, description) —— 用于重复 title/descript
 
 MIN_DESC = 20
 MAX_DESC = 160
+# 合规/许可类独立页：需要 title/description，但不占主导航（也不进 llms.txt 主要页面）
+NON_NAV_PAGES = {"privacy.md", "licenses.md"}
 
 
 def parse_frontmatter(path):
@@ -146,7 +148,7 @@ def check_post(path):
 
 def check_standalone(path, *, require_menu=True):
     rel = os.path.relpath(path, CONTENT).replace(os.sep, "/")
-    check_seo(path, post=False, require_menu=require_menu and rel != "privacy.md")
+    check_seo(path, post=False, require_menu=require_menu and rel not in NON_NAV_PAGES)
     fm = parse_frontmatter(path)
     for key in ("featured_image",):
         val = (fm.get(key) or "").strip().strip("\"'")

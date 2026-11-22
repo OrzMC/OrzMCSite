@@ -500,7 +500,8 @@
 
     var name = document.createElement('span');
     name.className = 'server-status__name';
-    name.textContent = server.name;
+    if (server.nameHtml) name.innerHTML = server.nameHtml;
+    else name.textContent = server.name;
     head.appendChild(name);
 
     /* 头部右侧：更新时间 + 状态徽标（带刷新），一目了然 */
@@ -755,12 +756,21 @@
       tab.setAttribute('role', 'tab');
       tab.setAttribute('aria-controls', 'server-status-panel-' + server.key);
       tab.setAttribute('aria-selected', 'false');
+      /* 可访问名用纯文本名（name）：否则读屏会把 name_html 里的国旗图标念成
+         "regional indicator symbol letter C …" */
+      tab.setAttribute('aria-label', server.name);
       tab.tabIndex = -1;
       var dot = document.createElement('span');
       dot.className = 'server-status__tab-dot';
       dot.setAttribute('aria-hidden', 'true');
       tab.appendChild(dot);
-      tab.appendChild(document.createTextNode(server.name));
+      if (server.nameHtml) {
+        var tabName = document.createElement('span');
+        tabName.innerHTML = server.nameHtml;
+        tab.appendChild(tabName);
+      } else {
+        tab.appendChild(document.createTextNode(server.name));
+      }
       tab.addEventListener('click', function () { selectTab(server.key); });
       tab.addEventListener('keydown', function (e) {
         var next = null;
@@ -910,6 +920,9 @@
         /* 内部索引用作 key：不把明文地址写进 DOM（data-server-key） */
         key: String(i),
         name: s.name || host,
+        /* name_html：服务端已把名字里的 emoji 换成 <img class="emoji">（与全站同一套 Twemoji 图形）；
+           有就用它渲染，否则回退纯文本 name。见 layouts/partials/server-status.html。 */
+        nameHtml: s.name_html || '',
         host: host,
         port: port,
         bedrockHost: bedrockHost,

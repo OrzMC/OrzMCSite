@@ -1,0 +1,281 @@
+# 由 scripts/emoji_assets.py 生成，请勿手改。
+# source: apple —— Apple 160px PNG（iamcal/emoji-data）
+# 用途：layouts/partials/func/emoji.html 构建期把 emoji 字符替换为自托管图形。
+# 顺序：字符数降序 —— 模板按顺序做字面量替换，保证 ZWJ 序列先于单颗心命中。
+
+# HEAVY BLACK HEART
+- char: "❤️‍🔥"
+  file: 2764-fe0f-200d-1f525.png
+  alt: "&#x2764;&#xfe0f;&#x200d;&#x1f525;"
+# HEAVY BLACK HEART
+- char: "❤‍🔥"
+  file: 2764-fe0f-200d-1f525.png
+  alt: "&#x2764;&#x200d;&#x1f525;"
+# CLOUD
+- char: "☁️"
+  file: 2601-fe0f.png
+  alt: "&#x2601;&#xfe0f;"
+# WARNING SIGN
+- char: "⚠️"
+  file: 26a0-fe0f.png
+  alt: "&#x26a0;&#xfe0f;"
+# HIGH VOLTAGE SIGN
+- char: "⚡️"
+  file: 26a1.png
+  alt: "&#x26a1;&#xfe0f;"
+# COFFIN
+- char: "⚰️"
+  file: 26b0-fe0f.png
+  alt: "&#x26b0;&#xfe0f;"
+# WHITE HEAVY CHECK MARK
+- char: "✅️"
+  file: 2705.png
+  alt: "&#x2705;&#xfe0f;"
+# CROSS MARK
+- char: "❌️"
+  file: 274c.png
+  alt: "&#x274c;&#xfe0f;"
+# REGIONAL INDICATOR SYMBOL LETTER C
+- char: "🇨🇳"
+  file: 1f1e8-1f1f3.png
+  alt: "&#x1f1e8;&#x1f1f3;"
+# PARTY POPPER
+- char: "🎉️"
+  file: 1f389.png
+  alt: "&#x1f389;&#xfe0f;"
+# BEACH WITH UMBRELLA
+- char: "🏖️"
+  file: 1f3d6-fe0f.png
+  alt: "&#x1f3d6;&#xfe0f;"
+# HOUSE BUILDING
+- char: "🏠️"
+  file: 1f3e0.png
+  alt: "&#x1f3e0;&#xfe0f;"
+# EUROPEAN CASTLE
+- char: "🏰️"
+  file: 1f3f0.png
+  alt: "&#x1f3f0;&#xfe0f;"
+# BUG
+- char: "🐛️"
+  file: 1f41b.png
+  alt: "&#x1f41b;&#xfe0f;"
+# BEATING HEART
+- char: "💓️"
+  file: 1f493.png
+  alt: "&#x1f493;&#xfe0f;"
+# SPARKLING HEART
+- char: "💖️"
+  file: 1f496.png
+  alt: "&#x1f496;&#xfe0f;"
+# ELECTRIC LIGHT BULB
+- char: "💡️"
+  file: 1f4a1.png
+  alt: "&#x1f4a1;&#xfe0f;"
+# SPEECH BALLOON
+- char: "💬️"
+  file: 1f4ac.png
+  alt: "&#x1f4ac;&#xfe0f;"
+# MONEY BAG
+- char: "💰️"
+  file: 1f4b0.png
+  alt: "&#x1f4b0;&#xfe0f;"
+# CHART WITH UPWARDS TREND
+- char: "📈️"
+  file: 1f4c8.png
+  alt: "&#x1f4c8;&#xfe0f;"
+# PUSHPIN
+- char: "📌️"
+  file: 1f4cc.png
+  alt: "&#x1f4cc;&#xfe0f;"
+# BOOKS
+- char: "📚️"
+  file: 1f4da.png
+  alt: "&#x1f4da;&#xfe0f;"
+# MOBILE PHONE
+- char: "📱️"
+  file: 1f4f1.png
+  alt: "&#x1f4f1;&#xfe0f;"
+# ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS
+- char: "🔄️"
+  file: 1f504.png
+  alt: "&#x1f504;&#xfe0f;"
+# SPEAKER WITH THREE SOUND WAVES
+- char: "🔊️"
+  file: 1f50a.png
+  alt: "&#x1f50a;&#xfe0f;"
+# LINK SYMBOL
+- char: "🔗️"
+  file: 1f517.png
+  alt: "&#x1f517;&#xfe0f;"
+# LARGE RED CIRCLE
+- char: "🔴️"
+  file: 1f534.png
+  alt: "&#x1f534;&#xfe0f;"
+# LARGE BLUE CIRCLE
+- char: "🔵️"
+  file: 1f535.png
+  alt: "&#x1f535;&#xfe0f;"
+# DESKTOP COMPUTER
+- char: "🖥️"
+  file: 1f5a5-fe0f.png
+  alt: "&#x1f5a5;&#xfe0f;"
+# FACE THROWING A KISS
+- char: "😘️"
+  file: 1f618.png
+  alt: "&#x1f618;&#xfe0f;"
+# LARGE YELLOW CIRCLE
+- char: "🟡️"
+  file: 1f7e1.png
+  alt: "&#x1f7e1;&#xfe0f;"
+# LARGE GREEN CIRCLE
+- char: "🟢️"
+  file: 1f7e2.png
+  alt: "&#x1f7e2;&#xfe0f;"
+# LARGE PURPLE CIRCLE
+- char: "🟣️"
+  file: 1f7e3.png
+  alt: "&#x1f7e3;&#xfe0f;"
+# ORANGE HEART
+- char: "🧡️"
+  file: 1f9e1.png
+  alt: "&#x1f9e1;&#xfe0f;"
+# BROOM
+- char: "🧹️"
+  file: 1f9f9.png
+  alt: "&#x1f9f9;&#xfe0f;"
+# PINK HEART
+- char: "🩷️"
+  file: 1fa77.png
+  alt: "&#x1fa77;&#xfe0f;"
+# CLOUD
+- char: "☁"
+  file: 2601-fe0f.png
+  alt: "&#x2601;"
+# WARNING SIGN
+- char: "⚠"
+  file: 26a0-fe0f.png
+  alt: "&#x26a0;"
+# HIGH VOLTAGE SIGN
+- char: "⚡"
+  file: 26a1.png
+  alt: "&#x26a1;"
+# COFFIN
+- char: "⚰"
+  file: 26b0-fe0f.png
+  alt: "&#x26b0;"
+# WHITE HEAVY CHECK MARK
+- char: "✅"
+  file: 2705.png
+  alt: "&#x2705;"
+# CROSS MARK
+- char: "❌"
+  file: 274c.png
+  alt: "&#x274c;"
+# PARTY POPPER
+- char: "🎉"
+  file: 1f389.png
+  alt: "&#x1f389;"
+# BEACH WITH UMBRELLA
+- char: "🏖"
+  file: 1f3d6-fe0f.png
+  alt: "&#x1f3d6;"
+# HOUSE BUILDING
+- char: "🏠"
+  file: 1f3e0.png
+  alt: "&#x1f3e0;"
+# EUROPEAN CASTLE
+- char: "🏰"
+  file: 1f3f0.png
+  alt: "&#x1f3f0;"
+# BUG
+- char: "🐛"
+  file: 1f41b.png
+  alt: "&#x1f41b;"
+# BEATING HEART
+- char: "💓"
+  file: 1f493.png
+  alt: "&#x1f493;"
+# SPARKLING HEART
+- char: "💖"
+  file: 1f496.png
+  alt: "&#x1f496;"
+# ELECTRIC LIGHT BULB
+- char: "💡"
+  file: 1f4a1.png
+  alt: "&#x1f4a1;"
+# SPEECH BALLOON
+- char: "💬"
+  file: 1f4ac.png
+  alt: "&#x1f4ac;"
+# MONEY BAG
+- char: "💰"
+  file: 1f4b0.png
+  alt: "&#x1f4b0;"
+# CHART WITH UPWARDS TREND
+- char: "📈"
+  file: 1f4c8.png
+  alt: "&#x1f4c8;"
+# PUSHPIN
+- char: "📌"
+  file: 1f4cc.png
+  alt: "&#x1f4cc;"
+# BOOKS
+- char: "📚"
+  file: 1f4da.png
+  alt: "&#x1f4da;"
+# MOBILE PHONE
+- char: "📱"
+  file: 1f4f1.png
+  alt: "&#x1f4f1;"
+# ANTICLOCKWISE DOWNWARDS AND UPWARDS OPEN CIRCLE ARROWS
+- char: "🔄"
+  file: 1f504.png
+  alt: "&#x1f504;"
+# SPEAKER WITH THREE SOUND WAVES
+- char: "🔊"
+  file: 1f50a.png
+  alt: "&#x1f50a;"
+# LINK SYMBOL
+- char: "🔗"
+  file: 1f517.png
+  alt: "&#x1f517;"
+# LARGE RED CIRCLE
+- char: "🔴"
+  file: 1f534.png
+  alt: "&#x1f534;"
+# LARGE BLUE CIRCLE
+- char: "🔵"
+  file: 1f535.png
+  alt: "&#x1f535;"
+# DESKTOP COMPUTER
+- char: "🖥"
+  file: 1f5a5-fe0f.png
+  alt: "&#x1f5a5;"
+# FACE THROWING A KISS
+- char: "😘"
+  file: 1f618.png
+  alt: "&#x1f618;"
+# LARGE YELLOW CIRCLE
+- char: "🟡"
+  file: 1f7e1.png
+  alt: "&#x1f7e1;"
+# LARGE GREEN CIRCLE
+- char: "🟢"
+  file: 1f7e2.png
+  alt: "&#x1f7e2;"
+# LARGE PURPLE CIRCLE
+- char: "🟣"
+  file: 1f7e3.png
+  alt: "&#x1f7e3;"
+# ORANGE HEART
+- char: "🧡"
+  file: 1f9e1.png
+  alt: "&#x1f9e1;"
+# BROOM
+- char: "🧹"
+  file: 1f9f9.png
+  alt: "&#x1f9f9;"
+# PINK HEART
+- char: "🩷"
+  file: 1fa77.png
+  alt: "&#x1fa77;"

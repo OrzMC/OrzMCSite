@@ -10,6 +10,6 @@
   {{- $tocHTML := strings.Replace $page.TableOfContents `id="TableOfContents"` (printf `id="%s"` $tocID) -}}
   <nav class="site-toc ba b--black-10 br2 bg-near-white pa3" role="navigation" aria-label="目录" aria-labelledby="toc-title-{{ $uid }}">
     <h2 id="toc-title-{{ $uid }}" class="f6 silver mb2">目录</h2>
-    {{ $tocHTML | safeHTML }}
+    {{ partial "func/emoji" $tocHTML | safeHTML }}
   </nav>
 {{- end -}}

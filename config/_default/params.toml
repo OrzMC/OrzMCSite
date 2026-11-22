@@ -2,6 +2,9 @@
 # CSS 配置参考：https://tachyons.io/
 
 favicon = "/images/favicon.png"
+# 页面内的品牌标记（导航、页脚版权前的国旗）。只在**可见位置**输出、走 emoji 统一管线；
+# 不进 hugo.toml 的 title —— 那里是纯文本通道，emoji 会被各平台字体渲染（Windows 显示 "CN"）。
+brand_mark = "🇨🇳"
 # 默认社交分享图（og:image / twitter:image / Article 结构化数据）
 default_og_image = "/images/og-default.png"
 site_logo = ""

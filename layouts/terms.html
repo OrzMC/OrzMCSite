@@ -7,7 +7,7 @@
     <div class="mw8 center">
       {{ with .Content }}
         <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
-          {{ . }}
+          {{ partial "func/emoji" . }}
         </div>
       {{ end }}
       <aside class="mt5 posts-grid">

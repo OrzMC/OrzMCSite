@@ -32,7 +32,7 @@
         {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv3 ph3 ph4-ns" }}
         <div class="{{ $header_section_class }}">
           <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-            {{ .Title | compare.Default .Site.Title }}
+            {{ with .Params.hero_mark }}{{ partial "func/emoji" . }} {{ end }}{{ partial "func/emoji" (.Title | compare.Default .Site.Title) }}
           </h1>
           {{ with (compare.Default .Params.description (.Param "hero_description")) }}
             <h2 class="fw1 f5 f3-l white-80 measure-wide-l center lh-copy mt3 mb4">
@@ -57,7 +57,7 @@
         {{ $header_section_class := .Param "header_section_class" | compare.Default "tc-l pv4 pv6-l ph3 ph4-ns" }}
         <div class="{{ $header_section_class }}">
           <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
-            {{ .Title | compare.Default .Site.Title }}
+            {{ with .Params.hero_mark }}{{ partial "func/emoji" . }} {{ end }}{{ partial "func/emoji" (.Title | compare.Default .Site.Title) }}
           </h1>
           {{ with (compare.Default .Params.description (.Param "hero_description")) }}
             <h2 class="fw1 f5 f3-l white-80 measure-wide-l center mt3">
@@ -87,7 +87,7 @@
           <div class="site-hero-main">
             <div class="site-hero-title">
               <h1 class="f2 f-subheadline-l fw2 white-90 mb0 lh-title">
-                {{ .Title | compare.Default .Site.Title }}
+                {{ with .Params.hero_mark }}{{ partial "func/emoji" . }} {{ end }}{{ partial "func/emoji" (.Title | compare.Default .Site.Title) }}
               </h1>
               {{ with (compare.Default .Params.description (.Param "hero_description")) }}
                 <h2 class="fw1 f5 f3-l white-80 mt3">

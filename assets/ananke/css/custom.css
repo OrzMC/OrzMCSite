@@ -41,6 +41,14 @@ html[data-theme="dark"] .theme-toggle__glow { background: radial-gradient(80% 10
 .nested-copy-line-height p { line-height: 1.75; }
 .measure-wide { max-width: 48rem; }
 
+/* Emoji 统一渲染：正文/标题里的 emoji 由 layouts/partials/func/emoji.html 替换成
+   自托管 Twemoji SVG，尺寸跟随字号、基线对齐中文行高。改动前先读 data/emoji_map.yaml
+   的注释（顺序=字符数降序，保证 ZWJ 序列先命中）。 */
+.emoji { width: 1.15em; height: 1.15em; margin: 0 0.05em; vertical-align: -0.15em; display: inline-block; }
+/* 暗色下锚点等灰色 emoji 提亮一档，避免与深色背景糊在一起 */
+html[data-theme="dark"] .anchor-link .emoji { filter: brightness(1.35); }
+
+
 /* Code blocks */
 pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 

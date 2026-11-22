@@ -49,6 +49,8 @@ jobs:
           ${{ runner.os }}-hugo-
     - name: Content checks
       run: python3 scripts/check_content.py
+    - name: Emoji asset checks
+      run: python3 scripts/emoji_assets.py check
     - name: Build and publish website
       run: |
         git config user.name "github-actions[bot]"

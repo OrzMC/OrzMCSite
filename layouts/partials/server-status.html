@@ -43,6 +43,7 @@
   {{- end -}}
   {{- $sd := dict
       "name"  ($s.name | default $s.host)
+      "name_html" (partial "func/emoji" ($s.name | default $s.host))
       "host"  $enc
       "port"  ($s.port | default 25565)
       "note"  ($s.note | default "")
@@ -116,7 +117,10 @@
   {{- /* 配置 JSON：safeJS 防止 <script> 上下文的 JS 转义破坏 JSON；
        < 转义为 < 防止配置中出现 </script> 提前闭合标签。
        注意 strings.Replace 显式传参——管道会把值作为最后一个参数导致参数顺序错乱。
-       信息面板是服务端静态渲染，info_panels/show_info 不进入 JS 配置（过滤后再 jsonify）。 */ -}}
+       信息面板是服务端静态渲染，info_panels/show_info 不进入 JS 配置（过滤后再 jsonify）。
+       name 会显示在卡片标题与 Tab 上：emoji 由 func/emoji 预先换成 <img>（name_html），
+       JS 优先用 name_html 渲染，保证与全站 emoji 同一套图形（Server 名在 JSON 里
+       原文不能替换——塞 <img> 会破坏 JSON）。 */ -}}
   {{- $json_cfg := dict -}}
   {{- range $k, $v := $cfg -}}
     {{- if and (ne $k "info_panels") (ne $k "show_info") -}}

@@ -2,7 +2,7 @@
 <footer class="{{ .Site.Params.background_color_class | compare.Default "bg-black" }} bottom-0 w-100 pa3" role="contentinfo">
   <div class="site-footer__row">
     <a class="site-footer__copyright f5 fw4 hover-white white-70 pv2 ph3 no-underline" href="{{ .Site.Home.Permalink }}">
-      &copy; {{ with .Site.Copyright | compare.Default .Site.Title }} {{ . | safe.HTML }} {{ now.Format "2006"}} {{ end }}
+      &copy; {{ with .Site.Copyright | compare.Default .Site.Title }}{{ with site.Params.brand_mark }}{{ partial "func/emoji" . }} {{ end }}{{ . }} {{ now.Format "2006"}}{{ end }}
     </a>
 
     {{/* 不蒜子访问统计：总访问量(PV) + 访客数(UV)。容器默认 .dn 隐藏，busuanzi 成功时以 style.display=inline 覆盖显示；
@@ -27,6 +27,8 @@
   <p class="site-footer__line">OrzMC 是独立的社区开源项目，与 Mojang / Microsoft 无隶属、赞助或背书关系，对本项目负责。</p>
   <p class="site-footer__links">
     <a href="https://orzmc.jokerhub.cn/privacy/">隐私政策</a>
+    <span class="site-footer__sep" aria-hidden="true">·</span>
+    <a href="https://orzmc.jokerhub.cn/licenses/">素材许可</a>
     <span class="site-footer__sep" aria-hidden="true">·</span>
     <a href="https://github.com/OrzMC" target="_blank" rel="noopener noreferrer">GitHub 组织</a>
   </p>
