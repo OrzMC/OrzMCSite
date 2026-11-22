@@ -95,10 +95,13 @@ tabs = false
 # api = "https://api.mcstatus.io/v2/status/java"   # 可选，覆盖默认状态 API
 # 「在浏览器中玩」按钮（紧跟在卡片上的 Web 地址胶囊下方）：**只要该服配了 Web 地址就显示**，不看 show_address
 # （它是「能不能用浏览器玩」的能力开关；地址隐藏的服同样会出现）。
-# 点击 = 新标签打开官方页，并自动拼上 `&joinServer=<本服 wss 地址>` → 官方客户端直接进服；
+# 点击 = 新标签打开官方页，并自动拼上
+# `&joinServer=<本服 wss 地址>&launch=1` → 页面跳过「启动游戏」按钮，直接下载/启动并进服；
 # 同时把地址写入剪贴板备用。按钮副标题「点击直接进服 · 同时复制地址备用」。
-# 官方站已支持 `/play?joinServer=<wss>&version=<ver>`（2026-11 实测，首页服务器目录即此格式），
+# 官方站已支持 `/play?joinServer=<wss>&version=<ver>&launch=1`（2026-11 实测；`launch=1` 是自动启动开关），
 # 因此不需要自托管客户端；置空则不显示该按钮。
+# 注意：未登录首次启动时官方页可能弹「登录以保存你的进度」，点 × 关闭即可；
+# 按钮用固定窗口名复用同一标签页，同一会话内不会反复弹。
 # 版本默认取本 URL 里的 `version`；个别服需要不同客户端版本时，在该服配 `web_version`。
 web_client_url = "https://eaglercraft.com/play?version=26.3"
 

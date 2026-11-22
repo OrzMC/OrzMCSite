@@ -329,26 +329,32 @@
      所以把提示做进按钮本身（整体仍是一个可点击区域，不额外占一行、关联最直接）。
      点击不阻止跳转（href 在新标签打开），同时把 wss:// 地址写进剪贴板，副标题短暂变
      「已复制地址，去粘贴」。 */
-  /* 官方站深链：/play?joinServer=<wss地址>&version=<客户端版本>
-     官方页会把 joinServer 传给客户端并直接进服（2026-11-22 实测首页服务器目录就是这种链接）。
-     基础参数（如 version）沿用 web_client_url；逐服 web_version 可覆盖版本。 */
+  /* 官方站深链：/play?joinServer=<wss地址>&version=<客户端版本>&launch=1
+     官方页会把 joinServer 传给客户端并直接进服；launch=1 让页面跳过「启动游戏」按钮
+     直接下载/启动（2026-11-22 无头 Edge 实测）。基础参数沿用 web_client_url；
+     逐服 web_version 可覆盖版本。 */
   function buildWebClientLink(addressText, version) {
     if (!webClientUrl) return '';
     var u;
     try { u = new URL(webClientUrl, window.location.href); } catch (err) { return webClientUrl; }
     if (addressText) u.searchParams.set('joinServer', addressText);
     if (version) u.searchParams.set('version', version);
+    /* 官方页的自动启动开关：带 launch=1 时页面会直接下载/启动客户端并进服，
+       不再停在「启动游戏」按钮（2026-11-22 无头 Edge 实测）。 */
+    u.searchParams.set('launch', '1');
     return u.toString();
   }
+
+  var PLAY_WINDOW_NAME = 'orzmc_eagler_client';
 
   function buildPlayBlock(addressText, clientVersion) {
     var playUrl = buildWebClientLink(addressText, clientVersion) || webClientUrl;
     var play = document.createElement('a');
     play.className = 'server-status__play';
     play.href = playUrl;
-    play.target = '_blank';
+    play.target = PLAY_WINDOW_NAME;
     play.rel = 'noopener noreferrer';
-    play.title = '新标签打开官方 Web 客户端并直接进服（同时复制地址备用）';
+    play.title = '打开官方 Web 客户端并直接进服；首次可能弹「登录以保存你的进度」，点右上角 × 关闭即可（同一标签页后续不再弹）';
 
     /* 第一行：图标 + 主标题（同一行）；第二行：副标题（整行居中，不缩进到图标之后） */
     var head = document.createElement('span');
@@ -371,7 +377,7 @@
       /* 显式在新标签打开：不依赖 `<a target>`（部分内置浏览器/WebView 会忽略它、直接在原页加载）。
          修饰键点击（Ctrl/⌘/Shift/中键）交给浏览器原生行为，不抢。 */
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-      var win = window.open(playUrl, '_blank');
+      var win = window.open(playUrl, PLAY_WINDOW_NAME);
       if (win) {
         e.preventDefault();   // 已在新标签打开 → 阻止锚点默认行为，原页面不跳转
         try { win.opener = null; } catch (err) {}   // 与 rel=noopener 同等隔离
